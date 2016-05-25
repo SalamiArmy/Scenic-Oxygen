@@ -92,4 +92,4 @@ ENV/
 .ipynb_checkpoints
 >>>>>>> 026b6d986bf20736767326c13141c5fde74b40aa
 
-commands/get.ini
+keys.ini

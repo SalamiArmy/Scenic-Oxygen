@@ -50,7 +50,7 @@ class Bot:
             try:
                 reply = self.run_command(split[split.index(self.name) + 1], incoming)
                 print("Responding with " + reply + "...")
-                bot.sendMessage(incoming.message.chat_id, text=reply)
+                #bot.sendMessage(incoming.message.chat_id, text=reply)
             except:
                 print("Unexpected error:", sys.exc_info()[0])
                 bot.sendMessage(incoming.message.chat_id, text="Sorry I had an errorerrorerrorerror")
