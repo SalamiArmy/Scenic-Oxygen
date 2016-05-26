@@ -9,7 +9,7 @@ import commands.get as get
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        fullMessageText = '/get test ballsack'
+        fullMessageText = '/get alsation cannon'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

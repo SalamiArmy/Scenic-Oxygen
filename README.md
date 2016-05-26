@@ -30,13 +30,14 @@ sudo zypper in virtualenv python git
 
 After that all you need to do is run the following
 
+Update {GOOGLE APP ENGINE PROJECT ID} on app.yaml.template and rename to app.yaml.
+Update keys.ini.template (mainly concentrating on were it says {Your Telegram Bot ID here} the rest is per commands you want to include) remember to rename to keys.ini.
+
 ```bash
 git clone (url for your thorin fork) ~/bot
 cd ~/bot
-virtualenv venv
-source venv/bin/activate
 pip install -t lib python-telegram-bot BeautifulSoup
-python main.py
+appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 
 Add the & sign to the end of the last command if you want to run thorin in the background (for example on a server you won't stay connected to.)
