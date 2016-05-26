@@ -35,7 +35,6 @@ git clone (url for your thorin fork) ~/bot
 cd ~/bot
 virtualenv venv
 source venv/bin/activate
-pip install -r requirements.txt
 pip install -t lib python-telegram-bot BeautifulSoup
 python main.py
 ```
