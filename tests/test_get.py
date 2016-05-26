@@ -13,9 +13,9 @@ class TestGet(unittest.TestCase):
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
-        chatId = keyConfig.get('HeyBoet', 'ADMIN_GROUP_CHAT_ID')
+        chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         #for bot group:
         #chatId = -1001048076684
 
-        get.run(chatId, 'SalamiArmy', fullMessageText)
+        get.run(chatId, 'Admin', fullMessageText)

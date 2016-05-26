@@ -58,7 +58,7 @@ def run(chat_id, user, message):
                                                   ', I\'m afraid I can\'t find any images for ' +\
                                                   string.capwords(requestText.encode('utf-8')))
     except:
-        adminGroupId = keyConfig.get('HeyBoet', 'ADMIN_GROUP_CHAT_ID')
+        adminGroupId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
         if user != adminGroupId:
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
             bot.sendMessage(chat_id=chat_id, text=requestText + ': ' + imagelink)
