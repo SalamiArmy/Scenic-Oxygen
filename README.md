@@ -5,9 +5,7 @@
 Thorin is a chat bot for telegram that makes is easy to add new commands. You can even add new commands while he's running!
 
 ### How does it work?
-Thorin will listen for all messages in a given chat (either directly with him or in a chat room which you invite him to) and looks for his name.
-Because of the way the Telegram Bot API works his name will include the @ sign as seen at the bottom of thorin.py and will assume that whatever word
-comes after his name is the name of the command you want to run. I plan on adding "/" command support later but it's not there now.
+Thorin will listen for all messages in a given chat (either directly with him or in a chat room which you invite him to) starting with "/".
 
 ### How do I add new commands?
 All you have to do is create a new python script in commands/ that has a function called run which takes two arguments and returns a string, the first argument is the 
