@@ -1,12 +1,11 @@
 # coding=utf-8
 import ConfigParser
-import os
+import json
 import random
 import string
 import urllib
 
 import telegram
-import json
 
 
 def run(chat_id, user, message):
@@ -25,15 +24,10 @@ def run(chat_id, user, message):
     if data['pagination']['total_count'] >= 1:
         imagelink = data['data'][random.randint(0, len(data['data']) - 1)]['images']['original']['url']
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_DOCUMENT)
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = imagelink
-        bot.sendDocument(chat_id=userWithCurrentChatAction,
+        bot.sendDocument(chat_id=chat_id,
                          filename=requestText.encode('utf-8') + '.gif',
-                         document=urlForCurrentChatAction.encode('utf-8'))
+                         document=imagelink.encode('utf-8'))
     else:
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                  ', I\'m afraid I can\'t find a giphy gif for ' + \
-                                  string.capwords(requestText.encode('utf-8')) + '.'
-        bot.sendMessage(chat_id=userWithCurrentChatAction,
-                        text=urlForCurrentChatAction.encode('utf-8'))
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                              ', I\'m afraid I can\'t find a giphy gif for ' + \
+                                              string.capwords(requestText.encode('utf-8')) + '.')
