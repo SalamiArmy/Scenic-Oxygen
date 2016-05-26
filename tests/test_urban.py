@@ -1,5 +1,4 @@
 import ConfigParser
-import sys
 import unittest
 
 import telegram
@@ -9,7 +8,7 @@ import commands.urban as urban
 
 class TestUrban(unittest.TestCase):
     def test_urban(self):
-        fullMessageText = '@Bashs_Bot urban trippy swirl'
+        fullMessageText = '@Bashs_Bot urban alsatian cannon'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -26,7 +25,4 @@ class TestUrban(unittest.TestCase):
 
         incomingUpdate = telegram.update.Update(0, message=incomingMessage,)
 
-        try:
-            urban.run(None, incomingUpdate)
-        except:
-            self.assertTrue(False, str(sys.exc_info()[0]))
+        urban.run(None, incomingUpdate)

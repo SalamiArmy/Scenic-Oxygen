@@ -1,36 +1,21 @@
 import ConfigParser
-import os
-
-import http
 import json
-import string
-import urllib
 import random
-import socket
+import string
+import sys
+import urllib
+
 import telegram
 
 
-def run(thorin, update):
+def run(chat_id, user, message):
     # Read keys.ini file at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
-    bot = telegram.Bot(os.getenv("THORIN_API_TOKEN"))
+    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
-    # chat_id is required to reply to any message
-    chat_id = update.message.chat_id
-    message = update.message.text
-    user = update.message.from_user.username \
-        if not update.message.from_user.username == '' \
-        else update.message.from_user.first_name + (' ' + update.message.from_user.last_name) \
-        if not update.message.from_user.last_name == '' \
-        else ''
-
-    message = message.replace(bot.name, "").strip()
-
-    splitText = message.split(' ', 1)
-
-    requestText = splitText[1] if ' ' in message else ''
+    requestText = message.replace(bot.name, "").strip()
 
     # Ashley: Added a try catch here-
     # For weird 'Unautherized' error when sending photos.
@@ -57,13 +42,11 @@ def run(thorin, update):
                 offset = offset+1
             if not imagelink.startswith('x-raw-image:///') and not imagelink == '':
                 bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-                userWithCurrentChatAction = chat_id
-                urlForCurrentChatAction = imagelink
-                bot.sendPhoto(chat_id=userWithCurrentChatAction,
-                              photo=urlForCurrentChatAction.encode('utf-8'),
+                bot.sendPhoto(chat_id=chat_id,
+                              photo=imagelink.encode('utf-8'),
                               caption=(user + ': ' if not user == '' else '') +
                                       string.capwords(requestText.encode('utf-8')) +
-                                      (' ' + imagelink if len(imagelink) < 100 else ''))
+                                      (' ' + imagelink if len(imagelink) < 100 else '').encode('utf-8'))
             else:
                 bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
@@ -74,17 +57,14 @@ def run(thorin, update):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
                                                   ', I\'m afraid I can\'t find any images for ' +\
                                                   string.capwords(requestText.encode('utf-8')))
-    except telegram.TelegramError or \
-            socket.timeout or socket.error or \
-            urllib.error.URLError or \
-            http.client.BadStatusLine as e:
-        adminGroupId = keyConfig['HeyBoet']['ADMIN_GROUP_CHAT_ID']
+    except:
+        adminGroupId = keyConfig.get('HeyBoet', 'ADMIN_GROUP_CHAT_ID')
         if user != adminGroupId:
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-            return bot.sendMessage(chat_id=chat_id, text=requestText + ': ' + imagelink)
-        if not adminGroupId == '':
+            bot.sendMessage(chat_id=chat_id, text=requestText + ': ' + imagelink)
+        if adminGroupId:
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-            return bot.sendMessage(chat_id=chat_id, text='Error: ' + e.message + '\n' +
-                                                         'Request Text: ' + requestText + '\n' +
-                                                         'Url: ' + imagelink)
+            bot.sendMessage(chat_id=chat_id, text='Error: ' + str(sys.exc_info()[1]) + '\n' +
+                                                  'Request Text: ' + requestText + '\n' +
+                                                  'Url: ' + imagelink)
 

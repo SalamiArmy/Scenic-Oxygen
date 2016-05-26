@@ -9,7 +9,7 @@ import commands.cric as cric
 
 class TestCric(unittest.TestCase):
     def test_cric(self):
-        fullMessageText = '@Bashs_Bot cric trippy swirl'
+        fullMessageText = '@Bashs_Bot cric'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

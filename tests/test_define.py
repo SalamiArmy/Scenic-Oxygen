@@ -9,7 +9,7 @@ import commands.define as define
 
 class TestDefine(unittest.TestCase):
     def test_define(self):
-        fullMessageText = '@Bashs_Bot define trippy swirl'
+        fullMessageText = '@Bashs_Bot define trippy'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

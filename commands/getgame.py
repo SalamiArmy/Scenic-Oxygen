@@ -1,56 +1,22 @@
 # coding=utf-8
 import ConfigParser
-import datetime
-import httplib
-import logging
 import os
-import random
-import socket
-import string
 import urllib
 import urllib2
 
-import MLStripper
-import feedparser
-import soundcloud
 import telegram
-import tungsten
-import xmltodict
-from dateutil import tz
-
 #reverse image search imports:
 from bs4 import BeautifulSoup
-from StringIO import StringIO
-import pycurl, json
-import certifi
-
-from mcstatus import MinecraftServer
-
-from imgurpython import ImgurClient
-from time import sleep
 
 
-def run(thorin, update):
+def run(chat_id, user, message):
     # Read keys.ini file at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
-    bot = telegram.Bot(os.getenv("THORIN_API_TOKEN"))
+    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
-    # chat_id is required to reply to any message
-    chat_id = update.message.chat_id
-    message = update.message.text
-    user = update.message.from_user.username \
-        if not update.message.from_user.username == '' \
-        else update.message.from_user.first_name + (' ' + update.message.from_user.last_name) \
-        if not update.message.from_user.last_name == '' \
-        else ''
-
-    message = message.replace(bot.name, "").strip()
-
-    splitText = message.split(' ', 1)
-
-    requestText = splitText[1] if ' ' in message else ''
+    requestText = message.replace(bot.name, "").strip()
 
 
     code = urllib.urlopen("http://store.steampowered.com/search/?term=" + requestText).read()

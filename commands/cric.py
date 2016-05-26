@@ -8,28 +8,12 @@ import telegram
 import json
 
 
-def run(thorin, update):
+def run(chat_id, user, message):
     # Read keys.ini file at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
-    bot = telegram.Bot(os.getenv("THORIN_API_TOKEN"))
-
-    # chat_id is required to reply to any message
-    chat_id = update.message.chat_id
-    message = update.message.text
-    user = update.message.from_user.username \
-        if not update.message.from_user.username == '' \
-        else update.message.from_user.first_name + (' ' + update.message.from_user.last_name) \
-        if not update.message.from_user.last_name == '' \
-        else ''
-
-    message = message.replace(bot.name, "").strip()
-
-    splitText = message.split(' ', 1)
-
-    requestText = splitText[1] if ' ' in message else ''
-
+    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
     allMatchesUrl = 'http://cricscore-api.appspot.com/csa'
     allMatches = json.load(urllib.urlopen(allMatchesUrl))

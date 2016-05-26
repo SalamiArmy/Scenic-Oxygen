@@ -1,4 +1,5 @@
 import ConfigParser
+
 import sys
 import unittest
 
@@ -9,7 +10,7 @@ import commands.getfig as getfig
 
 class TestGetFig(unittest.TestCase):
     def test_getfig(self):
-        fullMessageText = '@Bashs_Bot getfig trippy swirl'
+        fullMessageText = '@Bashs_Bot getfig'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

@@ -1,36 +1,22 @@
 # coding=utf-8
 import ConfigParser
 import os
+import re
 import urllib
 
-import MLStripper
 import telegram
-
 #reverse image search imports:
 import json
 
 
-def run(thorin, update):
+def run(chat_id, user, message):
     # Read keys.ini file at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
-    bot = telegram.Bot(os.getenv("THORIN_API_TOKEN"))
+    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
-    # chat_id is required to reply to any message
-    chat_id = update.message.chat_id
-    message = update.message.text
-    user = update.message.from_user.username \
-        if not update.message.from_user.username == '' \
-        else update.message.from_user.first_name + (' ' + update.message.from_user.last_name) \
-        if not update.message.from_user.last_name == '' \
-        else ''
-
-    message = message.replace(bot.name, "").strip()
-
-    splitText = message.split(' ', 1)
-
-    requestText = splitText[1] if ' ' in message else ''
+    requestText = message.replace(bot.name, "").strip()
 
 
     wikiUrl = \
@@ -38,7 +24,7 @@ def run(thorin, update):
     realUrl = wikiUrl + requestText.encode('utf-8')
     data = json.load(urllib.urlopen(realUrl))
     if len(data['query']['search']) >= 1:
-        formattedQuoteSnippet = MLStripper.strip_tags(
+        formattedQuoteSnippet = re.sub(r'<[^>]*?>', '',
             data['query']['search'][0]['snippet'].replace('<span class="searchmatch">', '*').replace(
                 '</span>', '*'))
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
@@ -54,7 +40,7 @@ def run(thorin, update):
         realUrl = wikiUrl + requestText.encode('utf-8')
         data = json.load(urllib.urlopen(realUrl))
         if len(data['query']['search']) >= 1:
-            formattedQuoteSnippet = MLStripper.strip_tags(
+            formattedQuoteSnippet = re.sub(r'<[^>]*?>', '',
                 data['query']['search'][0]['snippet'].replace('<span class="searchmatch">', '*').replace(
                     '</span>', '*'))
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
