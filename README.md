@@ -36,7 +36,8 @@ cd ~/bot
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python thorin.py
+pip install -t lib python-telegram-bot BeautifulSoup
+python main.py
 ```
 
 Add the & sign to the end of the last command if you want to run thorin in the background (for example on a server you won't stay connected to.)
