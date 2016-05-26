@@ -1,5 +1,7 @@
 import unittest
-import commands.the_rules as rules
+
+import tests.the_rules as rules
+
 
 class TestTheRules(unittest.TestCase):
     def test_the_rules(self):

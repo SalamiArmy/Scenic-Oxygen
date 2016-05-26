@@ -4,12 +4,11 @@ import os
 import urllib
 
 import telegram
-#reverse image search imports:
 import json
 
 
 def run(chat_id, user, message):
-    # Read keys.ini file at program start (don't forget to put your keys in there!)
+    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
@@ -30,7 +29,6 @@ def run(chat_id, user, message):
         forecast = data['query']['results']['channel']['item']['forecast']
         city = data['query']['results']['channel']['location']['city']
         astronomy = data['query']['results']['channel']['astronomy']
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
         userWithCurrentChatAction = chat_id
         urlForCurrentChatAction = ('It is currently ' + weather['text'] + ' in ' + city +
                                    ' with a temperature of ' + weather['temp'] + 'C.\nA high of ' +
@@ -42,7 +40,6 @@ def run(chat_id, user, message):
                         text=urlForCurrentChatAction,
                         parse_mode=telegram.ParseMode.MARKDOWN)
     else:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
         urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                   ', I\'m afraid I don\'t know the place ' + \
                                   requestText.encode('utf-8') + '.'

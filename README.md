@@ -8,28 +8,20 @@ Thorin is a chat bot for telegram that makes is easy to add new commands. You ca
 Thorin will listen for all messages in a given chat (either directly with him or in a chat room which you invite him to) starting with "/".
 
 ### How do I add new commands?
-All you have to do is create a new python script in commands/ that has a function called run which takes two arguments and returns a string, the first argument is the 
-bot itsself and the second is the incoming message object from the [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot) 
-package. You can read all about that on their github page. If you need to store information you have two options, you can use file based storage as 
-you want though that can be a little hacky and makes your command less portable. The second method is to store it in the bots inventory field which 
-is just a normal pyton dict.
+All you have to do is create a new python script in commands/ that has a function called run which takes three arguments, the first argument is the 
+id of the chat to reply to, the second is the name of the user to address when replying (I'm going to change this to message_id in the future so the bot can reply to that message) and the third is the incoming message text.
 
-tl;dr: Look at one of the existing commands, you must have a run(bot, incoming_message_object) -> String function.
-Thorin will send the -> String to the chat room as a message.
+tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, message) function.
 
 ### How do I make my own bot using this?
-You can fork Thorin and rename the bot by editing thorin.py and at the bottom changing the constructor such that "@Thorin_Bot"
-becomes the name of your bot including the @ symbol. You will need make sure that python, git, and virtualenv are installed, use your
-distro's package manager to accomplish this an example using my favorite distro [openSUSE](https://opensuse.org) would be:
+Go to https://console.developers.google.com and create a Google App Engine project. Then take that project id (it will be two random words and a number eg. gorilla-something-374635) and your Telegram Bot ID which the Bot Father gave you and do the following:
 
-```bash
-sudo zypper in virtualenv python git
-```
-
-After that all you need to do is run the following
-
-Update {GOOGLE APP ENGINE PROJECT ID} on app.yaml.template and rename to app.yaml.
-Update keys.ini.template (mainly concentrating on were it says {Your Telegram Bot ID here} the rest is per commands you want to include) remember to rename to keys.ini.
+Copy app.yaml.template and rename the copy to to app.yaml.
+Update {GOOGLE APP ENGINE PROJECT ID} in app.yaml.
+Copy keys.ini.template and rename the copy to keys.ini.
+Update {Your Telegram Bot ID here} in keys.ini 
+OPTIONAL:
+Update the rest of keys.ini with keys for each command you want to use.
 
 ```bash
 git clone (url for your thorin fork) ~/bot
@@ -37,8 +29,6 @@ cd ~/bot
 pip install -t lib python-telegram-bot BeautifulSoup
 appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
-
-Add the & sign to the end of the last command if you want to run thorin in the background (for example on a server you won't stay connected to.)
 
 When you add commands Thorin will pick them up when he's asked to perform them while running, this means that you don't need to restart Thorin to add 
 new commands. However if you edit an existing command Thorin won't reload it until you restart him.

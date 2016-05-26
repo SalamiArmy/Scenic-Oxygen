@@ -1,7 +1,13 @@
+import ConfigParser
+
 import requests
 from os import getenv
 
-API_KEY = getenv("THORIN_WEATHER_API_TOKEN")
+import telegram
+
+keyConfig = ConfigParser.ConfigParser()
+keyConfig.read(["keys.ini", "..\keys.ini"])
+API_KEY = keyConfig.get('OpenWeatherMap', 'API_KEY')
 
 def is_zip_code(requested):
     try:
@@ -35,3 +41,14 @@ def run(thorin, incoming):
     if is_zip_code(city_or_zip):
         return get_weather_zip(city_or_zip)
     return get_weather_name(city_or_zip)
+
+def run(chat_id, user, message):
+    keyConfig = ConfigParser.ConfigParser()
+    keyConfig.read(["keys.ini", "..\keys.ini"])
+
+    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
+
+    if is_zip_code(message):
+        bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + get_weather_zip(message))
+    else:
+        bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + get_weather_name(message))

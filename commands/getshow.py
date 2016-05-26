@@ -6,12 +6,11 @@ import urllib
 
 import telegram
 
-#reverse image search imports:
 import json
 
 
 def run(chat_id, user, message):
-    # Read keys.ini file at program start (don't forget to put your keys in there!)
+    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
@@ -29,7 +28,6 @@ def run(chat_id, user, message):
                       photo=urlForCurrentChatAction,
                       caption=re.sub(r'<[^>]*?>', '', data[0]['show']['summary'].replace('\\', '')[:125]))
     else:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
         urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                   ', I\'m afraid I cannot find the TV show ' + \
                                   requestText.title()

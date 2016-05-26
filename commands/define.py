@@ -6,11 +6,9 @@ import urllib
 import telegram
 import xmltodict
 
-#reverse image search imports:
-
 
 def run(chat_id, user, message):
-    # Read keys.ini file at program start (don't forget to put your keys in there!)
+    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
@@ -25,18 +23,15 @@ def run(chat_id, user, message):
         partOfSpeech = data['entry_list']['entry']['fl']
         if len(partOfSpeech) >= 1:
             definitionText = data['entry_list']['entry']['def']['dt'][0]
-            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
             urlForCurrentChatAction = (user + ': ' if not user == '' else '') + \
                                       requestText.title() + ":\n" + \
                                       partOfSpeech + ".\n\n" + definitionText
             bot.sendMessage(chat_id=chat_id, text=urlForCurrentChatAction)
         else:
-            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                                   ', I\'m afraid I can\'t find any definitions for the word ' + \
                                                   requestText + '.')
     else:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
         userWithCurrentChatAction = chat_id
         urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                   ', I\'m afraid I can\'t find any definitions for the word ' + \

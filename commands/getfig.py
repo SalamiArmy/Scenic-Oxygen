@@ -5,12 +5,11 @@ import random
 import urllib
 
 import telegram
-#reverse image search imports:
 import json
 
 
 def run(chat_id, user, message):
-    # Read keys.ini file at program start (don't forget to put your keys in there!)
+    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
@@ -32,7 +31,6 @@ def run(chat_id, user, message):
                       caption=(user if not user == '' else '') +
                               (' ' + imagelink if len(imagelink) < 100 else ''))
     else:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
         userWithCurrentChatAction = chat_id
         urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                   ', I\'m afraid I can\'t find any figs.'

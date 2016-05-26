@@ -1,23 +1,20 @@
 # coding=utf-8
 import ConfigParser
-import os
 import urllib
 import urllib2
 
 import telegram
-#reverse image search imports:
 from bs4 import BeautifulSoup
 
 
 def run(chat_id, user, message):
-    # Read keys.ini file at program start (don't forget to put your keys in there!)
+    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
     bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
     requestText = message.replace(bot.name, "").strip()
-
 
     code = urllib.urlopen("http://store.steampowered.com/search/?term=" + requestText).read()
     appId = steam_results_parser(code)
@@ -31,18 +28,14 @@ def run(chat_id, user, message):
     else:
         gameResults = ""
     if gameResults:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
         userWithCurrentChatAction = chat_id
         urlForCurrentChatAction = gameResults
         bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction,
                         disable_web_page_preview=True, parse_mode='Markdown')
     else:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                  ', I\'m afraid I can\'t find the steam game ' + \
-                                  requestText.encode('utf-8')
-        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction)
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                              ', I\'m afraid I can\'t find the steam game ' + \
+                                              requestText.encode('utf-8'))
 
 
 def steam_results_parser(code):
