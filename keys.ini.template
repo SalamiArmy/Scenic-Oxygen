@@ -1,0 +1,34 @@
+[Telegram]
+TELE_BOT_ID: {Your Telegram Bot ID here}
+
+[BotAdministration]
+ADMIN_GROUP_CHAT_ID: {ID of Telegram Group to Send and Receive Admin Messages}
+
+[Google]
+GCSE_APP_ID: {Your Google Api Key here}
+GCSE_SE_ID: {Your Google Custom Search Engine ID here}
+GCSE_XSE_ID: {Your x-rated Google Custom Search Engine ID here}
+
+[Soundcloud]
+SC_CLIENT_ID: {Your Soundcloud Api Key here}
+
+[Wolfram]
+WOLF_APP_ID: {Your Wolfram developer API key here}
+
+[Imgur]
+CLIENT_ID: {Imgur Client ID goes here}
+CLIENT_SECRET: {Imgur Client Secret goes here}
+
+[Minecraft]
+SVR_ADDR: {Your Minecraft Server Address here}
+SVR_PORT: {Your Minecraft Server Port here}
+DYNMAP_PORT: {Your Minecraft Server DynMap Port here}
+
+[MusixMatch]
+APP_ID: {Your MusixMatch App ID here}
+
+[Merriam-Webster]
+API_KEY: {Your Merriam-Webster App ID here}
+
+[OpenWeatherMap]
+API_KEY: (Your OpenWeatherMap Api Key from openweathermap.org here}
