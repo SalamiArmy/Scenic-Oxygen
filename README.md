@@ -20,7 +20,8 @@ Go to https://console.developers.google.com and create a Google App Engine proje
 2. Update {GOOGLE APP ENGINE PROJECT ID} in app.yaml.
 3. Copy keys.ini.template and rename the copy to keys.ini.
 4. Update {Your Telegram Bot ID here} in keys.ini 
-5. OPTIONAL: Update the rest of keys.ini with keys for each command you want to use.
+OPTIONAL:
+5. Update the rest of keys.ini with keys for each command you want to use.
 
 ```bash
 git clone (url for your thorin fork) ~/bot
