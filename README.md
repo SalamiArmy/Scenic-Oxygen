@@ -16,12 +16,12 @@ tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, 
 ### How do I make my own bot using this?
 Go to https://console.developers.google.com and create a Google App Engine project. Then take that project id (it will be two random words and a number eg. gorilla-something-374635) and your Telegram Bot ID which the Bot Father gave you and do the following:
 
-Copy app.yaml.template and rename the copy to to app.yaml.
-Update {GOOGLE APP ENGINE PROJECT ID} in app.yaml.
-Copy keys.ini.template and rename the copy to keys.ini.
-Update {Your Telegram Bot ID here} in keys.ini 
+1. Copy app.yaml.template and rename the copy to to app.yaml.
+2. Update {GOOGLE APP ENGINE PROJECT ID} in app.yaml.
+3. Copy keys.ini.template and rename the copy to keys.ini.
+4. Update {Your Telegram Bot ID here} in keys.ini 
 OPTIONAL:
-Update the rest of keys.ini with keys for each command you want to use.
+5. Update the rest of keys.ini with keys for each command you want to use.
 
 ```bash
 git clone (url for your thorin fork) ~/bot
