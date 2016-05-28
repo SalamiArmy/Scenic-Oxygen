@@ -1,10 +1,8 @@
 import ConfigParser
 import os
 
-import telegram
 
-
-def run(chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message):
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 

@@ -1,4 +1,5 @@
 import unittest
+import telegram
 import commands.weather as weather
 
 class TestWeather(unittest.TestCase):

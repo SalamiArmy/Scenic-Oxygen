@@ -1,4 +1,5 @@
 import unittest
+import telegram
 import commands.yoda as yoda
 
 class TestYoda(unittest.TestCase):

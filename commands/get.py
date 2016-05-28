@@ -8,7 +8,7 @@ import urllib
 import telegram
 
 
-def run(chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message):
     # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
