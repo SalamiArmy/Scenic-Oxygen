@@ -95,19 +95,6 @@ class WebhookHandler(webapp2.RequestHandler):
                 mod.run(chat_id, fr_username, split[1] if len(split) > 1 else '')
             except:
                 print("Unexpected error running command:", sys.exc_info()[1])
-        else:
-            if not text:
-                print('Webhook body member missing: \'message\'.')
-                return
-
-            import vocabs.intend_getweather as intend_getweather
-            try:
-                intent = intend_getweather.get_intention(text)
-                if intent != None:
-                    import commands.getweather as getweather
-                    getweather.run(chat_id, fr_username, intent.get('location'))
-            except:
-                print("Unexpected error running command:" + str(sys.exc_info()[1]))
 
 class RunTestsHandler(webapp2.RequestHandler):
     def get(self):
@@ -193,20 +180,6 @@ class WebCommandRunHandler(webapp2.RequestHandler):
                 requestText = split[1] if len(split) > 1 else ''
                 mod.run(chatId, "Admin", requestText)
                 self.response.write('Command ' + split[0] + ' ran with request text ' + requestText + ' successfully.')
-            except:
-                self.response.write("Unexpected error running command:" + str(sys.exc_info()[1]))
-        else:
-            if not text:
-                self.response.write('Webhook body member missing: \'message\'.')
-                return
-
-            import vocabs.intend_getweather as intend_getweather
-            try:
-                intent = intend_getweather.get_intention(text)
-                if intent is not None:
-                    import commands.getweather as getweather
-                    getweather.run(chatId, 'Admin', intent.get('Location'))
-                    self.response.write('getting weather for ' + intent.get('Location'))
             except:
                 self.response.write("Unexpected error running command:" + str(sys.exc_info()[1]))
 

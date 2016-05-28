@@ -1,15 +1,12 @@
 import ConfigParser
-import sys
 import unittest
-
-import telegram
 
 import commands.get as get
 
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        fullMessageText = '/get alsation cannon'
+        fullMessageText = '/get alsatian cannon'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
