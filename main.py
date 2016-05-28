@@ -76,25 +76,25 @@ class WebhookHandler(webapp2.RequestHandler):
         logging.info(body)
         self.response.write(json.dumps(body))
 
-        update_id = body['update_id']
-        message = body['message']
-        text = message.get('text')
-        fr = message.get('from')
-        fr_username = fr['username']
-        chat = message['chat']
-        chat_id = chat['id']
+        if 'message' in body:
+            message = body['message']
+            text = message.get('text')
+            fr = message.get('from')
+            fr_username = fr['username']
+            chat = message['chat']
+            chat_id = chat['id']
 
-        if not text:
-            logging.info('no text')
-            return
+            if not text:
+                logging.info('no text')
+                return
 
-        if text.startswith('/'):
-            split = text[1:].lower().split(" ", 1)
-            try:
-                mod = importlib.import_module('commands.' + split[0])
-                mod.run(chat_id, fr_username, split[1] if len(split) > 1 else '')
-            except:
-                print("Unexpected error running command:", sys.exc_info()[1])
+            if text.startswith('/'):
+                split = text[1:].lower().split(" ", 1)
+                try:
+                    mod = importlib.import_module('commands.' + split[0])
+                    mod.run(chat_id, fr_username, split[1] if len(split) > 1 else '')
+                except:
+                    print("Unexpected error running command:", sys.exc_info()[1])
 
 class RunTestsHandler(webapp2.RequestHandler):
     def get(self):

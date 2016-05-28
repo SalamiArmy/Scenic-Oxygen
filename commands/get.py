@@ -61,7 +61,7 @@ def run(chat_id, user, message):
         if user != adminGroupId:
             bot.sendMessage(chat_id=chat_id, text=requestText + ': ' + imagelink)
         if adminGroupId:
-            bot.sendMessage(chat_id=chat_id, text='Error: ' + str(sys.exc_info()[1]) + '\n' +
+            bot.sendMessage(chat_id=adminGroupId, text='Error: ' + str(sys.exc_info()[1]) + '\n' +
                                                   'Request Text: ' + requestText + '\n' +
                                                   'Url: ' + imagelink)
 
