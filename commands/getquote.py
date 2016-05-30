@@ -14,12 +14,10 @@ def run(bot, keyConfig, chat_id, user, message):
     if len(data['query']['search']) >= 1:
         formattedQuoteSnippet = re.sub(r'<[^>]*?>', '',
             data['query']['search'][0]['snippet'].replace('<span class="searchmatch">', '*').replace(
-                '</span>', '*'))
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = (user + ': ' if not user == '' else '') + formattedQuoteSnippet + \
-                                  '\nhttps://simple.wikiquote.org/wiki/' + \
-                                  urllib.quote(data['query']['search'][0]['title'].encode('utf-8'))
-        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction,
+                '</span>', '*')).replace('&quot;', '/"')
+        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + formattedQuoteSnippet + \
+                                              '\nhttps://simple.wikiquote.org/wiki/' + \
+                                              urllib.quote(data['query']['search'][0]['title'].encode('utf-8')),
                         disable_web_page_preview=True, parse_mode='Markdown')
     else:
         wikiUrl = \
@@ -29,7 +27,7 @@ def run(bot, keyConfig, chat_id, user, message):
         if len(data['query']['search']) >= 1:
             formattedQuoteSnippet = re.sub(r'<[^>]*?>', '',
                 data['query']['search'][0]['snippet'].replace('<span class="searchmatch">', '*').replace(
-                    '</span>', '*'))
+                    '</span>', '*')).replace('&quot;', '/"')
             bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + formattedQuoteSnippet + \
                                                   '\nhttps://en.wikiquote.org/wiki/' + \
                                                   urllib.quote(data['query']['search'][0]['title'].encode('utf-8')),
