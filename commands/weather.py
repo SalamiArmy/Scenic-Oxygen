@@ -1,7 +1,6 @@
 import ConfigParser
 
 import requests
-from os import getenv
 
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -41,11 +40,6 @@ def run(thorin, incoming):
     return get_weather_name(city_or_zip)
 
 def run(bot, keyConfig, chat_id, user, message):
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
     if is_zip_code(message):
         bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + get_weather_zip(message))
     else:

@@ -1,9 +1,8 @@
 # coding=utf-8
-import ConfigParser
-import os
 import random
 import string
 
+import telegram
 from imgurpython import ImgurClient
 
 

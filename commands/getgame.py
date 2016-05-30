@@ -1,7 +1,7 @@
 # coding=utf-8
-import ConfigParser
 import urllib
 import urllib2
+
 from bs4 import BeautifulSoup
 
 

@@ -1,8 +1,6 @@
 # coding=utf-8
-import ConfigParser
-import os
-import urllib
 import json
+import urllib
 
 
 def run(bot, keyConfig, chat_id, user, message):
@@ -29,10 +27,7 @@ def run(bot, keyConfig, chat_id, user, message):
                and 'xhamster.com/stories_search' not in xlink \
                and 'redtube.com/pornstar/' not in xlink \
                :
-                bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-                userWithCurrentChatAction = chat_id
-                urlForCurrentChatAction = (user + ': ' if not user == '' else '') + xlink
-                bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction)
+                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
                 break
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +

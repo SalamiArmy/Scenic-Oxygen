@@ -1,7 +1,6 @@
-import ConfigParser
+from os import getenv
 
 import requests
-from os import getenv
 
 JENKINS_URL = getenv("THORIN_JENKINS_URL")
 JENKINS_TOKEN = getenv("THORIN_JENKINS_TOKEN")
@@ -15,5 +14,4 @@ def run_build(strarr):
         return "Build successfully started."
 
 def run(bot, keyConfig, chat_id, user, message):
-    bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
     bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + run_build(message))

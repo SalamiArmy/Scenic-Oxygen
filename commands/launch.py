@@ -1,14 +1,14 @@
 # coding=utf-8
-import ConfigParser
 import datetime
 import json
 import urllib2
+
+import telegram
+
 from dateutil import tz
 
 
 def run(bot, keyConfig, chat_id, user, message):
-    requestText = message.replace(bot.name, "").strip()
-
     rocketUrl = 'https://launchlibrary.net/1.1/launch/next/5'
     rocketUrlRequest = urllib2.Request(rocketUrl, headers={'User-Agent': "Magic Browser"})
     rocketData = json.load(urllib2.urlopen(rocketUrlRequest))

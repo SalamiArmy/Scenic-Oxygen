@@ -1,8 +1,8 @@
 # coding=utf-8
-import ConfigParser
-import urllib2
-import BeautifulSoup
 import json
+import urllib2
+
+import BeautifulSoup
 
 
 def run(bot, keyConfig, chat_id, user, message):

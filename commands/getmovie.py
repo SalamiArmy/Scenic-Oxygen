@@ -1,7 +1,8 @@
 # coding=utf-8
-import ConfigParser
 import json
 import urllib
+
+import telegram
 
 
 def run(bot, keyConfig, chat_id, user, message):

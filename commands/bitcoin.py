@@ -1,8 +1,6 @@
 # coding=utf-8
-import ConfigParser
-import os
-import urllib
 import json
+import urllib
 
 
 def run(bot, keyConfig, chat_id, user, message):
@@ -14,7 +12,6 @@ def run(bot, keyConfig, chat_id, user, message):
     priceUS = data['bpi']['USD']
     priceZA = data['bpi']['ZAR']
     priceGB = data2['bpi']['GBP']
-    bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
     bot.sendMessage(chat_id=chat_id,
                     text='The Current Price of 1 Bitcoin:\n\n' + priceUS['rate'] +
                          ' USD\n' + priceGB['rate'] +

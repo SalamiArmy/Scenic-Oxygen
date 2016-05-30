@@ -1,11 +1,6 @@
 # coding=utf-8
-import ConfigParser
-import os
 
 import soundcloud
-import telegram
-
-
 
 
 def run(bot, keyConfig, chat_id, user, message):

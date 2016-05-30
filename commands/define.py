@@ -1,7 +1,7 @@
 # coding=utf-8
-import ConfigParser
 import random
 import urllib
+
 import xmltodict
 
 

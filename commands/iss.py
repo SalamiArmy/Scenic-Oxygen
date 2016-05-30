@@ -1,9 +1,9 @@
 # coding=utf-8
-import ConfigParser
 import datetime
-import os
-import urllib
 import json
+import urllib
+
+import telegram
 
 
 def run(bot, keyConfig, chat_id, user, message):
@@ -24,30 +24,20 @@ def run(bot, keyConfig, chat_id, user, message):
                 timeStamp = data['response'][0]['risetime']
                 durationSeconds = data['response'][0]['duration']
                 startDateTime = datetime.datetime.fromtimestamp(timeStamp)
-                bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-                userWithCurrentChatAction = chat_id
-                urlForCurrentChatAction = (user + ': ' if not user == '' else '') + \
-                                          'The next ISS sighting in ' + requestText.encode('utf-8').title() + \
-                                          ' starts at ' + startDateTime.strftime('%H:%M:%S on %d-%m-%Y') + \
-                                          ' for ' + str(divmod(durationSeconds, 60)[0]) + \
-                                          ' minutes and ' + str(divmod(durationSeconds, 60)[1]) + ' seconds.'
-                bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction)
+                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + \
+                                                      'The next ISS sighting in ' + requestText.encode('utf-8').title() + \
+                                                      ' starts at ' + startDateTime.strftime('%H:%M:%S on %d-%m-%Y') + \
+                                                      ' for ' + str(divmod(durationSeconds, 60)[0]) + \
+                                                      ' minutes and ' + str(divmod(durationSeconds, 60)[1]) + ' seconds.')
             else:
-                bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-                userWithCurrentChatAction = chat_id
-                urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                          ', I\'m afraid I can\'t find the next ISS sighting for ' + \
-                                          requestText.encode('utf-8') + '.'
-                bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction)
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                                      ', I\'m afraid I can\'t find the next ISS sighting for ' + \
+                                                      requestText.encode('utf-8') + '.')
         else:
-            userWithCurrentChatAction = chat_id
-            urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                      ', I\'m afraid I can\'t find any places for ' + \
-                                      requestText.encode('utf-8') + '.'
-            bot.sendMessage(chat_id=userWithCurrentChatAction, text=requestText)
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                                  ', I\'m afraid I can\'t find any places for ' + \
+                                                  requestText.encode('utf-8') + '.')
     else:
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = 'http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544'
-        bot.sendPhoto(chat_id=userWithCurrentChatAction, photo=urlForCurrentChatAction,
-                       caption='Current Position of the ISS')
+        bot.sendPhoto(chat_id=chat_id, photo='http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544',
+                      caption='Current Position of the ISS')
