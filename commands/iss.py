@@ -24,20 +24,25 @@ def run(bot, keyConfig, chat_id, user, message):
                 timeStamp = data['response'][0]['risetime']
                 durationSeconds = data['response'][0]['duration']
                 startDateTime = datetime.datetime.fromtimestamp(timeStamp)
-                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + \
-                                                      'The next ISS sighting in ' + requestText.encode('utf-8').title() + \
-                                                      ' starts at ' + startDateTime.strftime('%H:%M:%S on %d-%m-%Y') + \
-                                                      ' for ' + str(divmod(durationSeconds, 60)[0]) + \
-                                                      ' minutes and ' + str(divmod(durationSeconds, 60)[1]) + ' seconds.')
+                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
+                                                      'The next ISS sighting in ' +
+                                                      requestText.encode('utf-8').title() +
+                                                      ' starts at ' + startDateTime.strftime('%H:%M:%S on %d-%m-%Y') +
+                                                      ' for ' + str(divmod(durationSeconds, 60)[0]) + ' minutes and ' +
+                                                      str(divmod(durationSeconds, 60)[1]) + ' seconds.')
             else:
-                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                                      ', I\'m afraid I can\'t find the next ISS sighting for ' + \
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid I can\'t find the next ISS sighting for ' +
                                                       requestText.encode('utf-8') + '.')
         else:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                                  ', I\'m afraid I can\'t find any places for ' + \
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any places for ' +
                                                   requestText.encode('utf-8') + '.')
     else:
+        bot.sendMessage(chat_id=chat_id, text='http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544')
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        bot.sendPhoto(chat_id=chat_id, photo='http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544',
-                      caption='Current Position of the ISS')
+
+        # I get unsupported file extention error
+        # bot.sendPhoto(chat_id=chat_id,
+        #               photo='http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544',
+        #               caption='Current Position of the ISS')
