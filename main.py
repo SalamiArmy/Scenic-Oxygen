@@ -6,15 +6,22 @@ import unittest
 import urllib
 import sys
 
-# standard app engine imports
 import urllib2
+import telegram
 
+# standard app engine imports
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
 import webapp2
 
 BASE_URL = 'https://api.telegram.org/bot'
+
+# Read keys.ini file at program start (don't forget to put your keys in there!)
+keyConfig = ConfigParser.ConfigParser()
+keyConfig.read(["keys.ini", "..\keys.ini"])
+
+bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
 # ================================
 
@@ -42,8 +49,6 @@ def getEnabled(chat_id):
 class MeHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-        keyConfig = ConfigParser.ConfigParser()
-        keyConfig.read(["keys.ini", "..\keys.ini"])
         self.response.write(json.dumps(json.load(urllib2.urlopen(
             BASE_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/getMe'))))
 
@@ -51,8 +56,6 @@ class MeHandler(webapp2.RequestHandler):
 class GetUpdatesHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-        keyConfig = ConfigParser.ConfigParser()
-        keyConfig.read(["keys.ini", "..\keys.ini"])
         self.response.write(json.dumps(json.load(urllib2.urlopen(
             BASE_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/getUpdates'))))
 
@@ -60,8 +63,6 @@ class GetUpdatesHandler(webapp2.RequestHandler):
 class SetWebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-        keyConfig = ConfigParser.ConfigParser()
-        keyConfig.read(["keys.ini", "..\keys.ini"])
         url = self.request.get('url')
         if url:
             self.response.write(json.dumps(json.load(urllib2.urlopen(
@@ -76,25 +77,25 @@ class WebhookHandler(webapp2.RequestHandler):
         logging.info(body)
         self.response.write(json.dumps(body))
 
-        update_id = body['update_id']
-        message = body['message']
-        text = message.get('text')
-        fr = message.get('from')
-        fr_username = fr['username']
-        chat = message['chat']
-        chat_id = chat['id']
+        if 'message' in body:
+            message = body['message']
+            text = message.get('text')
+            fr = message.get('from')
+            fr_username = fr['username']
+            chat = message['chat']
+            chat_id = chat['id']
 
-        if not text:
-            logging.info('no text')
-            return
+            if not text:
+                logging.info('no text')
+                return
 
-        if text.startswith('/'):
-            split = text[1:].lower().split(" ", 1)
-            try:
-                mod = importlib.import_module('commands.' + split[0])
-                mod.run(chat_id, fr_username, split[1] if len(split) > 1 else '')
-            except:
-                print("Unexpected error running command:", sys.exc_info()[1])
+            if text.startswith('/'):
+                split = text[1:].lower().split(" ", 1)
+                try:
+                    mod = importlib.import_module('commands.' + split[0])
+                    mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
+                except:
+                    print("Unexpected error running command:", sys.exc_info()[1])
 
 class RunTestsHandler(webapp2.RequestHandler):
     def get(self):
@@ -162,15 +163,12 @@ class RunTestsHandler(webapp2.RequestHandler):
 class WebCommandRunHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-
         text = self.request.get('text')
         if not text:
             self.response.write('Argument missing: \'text\'.')
             return
         chatId = self.request.get('chat_id')
         if not chatId:
-            keyConfig = ConfigParser.ConfigParser()
-            keyConfig.read(["keys.ini", "..\keys.ini"])
             chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         if text.startswith('/'):
@@ -178,10 +176,10 @@ class WebCommandRunHandler(webapp2.RequestHandler):
             mod = importlib.import_module('commands.' + split[0])
             try:
                 requestText = split[1] if len(split) > 1 else ''
-                mod.run(chatId, "Admin", requestText)
+                mod.run(bot, keyConfig, chatId, "Admin", requestText)
                 self.response.write('Command ' + split[0] + ' ran with request text ' + requestText + ' successfully.')
             except:
-                self.response.write("Unexpected error running command:" + str(sys.exc_info()[1]))
+                self.response.write("Unexpected error running command: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),

@@ -25,8 +25,8 @@ Go to https://console.developers.google.com and create a Google App Engine proje
 ```bash
 git clone (url for your thorin fork) ~/bot
 cd ~/bot
-pip install -t lib python-telegram-bot BeautifulSoup
-appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
+(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot BeautifulSoup xmltodict
+(PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 
 When you add commands Thorin will pick them up when he's asked to perform them while running, this means that you don't need to restart Thorin to add 

@@ -3,8 +3,6 @@ import ConfigParser
 import requests
 from os import getenv
 
-import telegram
-
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["keys.ini", "..\keys.ini"])
 API_KEY = keyConfig.get('OpenWeatherMap', 'API_KEY')
@@ -42,7 +40,7 @@ def run(thorin, incoming):
         return get_weather_zip(city_or_zip)
     return get_weather_name(city_or_zip)
 
-def run(chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message):
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 

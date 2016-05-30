@@ -1,4 +1,5 @@
 import unittest
+import telegram
 import commands.pick as pick
 
 class TestPick(unittest.TestCase):

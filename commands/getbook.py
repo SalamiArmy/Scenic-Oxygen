@@ -2,18 +2,10 @@
 import ConfigParser
 import os
 import urllib
-
-import telegram
 import json
 
 
-def run(chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
+def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
 
     booksUrl = 'https://www.googleapis.com/books/v1/volumes?maxResults=1&key=' + \

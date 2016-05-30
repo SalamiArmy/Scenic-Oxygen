@@ -8,7 +8,7 @@ import urllib
 import telegram
 
 
-def run(chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message):
     # Read keys.ini file should be at program start (don't forget to put your keys in there!)
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -61,7 +61,7 @@ def run(chat_id, user, message):
         if user != adminGroupId:
             bot.sendMessage(chat_id=chat_id, text=requestText + ': ' + imagelink)
         if adminGroupId:
-            bot.sendMessage(chat_id=chat_id, text='Error: ' + str(sys.exc_info()[1]) + '\n' +
+            bot.sendMessage(chat_id=adminGroupId, text='Error: ' + str(sys.exc_info()[1]) + '\n' +
                                                   'Request Text: ' + requestText + '\n' +
                                                   'Url: ' + imagelink)
 

@@ -1,4 +1,5 @@
 import unittest
+import telegram
 import commands.hello as hello
 
 class TestHello(unittest.TestCase):
