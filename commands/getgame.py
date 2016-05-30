@@ -20,9 +20,7 @@ def run(bot, keyConfig, chat_id, user, message):
     else:
         gameResults = ""
     if gameResults:
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = gameResults
-        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction,
+        bot.sendMessage(chat_id=chat_id, text=gameResults,
                         disable_web_page_preview=True, parse_mode='Markdown')
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \

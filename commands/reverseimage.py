@@ -2,7 +2,7 @@
 import json
 import urllib2
 
-import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 def run(bot, keyConfig, chat_id, user, message):
