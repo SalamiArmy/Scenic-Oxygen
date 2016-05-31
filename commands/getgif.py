@@ -6,6 +6,8 @@ import urllib
 
 import telegram
 
+from commands import retry_on_telegram_error
+
 
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
@@ -18,10 +20,9 @@ def run(bot, keyConfig, chat_id, user, message):
     if 'items' in data and len(data['items']) >= 1:
         imagelink = data['items'][random.randint(0, 9)]['link']
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        bot.sendDocument(chat_id=chat_id,
-                         filename=requestText.encode('utf-8'),
-                         document=imagelink.encode('utf-8'))
+        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find a gif for ' + \
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
