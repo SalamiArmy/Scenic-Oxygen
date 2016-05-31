@@ -1,7 +1,5 @@
 import ConfigParser
-import sys
 import unittest
-import telegram
 
 import telegram
 
@@ -10,7 +8,7 @@ import commands.getgame as getgame
 
 class TestGetGame(unittest.TestCase):
     def test_getgame(self):
-        requestText = 'trippy swirl'
+        requestText = 'VR Regatta'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

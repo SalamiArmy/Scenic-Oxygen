@@ -15,11 +15,7 @@ def run(bot, keyConfig, chat_id, user, message):
         bypassAgeGate = urllib2.build_opener()
         bypassAgeGate.addheaders.append(('Cookie', 'birthtime=578390401'))
         code = bypassAgeGate.open(steamGameLink).read()
-        # code = urllib.urlopen(steamGameLink).read()
         gameResults = steam_game_parser(code, steamGameLink)
-    else:
-        gameResults = ""
-    if gameResults:
         bot.sendMessage(chat_id=chat_id, text=gameResults,
                         disable_web_page_preview=True, parse_mode='Markdown')
     else:
@@ -47,7 +43,12 @@ def steam_game_parser(code, link):
     titleDiv = soup.find("div", attrs={"class":"apphub_AppName"})
     if titleDiv:
         gameTitle = titleDiv.string
-        AllGameDetailsFormatted += "*" + gameTitle + "*" + "\n"
+        AllGameDetailsFormatted += "*" + gameTitle + "*"
+
+    priceDiv = soup.find("div", attrs={"class":"game_purchase_price price"})
+    if priceDiv:
+        gamePrice = priceDiv.string
+        AllGameDetailsFormatted += "* - " + gamePrice.strip() + "*" + "\n"
 
     descriptionDiv = soup.find("div", attrs={"class":"game_description_snippet"})
     if descriptionDiv:
