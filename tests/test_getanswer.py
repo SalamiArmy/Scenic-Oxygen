@@ -1,7 +1,5 @@
 import ConfigParser
-import sys
 import unittest
-import telegram
 
 import telegram
 
@@ -10,7 +8,7 @@ import commands.getanswer as getanswer
 
 class TestGetAnswer(unittest.TestCase):
     def test_getanswer(self):
-        requestText = 'How long is a piece of string?'
+        requestText = 'how many jupiters can fit in the sun?'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
