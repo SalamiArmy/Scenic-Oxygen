@@ -3,7 +3,7 @@ import tungsten
 
 
 def run(bot, keyConfig, chat_id, user, message):
-    requestText = message.replace(bot.name, "").strip()
+    requestText = message.replace(bot.name, '').strip()
 
     client = tungsten.Tungsten(keyConfig.get('Wolfram', 'WOLF_APP_ID'))
     result = client.query(requestText)
