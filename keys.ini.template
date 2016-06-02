@@ -33,3 +33,7 @@ API_KEY: {Your Merriam-Webster App ID here}
 
 [OpenWeatherMap]
 API_KEY: (Your OpenWeatherMap Api Key from openweathermap.org here}
+
+[SightEngine]
+API_user: {Your SightEngine User ID}
+API_secret: {Your SightEngine Api Secret Key}

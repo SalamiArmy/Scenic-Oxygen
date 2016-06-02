@@ -5,6 +5,8 @@ import urllib
 
 import telegram
 
+from commands import retry_on_telegram_error
+
 
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
@@ -22,10 +24,7 @@ def run(bot, keyConfig, chat_id, user, message):
             offset = offset + 1
         if not imagelink.startswith('x-raw-image:///'):
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            bot.sendPhoto(chat_id=chat_id, photo=imagelink.encode('utf-8'),
-                          caption=(user + ': ' if not user == '' else '') +
-                                  requestText.title().encode('utf-8') +
-                                  (' ' + imagelink if len(imagelink) < 100 else ''))
+            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
         else:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                                   ', I\'m afraid I can\'t find a huge image for ' + \

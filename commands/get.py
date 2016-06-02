@@ -7,14 +7,10 @@ import urllib
 
 import telegram
 
+from commands import retry_on_telegram_error
+
 
 def run(bot, keyConfig, chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
     requestText = message.replace(bot.name, "").strip()
 
     # Ashley: Added a try catch here-
@@ -42,13 +38,8 @@ def run(bot, keyConfig, chat_id, user, message):
                 offset = offset+1
             if not imagelink.startswith('x-raw-image:///') and not imagelink == '':
                 bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-                bot.sendPhoto(chat_id=chat_id,
-                              photo=imagelink.encode('utf-8'),
-                              caption=(user + ': ' if not user == '' else '') +
-                                      string.capwords(requestText.encode('utf-8')) +
-                                      (' ' + imagelink if len(imagelink) < 100 else '').encode('utf-8'))
+                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
             else:
-                bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
                                                       ', I\'m afraid I can\'t find any images for ' +\
                                                       string.capwords(requestText.encode('utf-8')))
@@ -64,4 +55,6 @@ def run(bot, keyConfig, chat_id, user, message):
             bot.sendMessage(chat_id=adminGroupId, text='Error: ' + str(sys.exc_info()[1]) + '\n' +
                                                   'Request Text: ' + requestText + '\n' +
                                                   'Url: ' + imagelink)
+
+
 
