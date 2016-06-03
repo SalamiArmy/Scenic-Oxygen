@@ -37,7 +37,7 @@ def run(bot, keyConfig, chat_id, user, message):
                 bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
                 thereWasAnError = imagelink.startswith('x-raw-image:///') or \
                                   imagelink == '' or \
-                                  retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
+                                  not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
             else:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find any images for ' +
