@@ -28,24 +28,23 @@ def run(bot, keyConfig, chat_id, user, message):
         realUrl = googurl + '?' + urllib.urlencode(args)
         data = json.load(urllib.urlopen(realUrl))
         if 'items' in data and len(data['items']) >= 9:
+            thereWasAnError = True
             imagelink = 'x-raw-image:///'
             offset = 0
-            randint = random.randint(0, 9)
-            while imagelink.startswith('x-raw-image:///') and \
-                            offset < 10 and \
-                            randint + offset < len(data['items']):
-                imagelink = data['items'][randint + offset]['link']
-                offset = offset+1
-            if not imagelink.startswith('x-raw-image:///') and not imagelink == '':
+            while thereWasAnError and offset < 10:
+                imagelink = data['items'][random.randint(0, 9) + offset]['link']
+                offset += 1
                 bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
+                thereWasAnError = imagelink.startswith('x-raw-image:///') or \
+                                  imagelink == '' or \
+                                  retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
             else:
-                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                                                      ', I\'m afraid I can\'t find any images for ' +\
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid I can\'t find any images for ' +
                                                       string.capwords(requestText.encode('utf-8')))
         else:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                                                  ', I\'m afraid I can\'t find any images for ' +\
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
     except:
         adminGroupId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')

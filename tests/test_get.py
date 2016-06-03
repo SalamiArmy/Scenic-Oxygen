@@ -7,7 +7,7 @@ import commands.get as get
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        requestText = '/get alsatian cannon'
+        requestText = 'bong like functionality'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
