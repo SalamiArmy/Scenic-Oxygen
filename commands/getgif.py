@@ -30,7 +30,7 @@ def run(bot, keyConfig, chat_id, user, message):
             randint_offset = randint + offset
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
-            if not imagelink.endswith('.gif'):
+            if imagelink.endswith('.gif'):
                 thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 10:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
