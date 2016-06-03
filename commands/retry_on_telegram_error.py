@@ -15,6 +15,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
         except telegram.TelegramError:
             sendException = True
             numberOfRetries -= 1
+    return numberOfRetries > 0
 
 def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user):
     numberOfRetries = 6
@@ -29,3 +30,4 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user):
         except telegram.TelegramError:
             sendException = True
             numberOfRetries -= 1
+    return numberOfRetries > 0

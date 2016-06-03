@@ -1,8 +1,5 @@
 import ConfigParser
-
-import sys
 import unittest
-import telegram
 
 import telegram
 
@@ -16,5 +13,4 @@ class TestGetFig(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        try:
-            getfig.run(bot, keyConfig, chatId, 'Admin', '')
+        getfig.run(bot, keyConfig, chatId, 'Admin', '')

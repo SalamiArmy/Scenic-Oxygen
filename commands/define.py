@@ -37,16 +37,23 @@ def send_formatted_entry(entry, bot, chat_id, user, requestText):
         partOfSpeech = entry['fl']
         if len(partOfSpeech) >= 1:
             getAllDefs = entry['def']['dt']
-            if type(getAllDefs) is list:
-                getDefinition = getAllDefs[random.randint(0, len(getAllDefs) - 1)]
-            else:
-                getDefinition = getAllDefs
-            if '#text' in getAllDefs:
-                definitionText = getDefinition['#text'].replace(':', '')
-            else:
-                definitionText = getDefinition.replace(':', '')
-            soundFilename = entry['sound']['wav']
-            soundUrl = 'http://media.merriam-webster.com/soundc11/' + soundFilename[:1] + '/' + soundFilename
+            getDefinition = ''
+            count = 0
+            while getDefinition == '' or count > len(getAllDefs):
+                if type(getAllDefs) is list:
+                    getDefinition = getAllDefs[count]
+                else:
+                    getDefinition = getAllDefs
+                if '#text' in getDefinition:
+                    definitionText = getDefinition['#text']
+                else:
+                    definitionText = getDefinition
+                definitionText = definitionText.replace(':', '').strip()
+                count += 1
+            soundUrl = ''
+            if 'sound' in entry:
+                soundFilename = entry['sound']['wav']
+                soundUrl = 'http://media.merriam-webster.com/soundc11/' + soundFilename[:1] + '/' + soundFilename
             bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
                                                   requestText.title() + "\n" +
                                                   partOfSpeech + ".\n\n" + definitionText + '\n' + soundUrl)
