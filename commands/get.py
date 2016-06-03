@@ -23,8 +23,7 @@ def run(bot, keyConfig, chat_id, user, message):
                 'key': keyConfig.get('Google', 'GCSE_APP_ID'),
                 'searchType': "image",
                 'safe': "off",
-                'q': requestText,
-                'searchType': "image"}
+                'q': requestText}
         realUrl = googurl + '?' + urllib.urlencode(args)
         data = json.load(urllib.urlopen(realUrl))
         if 'items' in data and len(data['items']) >= 9:
@@ -35,9 +34,10 @@ def run(bot, keyConfig, chat_id, user, message):
                 imagelink = data['items'][random.randint(0, 9) + offset]['link']
                 offset += 1
                 bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-                thereWasAnError = imagelink.startswith('x-raw-image:///') or \
-                                  imagelink == '' or \
-                                  not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
+                if not imagelink.startswith('x-raw-image:///') and imagelink != '':
+                    thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
+                else:
+                    thereWasAnError = True
             if thereWasAnError or not offset < 10:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find any images for ' +

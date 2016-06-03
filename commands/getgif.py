@@ -24,7 +24,10 @@ def run(bot, keyConfig, chat_id, user, message):
             imagelink = data['items'][random.randint(0, 9)+offset]['link']
             offset += 1
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+            if not imagelink.endswith('.gif'):
+                thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+            else:
+                thereWasAnError = True
         if thereWasAnError or not offset < 10:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
