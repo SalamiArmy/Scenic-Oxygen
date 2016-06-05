@@ -7,7 +7,7 @@ import commands.reverseimage as reverseimage
 
 class TestReverseImage(unittest.TestCase):
     def test_reverseimage(self):
-        requestText = 'http://i493.photobucket.com/albums/rr292/ReidxCore/PlainSwirl.jpg'
+        requestText = 'http://i.imgur.com/PMtWEpgl.jpg'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

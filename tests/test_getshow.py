@@ -7,7 +7,7 @@ import commands.getshow as getshow
 
 class TestGetShow(unittest.TestCase):
     def test_getshow(self):
-        requestText = 'trippy swirl'
+        requestText = 'x-files'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
