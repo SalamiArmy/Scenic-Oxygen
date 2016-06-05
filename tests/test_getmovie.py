@@ -7,7 +7,7 @@ import commands.getmovie as getmovie
 
 class TestGetMovie(unittest.TestCase):
     def test_getmovie(self):
-        requestText = 'trippy swirl'
+        requestText = 'Special Correspondents'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
