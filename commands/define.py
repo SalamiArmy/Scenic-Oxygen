@@ -13,7 +13,7 @@ def run(bot, keyConfig, chat_id, user, message):
     getXml = urllib.urlopen(realUrl).read()
     data = xmltodict.parse(getXml)
     getAllEntries = data['entry_list']
-    if len(getAllEntries) >= 1:
+    if len(getAllEntries) >= 1 and 'entry' in getAllEntries:
         if 'suggestion' not in getAllEntries:
             getEntry = getAllEntries['entry']
             if type(getEntry) is list:

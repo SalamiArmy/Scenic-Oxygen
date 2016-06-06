@@ -8,7 +8,7 @@ import commands.define as define
 
 class TestDefine(unittest.TestCase):
     def test_define(self):
-        requestText = 'transcendental'
+        requestText = 'inderfatigable'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

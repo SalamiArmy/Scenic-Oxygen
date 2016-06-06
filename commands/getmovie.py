@@ -17,9 +17,9 @@ def run(bot, keyConfig, chat_id, user, message):
             bot.sendPhoto(chat_id=chat_id, photo=data['Poster'].encode('utf-8'),
                           caption=(user if not user == '' else '') + data['Title'] + ':\n' + data['Plot'][400:])
         else:
-            bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + \
+            bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
                                       data['Title'] + ':\n' + data['Plot'])
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                              ', I\'m afraid I can\'t find any movies for ' + \
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find any movies for ' +
                                               requestText.encode('utf-8') + '.')
