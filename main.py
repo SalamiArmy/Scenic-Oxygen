@@ -90,25 +90,34 @@ class WebhookHandler(webapp2.RequestHandler):
                 return
 
         if text.startswith('/'):
-            split = text[1:].lower().split(" ", 1)
-            try:
-                mod = importlib.import_module('commands.' + split[0])
-                mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
-            except:
-                print("Unexpected error running command:", sys.exc_info()[1])
+            self.ExecuteExplicitCommand(chat_id, fr_username, text)
         else:
-            if not text:
-                print('Webhook body member missing: \'message\'.')
-                return
+            self.TryParseIntent(chat_id, fr_username, text)
 
+    def ExecuteExplicitCommand(self, chat_id, fr_username, text):
+        split = text[1:].lower().split(" ", 1)
+        try:
+            mod = importlib.import_module('commands.' + split[0])
+            mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
+        except:
+            print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+
+    def TryParseIntent(self, chat_id, fr_username, text):
+        if not text:
+            print('Webhook body member missing: \'message\'.')
+        else:
             import vocabs.intend_getweather as intend_getweather
             try:
-                intent = intend_getweather.get_intention(text)
-                if intent != None:
+                intent = intend_getweather.engine.determine_intent(text)
+            except:
+                print("Unexpected error parsing intentions: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            try:
+                if intent is not None:
                     import commands.getweather as getweather
                     getweather.run(chat_id, fr_username, intent.get('location'))
             except:
-                print("Unexpected error running command:" + str(sys.exc_info()[1]))
+                print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+
 
 class RunTestsHandler(webapp2.RequestHandler):
     def get(self):
@@ -180,54 +189,14 @@ class WebCommandRunHandler(webapp2.RequestHandler):
         if not text:
             self.response.write('Argument missing: \'text\'.')
             return
-        chatId = self.request.get('chat_id')
-        if not chatId:
-            chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
+        chat_id = self.request.get('chat_id')
+        if not chat_id:
+            chat_id = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         if text.startswith('/'):
-            split = text[1:].lower().split(" ", 1)
-            mod = importlib.import_module('commands.' + split[0])
-            try:
-                requestText = split[1] if len(split) > 1 else ''
-                mod.run(bot, keyConfig, chatId, "Admin", requestText)
-                self.response.write('Command ' + split[0] + ' ran with request text ' + requestText + ' successfully.')
-            except:
-                self.response.write("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            WebhookHandler.ExecuteExplicitCommand(chat_id, "Admin", text)
         else:
-            if not text:
-                self.response.write('Webhook body member missing: \'message\'.')
-                return
-
-            import vocabs.intend_getweather as intend_getweather
-            try:
-                intent = intend_getweather.get_intention(text)
-                if intent is not None:
-                    import commands.getweather as getweather
-                    getweather.run(chatId, 'Admin', intent.get('Location'))
-                    self.response.write('getting weather for ' + intent.get('Location'))
-            except:
-                self.response.write("Unexpected error running command:" + str(sys.exc_info()[1]))
-
-
-class WebCommandIntentHandler(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-
-        message = self.request.get('message')
-        if not message:
-            self.response.write('Argument missing: \'message\'.')
-            return
-
-        if not message.startswith('/'):
-            import vocabs.intend_getweather as intend_getweather
-            try:
-                intent = intend_getweather.get_intention(message)
-                self.response.write(json.dumps(intent, indent=4))
-            except:
-                self.response.write("Unexpected error running command:" + str(sys.exc_info()[1]))
-        else:
-            self.response.write('Argument \'message\' value must not start with \'/\'.')
-                self.response.write("Unexpected error running command: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            WebhookHandler.TryParseIntent(chat_id, "Admin", text)
 
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
@@ -235,6 +204,5 @@ app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/run_tests', RunTestsHandler),
-    ('/run', WebCommandRunHandler),
-    ('/get_intention', WebCommandIntentHandler)
+    ('/run', WebCommandRunHandler)
 ], debug=True)
