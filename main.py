@@ -81,7 +81,12 @@ class WebhookHandler(webapp2.RequestHandler):
             message = body['message']
             text = message.get('text')
             fr = message.get('from')
-            fr_username = fr['username']
+            user = fr['username'] \
+                if 'username' in fr \
+                else fr['first_name'] + (' ' + fr['last_name']) \
+                if 'first_name' in fr and 'last_name' in fr \
+                else fr['first_name'] if 'first_name' in fr \
+                else 'Dave'
             chat = message['chat']
             chat_id = chat['id']
 
@@ -93,7 +98,7 @@ class WebhookHandler(webapp2.RequestHandler):
                 split = text[1:].lower().split(" ", 1)
                 try:
                     mod = importlib.import_module('commands.' + split[0])
-                    mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
+                    mod.run(bot, keyConfig, chat_id, user, split[1] if len(split) > 1 else '')
                 except:
                     print("Unexpected error running command:", sys.exc_info()[1])
 
