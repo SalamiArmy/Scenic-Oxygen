@@ -1,15 +1,17 @@
 import ConfigParser
 import unittest
+import telegram
 
 import commands.getmovie as getmovie
 
 
 class TestGetMovie(unittest.TestCase):
     def test_getmovie(self):
-        fullMessageText = 'trippy swirl'
+        requestText = 'Special Correspondents'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
+        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        getmovie.run(chatId, 'Admin', fullMessageText)
+        getmovie.run(bot, keyConfig, chatId, 'Admin', requestText)

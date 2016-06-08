@@ -1,4 +1,5 @@
 # import unittest
+import telegram
 # import commands.build as build
 
 # class TestBuild(unittest.TestCase):

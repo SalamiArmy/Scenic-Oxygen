@@ -1,36 +1,22 @@
 # coding=utf-8
-import ConfigParser
 import urllib
 import urllib2
 
-import telegram
 from bs4 import BeautifulSoup
 
 
-def run(chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
+def run(bot, keyConfig, chat_id, user, message):
+    requestText = message.replace(bot.name, '').strip()
 
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
-    requestText = message.replace(bot.name, "").strip()
-
-    code = urllib.urlopen("http://store.steampowered.com/search/?term=" + requestText).read()
+    code = urllib.urlopen('http://store.steampowered.com/search/?term=' + requestText).read()
     appId = steam_results_parser(code)
     if appId:
-        steamGameLink = "http://store.steampowered.com/app/" + appId
+        steamGameLink = 'http://store.steampowered.com/app/' + appId
         bypassAgeGate = urllib2.build_opener()
         bypassAgeGate.addheaders.append(('Cookie', 'birthtime=578390401'))
         code = bypassAgeGate.open(steamGameLink).read()
-        # code = urllib.urlopen(steamGameLink).read()
         gameResults = steam_game_parser(code, steamGameLink)
-    else:
-        gameResults = ""
-    if gameResults:
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = gameResults
-        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction,
+        bot.sendMessage(chat_id=chat_id, text=gameResults,
                         disable_web_page_preview=True, parse_mode='Markdown')
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
@@ -39,70 +25,77 @@ def run(chat_id, user, message):
 
 
 def steam_results_parser(code):
-    soup = BeautifulSoup(code, "html.parser")
+    soup = BeautifulSoup(code, 'html.parser')
     resultList = []
-    for resultRow in soup.findAll("a", attrs={"class":"search_result_row"}):
-        if "data-ds-appid" in resultRow.attrs:
-            resultList.append(resultRow["data-ds-appid"])
-        if "data-ds-bundleid" in resultRow.attrs:
-            resultList.append(resultRow["data-ds-bundleid"])
+    for resultRow in soup.findAll('a', attrs={'class':'search_result_row'}):
+        if 'data-ds-appid' in resultRow.attrs:
+            resultList.append(resultRow['data-ds-appid'])
+        if 'data-ds-bundleid' in resultRow.attrs:
+            resultList.append(resultRow['data-ds-bundleid'])
     if len(resultList) > 0:
         return resultList[0]
-    return ""
+    return ''
 
 def steam_game_parser(code, link):
-    soup = BeautifulSoup(code, "html.parser")
-    AllGameDetailsFormatted = ""
+    soup = BeautifulSoup(code, 'html.parser')
+    AllGameDetailsFormatted = ''
 
-    titleDiv = soup.find("div", attrs={"class":"apphub_AppName"})
+    titleDiv = soup.find('div', attrs={'class':'apphub_AppName'})
     if titleDiv:
         gameTitle = titleDiv.string
-        AllGameDetailsFormatted += "*" + gameTitle + "*" + "\n"
+        AllGameDetailsFormatted += '*' + gameTitle
 
-    descriptionDiv = soup.find("div", attrs={"class":"game_description_snippet"})
+    priceDiv = soup.find('div', attrs={'class':'game_purchase_price price'})
+    if priceDiv:
+        gamePrice = priceDiv.string
+        AllGameDetailsFormatted += ' - ' + gamePrice.strip() + '*\n'
+    else:
+        AllGameDetailsFormatted += ' - Free to Play*\n'
+
+    descriptionDiv = soup.find('div', attrs={'class':'game_description_snippet'})
     if descriptionDiv:
-        descriptionSnippet = descriptionDiv.string.replace("\r", "").replace("\n", "").replace("\t", "")
-        AllGameDetailsFormatted += descriptionSnippet + "\n"
+        descriptionSnippet = descriptionDiv.string.replace('\r', '').replace('\n', '').replace('\t', '')
+        AllGameDetailsFormatted += descriptionSnippet + '\n'
 
     if AllGameDetailsFormatted:
-        AllGameDetailsFormatted += link + "\n"
+        AllGameDetailsFormatted += link + '\n'
 
-    dateSpan = soup.find("span", attrs={"class":"date"})
+    dateSpan = soup.find('span', attrs={'class':'date'})
     if dateSpan:
         releaseDate = dateSpan.string
-        AllGameDetailsFormatted += "Release Date: " + releaseDate + "\n"
+        AllGameDetailsFormatted += 'Release Date: ' + releaseDate + '\n'
 
-    featureList = ""
-    featureLinks = soup.findAll("a", attrs={"class":"name"})
+    featureList = ''
+    featureLinks = soup.findAll('a', attrs={'class':'name'})
     if len(featureLinks) > 0:
         for featureLink in featureLinks:
-            featureList += "     " + featureLink.string.replace("Seated", "Will make you shit yourself") + "\n"
-        AllGameDetailsFormatted += "Features:\n" + featureList
+            featureList += '     ' + featureLink.string.replace('Seated', 'Will make you shit yourself') + '\n'
+        AllGameDetailsFormatted += 'Features:\n' + featureList
 
-    reviewRows = ""
-    reviewDivs = soup.findAll("div", attrs={"class":"user_reviews_summary_row"})
+    reviewRows = ''
+    reviewDivs = soup.findAll('div', attrs={'class':'user_reviews_summary_row'})
     if len(reviewDivs) > 0:
         for reviewRow in reviewDivs:
-            reviewSubtitleDiv = reviewRow.find("div", attrs={"class":"subtitle column"}).string
-            reviewSummaryDiv = reviewRow.find("div", attrs={"class":"summary column"}).string
+            reviewSubtitleDiv = reviewRow.find('div', attrs={'class':'subtitle column'}).string
+            reviewSummaryDiv = reviewRow.find('div', attrs={'class':'summary column'}).string
             if not reviewSummaryDiv:
-                reviewSummaryDiv = reviewRow.find("span", attrs={"class":"nonresponsive_hidden responsive_reviewdesc"}).string
-            reviewSummaryDiv = reviewSummaryDiv.replace("\r", "").replace("\n", "").replace("\t", "")
-            if reviewSummaryDiv != "No user reviews":
-                reviewRows += "     " + reviewSubtitleDiv + reviewSummaryDiv.replace("-", "").replace(" user reviews", "").replace(" of the ", " of ") + "\n"
+                reviewSummaryDiv = reviewRow.find('span', attrs={'class':'nonresponsive_hidden responsive_reviewdesc'}).string
+            reviewSummaryDiv = reviewSummaryDiv.replace('\r', '').replace('\n', '').replace('\t', '')
+            if reviewSummaryDiv != 'No user reviews':
+                reviewRows += '     ' + reviewSubtitleDiv + reviewSummaryDiv.replace('-', '').replace(' user reviews', '').replace(' of the ', ' of ') + '\n'
         if reviewRows:
-            AllGameDetailsFormatted += "Reviews:\n" + reviewRows
-        if AllGameDetailsFormatted.endswith("\n"):
-            AllGameDetailsFormatted = AllGameDetailsFormatted[:AllGameDetailsFormatted.rfind("\n")]
+            AllGameDetailsFormatted += 'Reviews:\n' + reviewRows
+        if AllGameDetailsFormatted.endswith('\n'):
+            AllGameDetailsFormatted = AllGameDetailsFormatted[:AllGameDetailsFormatted.rfind('\n')]
 
-    tagList = ""
-    tagLinks = soup.findAll("a", attrs={"class":"app_tag"})
+    tagList = ''
+    tagLinks = soup.findAll('a', attrs={'class':'app_tag'})
     if len(tagLinks) > 0:
         for tagLink in tagLinks:
-            tagList += tagLink.string.replace("\r", "").replace("\n", "").replace("\t", "") + ", "
-        AllGameDetailsFormatted += "\n" + "Tags:\n`" + tagList
-    if AllGameDetailsFormatted.endswith(", "):
-        AllGameDetailsFormatted = AllGameDetailsFormatted[:AllGameDetailsFormatted.rfind(", ")]
-        AllGameDetailsFormatted += "`"
+            tagList += tagLink.string.replace('\r', '').replace('\n', '').replace('\t', '') + ', '
+        AllGameDetailsFormatted += '\n' + 'Tags:\n`' + tagList
+    if AllGameDetailsFormatted.endswith(', '):
+        AllGameDetailsFormatted = AllGameDetailsFormatted[:AllGameDetailsFormatted.rfind(', ')]
+        AllGameDetailsFormatted += '`'
 
     return AllGameDetailsFormatted

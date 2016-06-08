@@ -1,15 +1,17 @@
 import ConfigParser
 import unittest
+import telegram
 
 import commands.getlyrics as getlyrics
 
 
 class TestGetLyrics(unittest.TestCase):
     def test_getlyrics(self):
-        fullMessageText = 'trippy swirl'
+        requestText = 'trippy swirl'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
+        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        getlyrics.run(chatId, 'Admin', fullMessageText)
+        getlyrics.run(bot, keyConfig, chatId, 'Admin', requestText)

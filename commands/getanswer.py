@@ -1,35 +1,25 @@
 # coding=utf-8
-import ConfigParser
-import os
-
-import telegram
 import tungsten
 
 
-def run(chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
-    requestText = message.replace(bot.name, "").strip()
-
+def run(bot, keyConfig, chat_id, user, message):
+    requestText = message.replace(bot.name, '').strip()
 
     client = tungsten.Tungsten(keyConfig.get('Wolfram', 'WOLF_APP_ID'))
     result = client.query(requestText)
-    if len(result.pods) >= 1:
+    allAnswers = result.pods
+    if len(allAnswers) > 0:
         fullAnswer = ''
-        for pod in result.pods:
-            for answer in pod.format['plaintext']:
-                if not answer == None:
-                    fullAnswer += answer.encode('ascii', 'ignore')
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = (user + ': ' if not user == '' else '') + fullAnswer
-        bot.sendMessage(chat_id=chat_id, text=urlForCurrentChatAction)
+        for question in allAnswers[0].format['plaintext']:
+            if question is not None:
+                fullAnswer += question.encode('ascii', 'ignore') + '?\n'
+        if len(allAnswers) > 1:
+            for pod in allAnswers[1:]:
+                for answer in pod.format['plaintext']:
+                    if answer is not None:
+                        fullAnswer += answer.encode('ascii', 'ignore') + '.\n'
+        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + fullAnswer)
     else:
-        userWithCurrentChatAction = chat_id
-        urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                  ', I\'m afraid I can\'t find any answers for ' + \
-                                  requestText.encode('utf-8')
-        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction)
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find any answers for ' +
+                                              requestText.encode('utf-8'))

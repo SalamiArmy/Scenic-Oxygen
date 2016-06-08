@@ -1,15 +1,17 @@
 import ConfigParser
 import unittest
+import telegram
 
 import commands.place as place
 
 
 class TestPlace(unittest.TestCase):
     def test_place(self):
-        fullMessageText = 'Hillcrest'
+        requestText = 'Hillcrest'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
+        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        place.run(chatId, 'Admin', fullMessageText)
+        place.run(bot, keyConfig, chatId, 'Admin', requestText)

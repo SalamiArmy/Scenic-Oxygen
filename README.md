@@ -26,9 +26,11 @@ OPTIONAL:
 ```bash
 git clone (url for your thorin fork) ~/bot
 cd ~/bot
-pip install -t lib python-telegram-bot BeautifulSoup
-appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
+(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot bs4 xmltodict six soundcloud feedparser requests tungsten
+(PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
+
+oh ja, /launch command needs a module called "dateutil", pip can't find it, GAE can't find it, a better man than I can fix that, I'm out.
 
 When you add commands Thorin will pick them up when he's asked to perform them while running, this means that you don't need to restart Thorin to add 
 new commands. However if you edit an existing command Thorin won't reload it until you restart him.

@@ -1,18 +1,9 @@
 # coding=utf-8
-import ConfigParser
 import json
 import urllib
 
-import telegram
 
-
-def run(chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
+def run(bot, keyConfig, chat_id, user, message):
     allMatchesUrl = 'http://cricscore-api.appspot.com/csa'
     allMatches = json.load(urllib.urlopen(allMatchesUrl))
     proteasMatchId = None

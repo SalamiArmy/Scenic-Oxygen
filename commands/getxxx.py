@@ -1,19 +1,9 @@
 # coding=utf-8
-import ConfigParser
-import os
+import json
 import urllib
 
-import telegram
-import json
 
-
-def run(chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
+def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
 
 
@@ -31,16 +21,14 @@ def run(chat_id, user, message):
                and 'xvideos.com/tags' not in xlink \
                and 'pornhub.com/users/' not in xlink \
                and 'pornhub.com/video/search?search=' not in xlink \
+               and 'pornhub.com/insights/' not in xlink \
                and 'xvideos.com/profiles/' not in xlink \
                and 'xnxx.com/?' not in xlink \
                and 'xnxx.com/tags/' not in xlink \
                and 'xhamster.com/stories_search' not in xlink \
                and 'redtube.com/pornstar/' not in xlink \
                :
-                bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
-                userWithCurrentChatAction = chat_id
-                urlForCurrentChatAction = (user + ': ' if not user == '' else '') + xlink
-                bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction)
+                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
                 break
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +

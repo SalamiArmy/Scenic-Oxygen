@@ -3,6 +3,7 @@ TELE_BOT_ID: {Your Telegram Bot ID here}
 
 [BotAdministration]
 ADMIN_GROUP_CHAT_ID: {ID of Telegram Group to Send and Receive Admin Messages}
+Timezone: {Timezone of bot host eg: +02}
 
 [Google]
 GCSE_APP_ID: {Your Google Api Key here}
@@ -32,3 +33,7 @@ API_KEY: {Your Merriam-Webster App ID here}
 
 [OpenWeatherMap]
 API_KEY: (Your OpenWeatherMap Api Key from openweathermap.org here}
+
+[SightEngine]
+API_user: {Your SightEngine User ID}
+API_secret: {Your SightEngine Api Secret Key}

@@ -1,18 +1,11 @@
 # coding=utf-8
-import ConfigParser
 import json
 import urllib
 
 import telegram
 
 
-def run(chat_id, user, message):
-    # Read keys.ini file should be at program start (don't forget to put your keys in there!)
-    keyConfig = ConfigParser.ConfigParser()
-    keyConfig.read(["keys.ini", "..\keys.ini"])
-
-    bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-
+def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
 
     movieUrl = 'http://www.omdbapi.com/?plot=short&r=json&y=&t='
@@ -21,12 +14,12 @@ def run(chat_id, user, message):
     if 'Error' not in data:
         if 'Poster' in data and not data['Poster'] == 'N/A':
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            bot.sendPhoto(chat_id=chat_id, photo=data['Poster'],
-                          caption=(user if not user == '' else '') + data['Title'] + ':\n' + data['Plot'])
+            bot.sendPhoto(chat_id=chat_id, photo=data['Poster'].encode('utf-8'),
+                          caption=(user if not user == '' else '') + data['Title'] + ':\n' + data['Plot'][400:])
         else:
-            bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + \
+            bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
                                       data['Title'] + ':\n' + data['Plot'])
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                              ', I\'m afraid I can\'t find any movies for ' + \
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find any movies for ' +
                                               requestText.encode('utf-8') + '.')
