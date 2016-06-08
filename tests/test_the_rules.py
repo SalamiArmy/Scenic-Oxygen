@@ -1,5 +1,4 @@
 import unittest
-import telegram
 
 import tests.the_rules as rules
 

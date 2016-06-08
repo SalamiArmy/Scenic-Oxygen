@@ -81,7 +81,12 @@ class WebhookHandler(webapp2.RequestHandler):
             message = body['message']
             text = message.get('text')
             fr = message.get('from')
-            fr_username = fr['username']
+            user = fr['username'] \
+                if 'username' in fr \
+                else fr['first_name'] + (' ' + fr['last_name']) \
+                if 'first_name' in fr and 'last_name' in fr \
+                else fr['first_name'] if 'first_name' in fr \
+                else 'Dave'
             chat = message['chat']
             chat_id = chat['id']
 
@@ -90,9 +95,9 @@ class WebhookHandler(webapp2.RequestHandler):
                 return
 
         if text.startswith('/'):
-            self.TryExecuteExplicitCommand(chat_id, fr_username, text)
+            self.TryExecuteExplicitCommand(chat_id, user, text)
         else:
-            self.TryParseIntent(chat_id, fr_username, text)
+            self.TryParseIntent(chat_id, user, text)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(" ", 1)
