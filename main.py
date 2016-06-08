@@ -90,11 +90,11 @@ class WebhookHandler(webapp2.RequestHandler):
                 return
 
         if text.startswith('/'):
-            self.ExecuteExplicitCommand(chat_id, fr_username, text)
+            self.TryExecuteExplicitCommand(chat_id, fr_username, text)
         else:
             self.TryParseIntent(chat_id, fr_username, text)
 
-    def ExecuteExplicitCommand(self, chat_id, fr_username, text):
+    def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(" ", 1)
         try:
             mod = importlib.import_module('commands.' + split[0])
@@ -103,20 +103,17 @@ class WebhookHandler(webapp2.RequestHandler):
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     def TryParseIntent(self, chat_id, fr_username, text):
-        if not text:
-            print('Webhook body member missing: \'message\'.')
-        else:
-            import vocabs.intend_getweather as intend_getweather
-            try:
-                intent = intend_getweather.engine.determine_intent(text)
-            except:
-                print("Unexpected error parsing intentions: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
-            try:
-                if intent is not None:
-                    import commands.getweather as getweather
-                    getweather.run(chat_id, fr_username, intent.get('location'))
-            except:
-                print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+        import vocabs
+        try:
+            intent = vocabs.intend_getweather.engine.determine_intent(text)
+        except:
+            print("Unexpected error parsing intentions: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+        try:
+            if intent is not None:
+                import commands.getweather as getweather
+                getweather.run(chat_id, fr_username, intent.get('location'))
+        except:
+            print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
 
 class RunTestsHandler(webapp2.RequestHandler):
@@ -194,7 +191,7 @@ class WebCommandRunHandler(webapp2.RequestHandler):
             chat_id = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         if text.startswith('/'):
-            WebhookHandler.ExecuteExplicitCommand(chat_id, "Admin", text)
+            WebhookHandler.TryExecuteExplicitCommand(chat_id, "Admin", text)
         else:
             WebhookHandler.TryParseIntent(chat_id, "Admin", text)
 
