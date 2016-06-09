@@ -83,7 +83,7 @@ class WebhookHandler(webapp2.RequestHandler):
             fr = message.get('from')
             user = fr['username'] \
                 if 'username' in fr \
-                else fr['first_name'] + (' ' + fr['last_name']) \
+                else fr['first_name'] + ' ' + fr['last_name'] \
                 if 'first_name' in fr and 'last_name' in fr \
                 else fr['first_name'] if 'first_name' in fr \
                 else 'Dave'
