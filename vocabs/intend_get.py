@@ -25,7 +25,7 @@ image_verbs = [
 for mv in image_verbs:
     engine.register_entity(mv, "ImageVerb")
 
-music_keywords = [
+image_keywords = [
     "pictures",
     "images",
     "look",
@@ -33,7 +33,7 @@ music_keywords = [
     "gaze"
 ]
 
-for mk in music_keywords:
+for mk in image_keywords:
     engine.register_entity(mk, "ImageKeyword")
 
 get_intent = IntentBuilder("ImageIntent")\
