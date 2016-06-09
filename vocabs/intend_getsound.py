@@ -13,17 +13,8 @@ from adapt.intent import IntentBuilder
 
 engine = vocabs.engine
 
-artists = [
-    "third eye blind",
-    "the who",
-    "the clash",
-    "john mayer",
-    "kings of leon",
-    "adelle"
-]
-
-for a in artists:
-    engine.register_entity(a, "Artist")
+# create regex to parse out sounds
+engine.register_regex_entity("to (?P<Sound>.*)")
 
 music_verbs = [
     "listen",
@@ -45,7 +36,7 @@ for mk in music_keywords:
 music_intent = IntentBuilder("MusicIntent")\
     .require("MusicVerb")\
     .optionally("MusicKeyword")\
-    .optionally("Artist")\
+    .optionally("Sound")\
     .build()
 
 if __name__ == "__main__":

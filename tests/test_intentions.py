@@ -1,8 +1,6 @@
-import ConfigParser
 import unittest
 
 import vocabs
-import vocabs.intend_getweather as intend_getweather
 
 
 class TestIntentions(unittest.TestCase):
@@ -18,3 +16,14 @@ class TestIntentions(unittest.TestCase):
         self.assertIsNotNone(intent, 'Could not parse intent to get sound.')
         self.assertTrue(intent.get('confidence') > 0,
                         'Intent confidence is too weak for such an explicit utterance of intent.')
+
+    def test_intend_get(self):
+        intent = vocabs.engine.determine_intent("i want to see the visage of gaben")
+        self.assertIsNotNone(intent, 'Could not parse any intentions.')
+        getIntention = next(intent)
+        while getIntention and getIntention.get('confidence') > 0:
+            if 'ImageVerb' in getIntention and 'Image' in getIntention:
+                pass
+            getIntention = next(intent)
+        self.assertIsNotNone(getIntention, 'Could not parse intent to get image.')
+        self.assertTrue('Image' in intent, 'No image found in this get image intention.')

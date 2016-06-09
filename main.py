@@ -119,9 +119,12 @@ class WebhookHandler(webapp2.RequestHandler):
                 if 'WeatherKeyword' in getIntention and 'Location' in getIntention:
                     import commands.getweather as getweather
                     getweather.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Location'))
-                if 'MusicVerb' in getIntention and 'Artist' in getIntention:
+                if 'MusicVerb' in getIntention and 'Sound' in getIntention:
                     import commands.getsound as getsound
-                    getsound.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Artist'))
+                    getsound.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Sound'))
+                if 'ImageVerb' in getIntention and 'Image' in getIntention:
+                    import commands.get as get
+                    get.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Image'))
                 getIntention = next(intent)
         except:
             print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
