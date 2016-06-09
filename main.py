@@ -110,13 +110,19 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryParseIntent(self, chat_id, fr_username, text):
         import vocabs
         try:
-            intent = vocabs.intend_getweather.engine.determine_intent(text)
+            intent = vocabs.engine.determine_intent(text)
         except:
             print("Unexpected error parsing intentions: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
         try:
-            if intent is not None:
-                import commands.getweather as getweather
-                getweather.run(chat_id, fr_username, intent.get('location'))
+            getIntention = next(intent)
+            while getIntention and getIntention.get('confidence') > 0:
+                if 'WeatherKeyword' in getIntention:
+                    import commands.getweather as getweather
+                    getweather.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Location'))
+                if 'MusicVerb' in getIntention:
+                    import commands.getsound as getsound
+                    getsound.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Artist'))
+                getIntention = next(intent)
         except:
             print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
