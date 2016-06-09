@@ -116,10 +116,10 @@ class WebhookHandler(webapp2.RequestHandler):
         try:
             getIntention = next(intent)
             while getIntention and getIntention.get('confidence') > 0:
-                if 'WeatherKeyword' in getIntention:
+                if 'WeatherKeyword' in getIntention and 'Location' in getIntention:
                     import commands.getweather as getweather
                     getweather.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Location'))
-                if 'MusicVerb' in getIntention:
+                if 'MusicVerb' in getIntention and 'Artist' in getIntention:
                     import commands.getsound as getsound
                     getsound.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Artist'))
                 getIntention = next(intent)

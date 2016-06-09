@@ -11,6 +11,8 @@ import json
 import sys
 from adapt.intent import IntentBuilder
 
+engine = vocabs.engine
+
 artists = [
     "third eye blind",
     "the who",
@@ -21,7 +23,7 @@ artists = [
 ]
 
 for a in artists:
-    vocabs.engine.register_entity(a, "Artist")
+    engine.register_entity(a, "Artist")
 
 music_verbs = [
     "listen",
@@ -30,7 +32,7 @@ music_verbs = [
 ]
 
 for mv in music_verbs:
-    vocabs.engine.register_entity(mv, "MusicVerb")
+    engine.register_entity(mv, "MusicVerb")
 
 music_keywords = [
     "songs",
@@ -38,7 +40,7 @@ music_keywords = [
 ]
 
 for mk in music_keywords:
-    vocabs.engine.register_entity(mk, "MusicKeyword")
+    engine.register_entity(mk, "MusicKeyword")
 
 music_intent = IntentBuilder("MusicIntent")\
     .require("MusicVerb")\
@@ -47,6 +49,6 @@ music_intent = IntentBuilder("MusicIntent")\
     .build()
 
 if __name__ == "__main__":
-    for intent in vocabs.engine.determine_intent(' '.join(sys.argv[1:])):
+    for intent in engine.determine_intent(' '.join(sys.argv[1:])):
         if intent and intent.get('confidence') > 0:
             print(json.dumps(intent, indent=4))

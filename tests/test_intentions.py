@@ -14,7 +14,7 @@ class TestIntentions(unittest.TestCase):
         self.assertTrue(intent.get('Location') == 'tokyo', 'Cannot get location for intention to get weather.')
 
     def test_intend_getsound(self):
-        intent = vocabs.engine.determine_intent("play some music by the clash", 1).next()
+        intent = vocabs.engine.determine_intent("i want to listen to some music now please", 1).next()
         self.assertIsNotNone(intent, 'Could not parse intent to get sound.')
         self.assertTrue(intent.get('confidence') > 0,
                         'Intent confidence is too weak for such an explicit utterance of intent.')
