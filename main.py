@@ -109,8 +109,8 @@ class WebhookHandler(webapp2.RequestHandler):
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     def TryParseIntent(self, chat_id, fr_username, text):
-        try:
-            for intent in engine.determine_intent(text, 3):
+        for intent in engine.determine_intent(text, 3):
+            try:
                 if intent and intent.get('confidence', 0.0) > 0:
                     if 'WeatherKeyword' in intent and 'Location' in intent:
                         import commands.getweather as getweather
@@ -121,8 +121,8 @@ class WebhookHandler(webapp2.RequestHandler):
                     if 'ImageVerb' in intent and 'Image' in intent:
                         import commands.get as get
                         get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'))
-        except:
-            print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            except:
+                print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
 
 class RunTestsHandler(webapp2.RequestHandler):

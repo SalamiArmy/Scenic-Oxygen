@@ -14,7 +14,7 @@ from adapt.intent import IntentBuilder
 engine = vocabs.engine
 
 # create regex to parse out sounds
-engine.register_regex_entity("(of|show|show me) (?P<Image>.*)")
+engine.register_regex_entity("(of|show|show me|show us|show all of us|show us all) (?P<Image>.*)")
 
 image_verbs = [
     "picture",

@@ -27,7 +27,21 @@ class TestIntentions(unittest.TestCase):
         testPassed = False
         for intent in vocabs.engine.determine_intent("i want to see the visage of gaben", 3):
             self.assertIsNotNone(intent, 'Could not parse intent to get image.')
-            self.assertTrue('ImageVerb' in intent, 'Could not get ImageVerb from intent to get image.')
-            self.assertTrue('Image' in intent, 'Could not get Image from intent to get image.')
             testPassed = True
         self.assertTrue(testPassed, 'Cannot find intent to get image in multi-intent parser')
+
+    def test_multiintentionparser(self):
+        count = 0
+        for intent in vocabs.engine.determine_intent(
+                "what's the weather like in tokyo and "
+                "i want to listen to some music now please and "
+                "i want to see the visage of gaben", 3):
+            self.assertIsNotNone(intent, 'Could not parse intent.')
+            self.assertTrue('Image' in intent if 'ImageVerb' in intent else True,
+                            'Could not get Image from intent to get image.')
+            self.assertTrue('Sound' in intent if 'MusicVerb' in intent else True,
+                            'Cannot find intent to get image in multi-intent parser')
+            self.assertTrue('Location' in intent and intent.get('Location') == 'tokyo' if 'WeatherKeyword' in intent else True,
+                            'Cannot get location for intention to get weather.')
+            count += 1
+        self.assertEqual(count, 3, 'Not enough intentions found.')

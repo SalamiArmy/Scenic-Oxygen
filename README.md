@@ -30,7 +30,9 @@ cd ~/bot
 (PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 
-oh ja, /launch command needs a module called "dateutil", pip can't find it, GAE can't find it, a better man than I can fix that, I'm out.
+You might want to clone https://github.com/Imgur/imgurpython.git and copy out the "imgurpython" folder into that lib folder that pip created
+also clone https://github.com/MycroftAI/adapt.git and copy it's "adapt" folder into the root
+oh ja, /launch command needs a module called "dateutil", pip can't find it, GAE can't find it, I can't find it on GitHub, a better man than I can fix that, I'm out.
 
 When you add commands Thorin will pick them up when he's asked to perform them while running, this means that you don't need to restart Thorin to add 
 new commands. However if you edit an existing command Thorin won't reload it until you restart him.
