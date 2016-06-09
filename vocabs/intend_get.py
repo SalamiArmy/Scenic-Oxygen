@@ -19,7 +19,8 @@ engine.register_regex_entity("of (?P<Image>.*)")
 image_verbs = [
     "picture",
     "image",
-    "see"
+    "see",
+    "show"
 ]
 
 for mv in image_verbs:
