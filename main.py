@@ -14,6 +14,7 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
 import webapp2
+from vocabs import engine
 
 BASE_URL = 'https://api.telegram.org/bot'
 
@@ -108,23 +109,18 @@ class WebhookHandler(webapp2.RequestHandler):
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     def TryParseIntent(self, chat_id, fr_username, text):
-        import vocabs
         try:
-            intent = vocabs.engine.determine_intent(text, 3)
-        except:
-            print("Unexpected error parsing intentions: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
-        try:
-            getIntention = next(intent, None)
-            if getIntention and getIntention.get('confidence', 0.0) > 0:
-                if 'WeatherKeyword' in getIntention and 'Location' in getIntention:
-                    import commands.getweather as getweather
-                    getweather.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Location'))
-                if 'MusicVerb' in getIntention and 'Sound' in getIntention:
-                    import commands.getsound as getsound
-                    getsound.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Sound'))
-                if 'ImageVerb' in getIntention and 'Image' in getIntention:
-                    import commands.get as get
-                    get.run(bot, keyConfig, chat_id, fr_username, getIntention.get('Image'))
+            for intent in engine.determine_intent(text, 3):
+                if intent and intent.get('confidence', 0.0) > 0:
+                    if 'WeatherKeyword' in intent and 'Location' in intent:
+                        import commands.getweather as getweather
+                        getweather.run(bot, keyConfig, chat_id, fr_username, intent.get('Location'))
+                    if 'MusicVerb' in intent and 'Sound' in intent:
+                        import commands.getsound as getsound
+                        getsound.run(bot, keyConfig, chat_id, fr_username, intent.get('Sound'))
+                    if 'ImageVerb' in intent and 'Image' in intent:
+                        import commands.get as get
+                        get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'))
         except:
             print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
