@@ -1,10 +1,11 @@
-# coding=utf-8
 import datetime
 import json
 import urllib
+import uuid
 
 import telegram
-
+from poster.encode import multipart_encode
+from poster.streaminghttp import register_openers
 
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
@@ -39,10 +40,7 @@ def run(bot, keyConfig, chat_id, user, message):
                                                   ', I\'m afraid I can\'t find any places for ' +
                                                   requestText.encode('utf-8') + '.')
     else:
-        bot.sendMessage(chat_id=chat_id, text='http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544')
+        url = 'http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544&uuid=' + \
+              str(uuid.uuid4())
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-
-        # I get unsupported file extention error
-        # bot.sendPhoto(chat_id=chat_id,
-        #               photo='http://www.heavens-above.com/orbitdisplay.aspx?icon=iss&width=400&height=400&satid=25544',
-        #               caption='Current Position of the ISS')
+        bot.sendMessage(chat_id=chat_id, text=url)
