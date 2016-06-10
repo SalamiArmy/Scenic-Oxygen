@@ -121,9 +121,12 @@ class WebhookHandler(webapp2.RequestHandler):
                     if 'ImageVerb' in intent and 'Image' in intent:
                         import commands.get as get
                         get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'))
-                    if 'WhatIs' in intent:
+                    if 'WhatWhoIs' in intent:
                         import commands.wiki as wiki
-                        wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatIs'))
+                        wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatWhoIs'))
+                    if 'QuestionKeyword' in intent:
+                        import commands.getanswer as getanswer
+                        getanswer.run(bot, keyConfig, chat_id, fr_username, text)
             except:
                 print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
