@@ -2,7 +2,7 @@
 import tungsten
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, '').strip()
 
     client = tungsten.Tungsten(keyConfig.get('Wolfram', 'WOLF_APP_ID'))
@@ -18,8 +18,10 @@ def run(bot, keyConfig, chat_id, user, message):
                 for answer in pod.format['plaintext']:
                     if answer is not None:
                         fullAnswer += answer.encode('ascii', 'ignore') + '.\n'
-        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + fullAnswer)
+        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + fullAnswer +
+                        '\nMight I add that I am ' + str(intention_confidence) + '% confident your question was not rhetorical.' if intention_confidence > 0.0 else '')
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find any answers for ' +
-                                              requestText.encode('utf-8'))
+                                              requestText.encode('utf-8') +
+                        '\nMight I add that I am ' + str(intention_confidence) + '% confident your question was not rhetorical.' if intention_confidence > 0.0 else '')

@@ -111,22 +111,23 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryParseIntent(self, chat_id, fr_username, text):
         for intent in engine.determine_intent(text):
             try:
-                if intent and intent.get('confidence', 0.0) > 0:
+                confidence_percent = intent.get('confidence', 0.0)*100
+                if intent and confidence_percent > 0:
                     if 'WeatherKeyword' in intent and 'Location' in intent:
                         import commands.getweather as getweather
-                        getweather.run(bot, keyConfig, chat_id, fr_username, intent.get('Location'))
+                        getweather.run(bot, keyConfig, chat_id, fr_username, intent.get('Location'), confidence_percent)
                     if 'MusicVerb' in intent and 'Sound' in intent:
                         import commands.getsound as getsound
-                        getsound.run(bot, keyConfig, chat_id, fr_username, intent.get('Sound'))
+                        getsound.run(bot, keyConfig, chat_id, fr_username, intent.get('Sound'), confidence_percent)
                     if 'ImageVerb' in intent and 'Image' in intent:
                         import commands.get as get
-                        get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'))
+                        get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'), confidence_percent)
                     if 'WhatWhoIs' in intent:
                         import commands.wiki as wiki
-                        wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatWhoIs'))
+                        wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatWhoIs'), confidence_percent)
                     if 'QuestionKeyword' in intent:
                         import commands.getanswer as getanswer
-                        getanswer.run(bot, keyConfig, chat_id, fr_username, text)
+                        getanswer.run(bot, keyConfig, chat_id, fr_username, text, confidence_percent)
             except:
                 print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
