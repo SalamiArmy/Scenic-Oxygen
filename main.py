@@ -109,7 +109,7 @@ class WebhookHandler(webapp2.RequestHandler):
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     def TryParseIntent(self, chat_id, fr_username, text):
-        for intent in engine.determine_intent(text, 3):
+        for intent in engine.determine_intent(text):
             try:
                 if intent and intent.get('confidence', 0.0) > 0:
                     if 'WeatherKeyword' in intent and 'Location' in intent:
