@@ -4,8 +4,7 @@ import urllib
 import uuid
 
 import telegram
-from poster.encode import multipart_encode
-from poster.streaminghttp import register_openers
+
 
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()

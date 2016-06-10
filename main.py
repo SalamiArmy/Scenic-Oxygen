@@ -103,7 +103,7 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(" ", 1)
         try:
-            mod = importlib.import_module('commands.' + split[0])
+            mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ""))
             mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
         except:
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
@@ -121,6 +121,9 @@ class WebhookHandler(webapp2.RequestHandler):
                     if 'ImageVerb' in intent and 'Image' in intent:
                         import commands.get as get
                         get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'))
+                    if 'WhatIs' in intent:
+                        import commands.wiki as wiki
+                        wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatIs'))
             except:
                 print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
