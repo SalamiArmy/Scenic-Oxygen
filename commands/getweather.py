@@ -31,7 +31,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                         '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know this about the weather.' if intention_confidence > 0.0 else '',
                         parse_mode=telegram.ParseMode.MARKDOWN)
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I don\'t know the place ' +
-                                              requestText.encode('utf-8') + '.' +
-                        '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know about the weather. Again, I\'m sorry.' if intention_confidence > 0.0 else '')
+        if intention_confidence == 0.0:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I don\'t know the place ' +
+                                                  requestText.encode('utf-8') + '.')

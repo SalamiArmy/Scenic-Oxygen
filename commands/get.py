@@ -31,15 +31,14 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             offset += 1
             if not imagelink.startswith('x-raw-image:///') and imagelink != '':
                 thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user, intention_confidence)
-        if thereWasAnError or not offset < 10:
+        if (thereWasAnError or not offset < 10) and intention_confidence == 0.0:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any images for ' +
-                                                  string.capwords(requestText.encode('utf-8')) +
-                        '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to try see this. Again, I\'m sorry.' if intention_confidence > 0.0 else '')
+                                                  string.capwords(requestText.encode('utf-8')))
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find any images for ' +
-                                              string.capwords(requestText.encode('utf-8')) +
-                        '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to try see this. Again, I\'m sorry.' if intention_confidence > 0.0 else '')
+        if intention_confidence == 0.0:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any images for ' +
+                                                  string.capwords(requestText.encode('utf-8')))
 
 
