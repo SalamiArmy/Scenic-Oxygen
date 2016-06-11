@@ -3,9 +3,7 @@ from adapt.intent import IntentBuilder
 
 def generate_vocab(engine):
     weather_keyword = [
-        "how",
-        "why",
-        "when"
+        "how many"
     ]
 
     for wk in weather_keyword:
