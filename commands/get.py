@@ -35,6 +35,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
+        else:
+            return True
     else:
         if intention_confidence == 0.0:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +

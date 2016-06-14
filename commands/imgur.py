@@ -22,3 +22,4 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendDocument(chat_id=chat_id,
                          filename=requestText.encode('utf-8'),
                          document=item.link.encode('utf-8'))
+        return True

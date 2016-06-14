@@ -21,6 +21,7 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + \
                                               "Detected language: " + detectedLanguageSemanticName + \
                                               "\nMeaning: " + translation.title())
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find any translations for ' + \

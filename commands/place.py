@@ -18,8 +18,9 @@ def run(bot, keyConfig, chat_id, user, message):
         lngNum = data['results'][0]['geometry']['location']['lng']
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.FIND_LOCATION)
         bot.sendLocation(chat_id=chat_id, latitude=latNum, longitude=lngNum)
+        return True
     else:
         bot.sendMessage(chat_id=chat_id,
-                        text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                             ', I\'m afraid I can\'t find any places for ' + \
+                        text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                             ', I\'m afraid I can\'t find any places for ' +
                              requestText.encode('utf-8') + '.')

@@ -33,6 +33,7 @@ def run(bot, keyConfig, chat_id, user, message):
                                               ((
                                                    '\nListen at: https://api.soundcloud.com/tracks/' + track_soundcloud_id) if not track_soundcloud_id == '0' else '') + \
                                               (('\n' + lyrics_body) if not lyrics_body == '' else ''))
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find any tracks for the lyrics ' + \

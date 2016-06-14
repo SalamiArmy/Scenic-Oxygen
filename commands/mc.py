@@ -12,3 +12,4 @@ def run(bot, keyConfig, chat_id, user, message):
     bot.sendMessage(chat_id=chat_id, text=('The server at {0} has {1} players and replied in {2} ms' +
                                            ('' if dynmapPort == '' else '\nSee map: ' + mcServer + ':' + dynmapPort)) \
                     .format(mcServer + ':' + str(mcPort), status.players.online, status.latency))
+    return True

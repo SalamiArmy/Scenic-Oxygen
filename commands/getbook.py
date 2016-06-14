@@ -19,7 +19,7 @@ def run(bot, keyConfig, chat_id, user, message):
         googleBooksUrl = data['items'][0]['accessInfo']['webReaderLink']
         if 'imageLinks' in bookData:
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, bookData['imageLinks']['thumbnail'], requestText, user)
+            return retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, bookData['imageLinks']['thumbnail'], requestText, user)
         else:
             bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + googleBooksUrl)
     else:

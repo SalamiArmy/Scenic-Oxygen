@@ -13,6 +13,7 @@ def run(bot, keyConfig, chat_id, user, message):
         vidlink = data['items'][0]['id']['videoId']
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
                                               'https://www.youtube.com/watch?v=' + vidlink + '&type=video')
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t do that.\n(Video not found)')

@@ -30,6 +30,7 @@ def run(bot, keyConfig, chat_id, user, message):
                                                       ' starts at ' + startDateTime.strftime('%H:%M:%S on %d-%m-%Y') +
                                                       ' for ' + str(divmod(durationSeconds, 60)[0]) + ' minutes and ' +
                                                       str(divmod(durationSeconds, 60)[1]) + ' seconds.')
+                return True
             else:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find the next ISS sighting for ' +

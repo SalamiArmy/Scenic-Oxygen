@@ -20,6 +20,7 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendDocument(chat_id=chat_id,
                          filename=requestText.encode('utf-8') + '.gif',
                          document=imagelink.encode('utf-8'))
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find a giphy gif for ' + \

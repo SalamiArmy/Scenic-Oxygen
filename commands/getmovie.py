@@ -16,6 +16,7 @@ def run(bot, keyConfig, chat_id, user, message):
             bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
             bot.sendPhoto(chat_id=chat_id, photo=data['Poster'].encode('utf-8'),
                           caption=(user if not user == '' else '') + data['Title'] + ':\n' + data['Plot'][400:])
+            return True
         else:
             bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
                                       data['Title'] + ':\n' + data['Plot'])

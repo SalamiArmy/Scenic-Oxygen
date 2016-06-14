@@ -30,6 +30,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                               '\nSunset: ' + astronomy['sunset']) +
                         '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know this about the weather.' if intention_confidence > 0.0 else '',
                         parse_mode=telegram.ParseMode.MARKDOWN)
+        return True
     else:
         if intention_confidence == 0.0:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +

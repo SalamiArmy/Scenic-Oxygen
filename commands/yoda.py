@@ -22,3 +22,4 @@ def run(bot, keyConfig, chat_id, user, message):
 
     bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.TYPING)
     bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + translate(message))
+    return True

@@ -22,6 +22,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                               ('\nMight I add that I am ' + str(intention_confidence) +
                                                '% confident your question was not rhetorical.'
                                                if intention_confidence > 0.0 else ''))
+        return True
     else:
         if intention_confidence == 0.0:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +

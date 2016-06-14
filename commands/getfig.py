@@ -16,7 +16,7 @@ def run(bot, keyConfig, chat_id, user, message):
     if data['searchInformation']['totalResults'] >= 1:
         imagelink = data['items'][random.randint(0, 9)]['link']
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, '', user)
+        return retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, '', user)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find any figs.')

@@ -22,6 +22,7 @@ def run(bot, keyConfig, chat_id, user, message):
                 entry = getEntry
             formatted_entry = format_entry(entry, bot, chat_id, user, requestText)
             bot.sendMessage(chat_id=chat_id, text=formatted_entry)
+            return True
         else:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any definitions for the word ' +

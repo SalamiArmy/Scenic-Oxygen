@@ -18,6 +18,7 @@ def run(bot, keyConfig, chat_id, user, message):
         gameResults = steam_game_parser(code, steamGameLink)
         bot.sendMessage(chat_id=chat_id, text=gameResults,
                         disable_web_page_preview=True, parse_mode='Markdown')
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find the steam game ' + \

@@ -23,6 +23,7 @@ def run(bot, keyConfig, chat_id, user, message):
                                               '\nhttps://simple.wikiquote.org/wiki/' +
                                               urllib.quote(data['query']['search'][0]['title'].encode('utf-8')),
                         disable_web_page_preview=True, parse_mode='Markdown')
+        return True
     else:
         wikiUrl = \
             'https://en.wikiquote.org/w/api.php?action=query&list=search&srlimit=1&namespace=0&format=json&srsearch='

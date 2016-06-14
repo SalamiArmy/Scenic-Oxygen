@@ -4,3 +4,4 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendMessage(chat_id=chat_id, text="pew PEW pew " + target + " PEW pew PEW")
     except:
         bot.sendMessage(chat_id=chat_id, text="pew pew PEW PEW PEW")
+    return True

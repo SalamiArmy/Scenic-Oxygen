@@ -30,7 +30,7 @@ def run(bot, keyConfig, chat_id, user, message):
                and 'redtube.com/pornstar/' not in xlink \
                :
                 bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
-                break
+                return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', you\'re just too filthy.')

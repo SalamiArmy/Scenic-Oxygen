@@ -16,3 +16,4 @@ def run(bot, keyConfig, chat_id, user, message):
                     text='The Current Price of 1 Bitcoin:\n\n' + priceUS['rate'] +
                          ' USD\n' + priceGB['rate'] +
                          ' GBP\n' + priceZA['rate'] + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+    return True

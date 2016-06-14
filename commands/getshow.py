@@ -26,6 +26,7 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendPhoto(chat_id=chat_id,
                       photo=image_original,
                       caption=formattedShowSnippet)
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I cannot find the TV show ' + \

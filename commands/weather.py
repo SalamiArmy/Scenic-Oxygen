@@ -44,3 +44,4 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + get_weather_zip(message))
     else:
         bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + get_weather_name(message))
+    return True

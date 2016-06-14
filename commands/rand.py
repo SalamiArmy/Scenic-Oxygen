@@ -15,3 +15,4 @@ def run(bot, keyConfig, chat_id, user, message):
     zareur = float(data3['rates']['ZAR'])
     bot.sendMessage(chat_id=chat_id, text='1 USD = ' + str(zarusd) + ' ZAR\n1 GBP = ' + str(zargbp) + \
                                           ' ZAR\n1 EUR = ' + str(zareur) + ' ZAR')
+    return True

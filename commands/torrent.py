@@ -21,6 +21,7 @@ def run(bot, keyConfig, chat_id, user, message):
                                               '\nSeeds: ' + seeds + \
                                               '\nLeechers: ' + leechs,
                         disable_web_page_preview=True)
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I can\'t find any torrents for ' + \

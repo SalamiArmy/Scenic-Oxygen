@@ -36,6 +36,7 @@ def run(bot, keyConfig, chat_id, user, message):
             resultsText += foundLink + '\n'
     if resultsText:
         bot.sendMessage(chat_id=chat_id, text=resultsText, disable_web_page_preview=True)
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find any reverse image results for ' + \

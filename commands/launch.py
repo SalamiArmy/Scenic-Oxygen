@@ -85,6 +85,7 @@ def run(bot, keyConfig, chat_id, user, message):
                               ('\nWatch live at ' + b5['vidURL'] if 'vidURL' in b5 else '')
         bot.sendMessage(chat_id=chat_id, text=formattedLaunchInfo,
                         parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+        return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
                                               ', I\'m afraid I can\'t find any upcoming rocket launches.')
