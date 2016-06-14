@@ -14,4 +14,4 @@ class TestGetXXX(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        getxxx.run(bot, keyConfig, chatId, 'Admin', requestText)
+        self.assertTrue(getxxx.run(bot, keyConfig, chatId, 'Admin', requestText))

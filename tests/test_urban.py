@@ -17,4 +17,4 @@ class TestUrban(unittest.TestCase):
         #for bot group:
         #chatId = -1001048076684
 
-        urban.run(bot, keyConfig, chatId, 'Admin', requestText)
+        self.assertTrue(urban.run(bot, keyConfig, chatId, 'Admin', requestText))
