@@ -8,7 +8,7 @@ import commands.getanswer as getanswer
 
 class TestGetAnswer(unittest.TestCase):
     def test_getanswer(self):
-        requestText = 'what is napier\'s constant?'
+        requestText = 'how much weed?'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

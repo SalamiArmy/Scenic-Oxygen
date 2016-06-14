@@ -10,7 +10,7 @@ import telegram
 from commands import retry_on_telegram_error
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
     googurl = 'https://www.googleapis.com/customsearch/v1'
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
@@ -30,14 +30,15 @@ def run(bot, keyConfig, chat_id, user, message):
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
             if not imagelink.startswith('x-raw-image:///') and imagelink != '':
-                thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
-        if thereWasAnError or not offset < 10:
+                thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user, intention_confidence)
+        if (thereWasAnError or not offset < 10) and intention_confidence == 0.0:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find any images for ' +
-                                              string.capwords(requestText.encode('utf-8')))
+        if intention_confidence == 0.0:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any images for ' +
+                                                  string.capwords(requestText.encode('utf-8')))
 
 

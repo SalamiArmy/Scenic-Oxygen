@@ -20,7 +20,8 @@ def run(bot, keyConfig, chat_id, user, message):
                 entry = getEntry[random.randint(0, len(getEntry) - 1)]
             else:
                 entry = getEntry
-            send_formatted_entry(entry, bot, chat_id, user, requestText)
+            formatted_entry = format_entry(entry, bot, chat_id, user, requestText)
+            bot.sendMessage(chat_id=chat_id, text=formatted_entry)
         else:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any definitions for the word ' +
@@ -32,7 +33,7 @@ def run(bot, keyConfig, chat_id, user, message):
                                               requestText + '.')
 
 
-def send_formatted_entry(entry, bot, chat_id, user, requestText):
+def format_entry(entry, bot, chat_id, user, requestText):
     if 'fl' in entry:
         partOfSpeech = entry['fl']
         if len(partOfSpeech) >= 1:
@@ -51,21 +52,15 @@ def send_formatted_entry(entry, bot, chat_id, user, requestText):
                     definitionText = getDefinition
                 definitionText = definitionText.replace(':', '').strip()
                 count += 1
-            soundUrl = ''
             if 'sound' in entry:
                 soundFilename = entry['sound']['wav']
                 soundUrl = 'http://media.merriam-webster.com/soundc11/' + soundFilename[:1] + '/' + soundFilename
-            bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                                  requestText.title() + "\n" +
-                                                  partOfSpeech + ".\n\n" + definitionText + '\n' + soundUrl)
+                return (user + ': ' if not user == '' else '') + requestText.title() + "\n" + partOfSpeech + ".\n\n" + definitionText + '\n' + soundUrl
+
     elif 'cx' in entry:
-        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                              requestText.title() + ":\n" +
-                                              entry['cx']['cl'] + ' ' + entry['ew'])
+        return (user + ': ' if not user == '' else '') + requestText.title() + ":\n" + entry['cx']['cl'] + ' ' + entry['ew']
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find any definitions for the word ' +
-                                              requestText + '.')
+        return 'I\'m sorry ' + (user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any definitions for the word ' + requestText + '.'
 
 
         ############################# Ashley: http://dictionaryapi.net/ is down! ###############################

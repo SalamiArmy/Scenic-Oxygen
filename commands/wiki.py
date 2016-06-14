@@ -3,7 +3,7 @@ import json
 import urllib
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
 
 
@@ -15,22 +15,20 @@ def run(bot, keyConfig, chat_id, user, message):
         userWithCurrentChatAction = chat_id
         urlForCurrentChatAction = (user + ': ' if not user == '' else '') + \
                                   data[2][0] + '\nLink: ' + data[3][0]
-        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction, disable_web_page_preview=True)
+        bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction +
+                        '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know this.' if intention_confidence > 0.0 else '', disable_web_page_preview=True)
     else:
         wikiUrl = \
             'https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search='
         realUrl = wikiUrl + requestText.encode('utf-8')
         data = json.load(urllib.urlopen(realUrl))
-        if len(data[2]) >= 1 and not data[2][0] == '':
-            userWithCurrentChatAction = chat_id
-            urlForCurrentChatAction = (user + ': ' if not user == '' else '') + \
-                                      data[2][0] + '\nLink: ' + data[3][0]
-            bot.sendMessage(chat_id=userWithCurrentChatAction, text=urlForCurrentChatAction,
+        if len(data[2]) >= 1 and not data[2][0] == '' and intention_confidence == 0.0:
+            bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + \
+                                      data[2][0] + '\nLink: ' + data[3][0],
                             disable_web_page_preview=True)
         else:
-            userWithCurrentChatAction = chat_id
-            urlForCurrentChatAction = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                      ', I\'m afraid I can\'t find any wiki articles for ' + \
-                                      requestText.encode('utf-8') + '.'
-            bot.sendMessage(chat_id=userWithCurrentChatAction,
-                            text=urlForCurrentChatAction)
+            if intention_confidence == 0.0:
+                bot.sendMessage(chat_id=chat_id,
+                                text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                          ', I\'m afraid I can\'t find any wiki articles for ' + \
+                                          requestText.encode('utf-8') + '.')

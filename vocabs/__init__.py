@@ -13,3 +13,6 @@ engine.register_intent_parser(intend_get.generate_vocab(engine))
 
 import intend_wiki
 engine.register_intent_parser(intend_wiki.generate_vocab(engine))
+
+import intend_getanswer
+engine.register_intent_parser(intend_getanswer.generate_vocab(engine))
