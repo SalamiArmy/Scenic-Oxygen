@@ -22,6 +22,7 @@ def run(bot, keyConfig, chat_id, user, message):
                and 'pornhub.com/users/' not in xlink \
                and 'pornhub.com/video/search?search=' not in xlink \
                and 'pornhub.com/insights/' not in xlink \
+               and 'pornhub.com/devices/' not in xlink \
                and 'xvideos.com/profiles/' not in xlink \
                and 'xnxx.com/?' not in xlink \
                and 'xnxx.com/tags/' not in xlink \

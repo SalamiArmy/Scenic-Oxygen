@@ -22,7 +22,7 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_con
                           photo=imagelink.encode('utf-8'),
                           caption=(user + ': ' if not user == '' else '') + captionText.encode('utf-8') +
                                   (' ' + imagelink if len(imagelink) < 100 else '').encode('utf-8') +
-                        '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to see this.' if intention_confidence > 0.0 else '')
+                                  ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to see this.' if intention_confidence > 0.0 else ''))
             sendException = False
         except:
             sendException = True
