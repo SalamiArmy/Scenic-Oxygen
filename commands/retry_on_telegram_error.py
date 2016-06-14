@@ -1,6 +1,4 @@
-import string
-
-import telegram
+import sys
 
 
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
@@ -28,4 +26,5 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user):
         except:
             sendException = True
             numberOfRetries -= 1
+            print(sys.exc_info()[0])
     return numberOfRetries > 0
