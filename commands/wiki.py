@@ -11,7 +11,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         'https://simple.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search='
     realUrl = wikiUrl + requestText.encode('utf-8')
     data = json.load(urllib.urlopen(realUrl))
-    if len(data[2]) >= 1:
+    if len(data[2]) and data[2][0] != '' >= 1:
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
                                               data[2][0] + '\nLink: ' + data[3][0] +
                                               ('\nMight I add that I am ' +

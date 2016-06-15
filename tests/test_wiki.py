@@ -7,7 +7,7 @@ import commands.wiki as wiki
 
 class TestWiki(unittest.TestCase):
     def test_wiki(self):
-        requestText = 'htpc'
+        requestText = 'the'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
