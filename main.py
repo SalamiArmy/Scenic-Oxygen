@@ -14,7 +14,8 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
 import webapp2
-from vocabs import engine
+
+import vocabs
 
 BASE_URL = 'https://api.telegram.org/bot'
 
@@ -109,7 +110,7 @@ class WebhookHandler(webapp2.RequestHandler):
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     def TryParseIntent(self, chat_id, fr_username, text):
-        for intent in engine.determine_intent(text):
+        for intent in vocabs.engine.determine_intent(text):
             try:
                 confidence_percent = intent.get('confidence', 0.0)*100
                 if intent and confidence_percent > 0:
@@ -122,12 +123,8 @@ class WebhookHandler(webapp2.RequestHandler):
                     if 'ImageVerb' in intent and 'Image' in intent:
                         import commands.get as get
                         get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'), confidence_percent)
-                    if 'WhatWhoIs' in intent:
-                        import commands.wiki as wiki
-                        wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatWhoIs'), confidence_percent)
-                    if 'QuestionKeyword' in intent:
-                        import commands.getanswer as getanswer
-                        getanswer.run(bot, keyConfig, chat_id, fr_username, text, confidence_percent)
+                    if 'WhoWhatHow' in intent:
+                        vocabs.intend_getinfo.run_command_hierarchy(bot, keyConfig, chat_id, fr_username, intent.get('WhoWhatHow'), confidence_percent)
             except:
                 print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
@@ -136,47 +133,47 @@ class RunTestsHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         testmodules = [
-            'tests.test_bitcoin',
-            'tests.test_cric',
-            'tests.test_get',
-            'tests.test_getbook',
-            'tests.test_getfig',
-            'tests.test_getgif',
-            'tests.test_gethuge',
-            'tests.test_gethugegif',
-            'tests.test_getlyrics',
-            'tests.test_getmovie',
-            'tests.test_getquote',
-            'tests.test_getshow',
-            'tests.test_getvid',
-            'tests.test_getweather',
-            'tests.test_getxxx',
-            'tests.test_giphy',
-            'tests.test_iss',
-            'tests.test_place',
-            'tests.test_rand',
-            'tests.test_torrent',
-            'tests.test_translate',
-            'tests.test_urban',
-            'tests.test_wiki',
-            'tests.test_define',
-            'tests.test_getanswer',
-            'tests.test_getgame',
-            'tests.test_getsound',
-            'tests.test_imgur',
-            'tests.test_isis',
-            'tests.test_launch',
-            'tests.test_mc',
-            'tests.test_reverseimage',
-            'tests.test_define',
-            'tests.test_getanswer',
-            'tests.test_getgame',
-            'tests.test_getsound',
-            'tests.test_imgur',
-            'tests.test_isis',
-            'tests.test_launch',
-            'tests.test_mc',
-            'tests.test_reverseimage',
+            'command_tests.test_bitcoin',
+            'command_tests.test_cric',
+            'command_tests.test_get',
+            'command_tests.test_getbook',
+            'command_tests.test_getfig',
+            'command_tests.test_getgif',
+            'command_tests.test_gethuge',
+            'command_tests.test_gethugegif',
+            'command_tests.test_getlyrics',
+            'command_tests.test_getmovie',
+            'command_tests.test_getquote',
+            'command_tests.test_getshow',
+            'command_tests.test_getvid',
+            'command_tests.test_getweather',
+            'command_tests.test_getxxx',
+            'command_tests.test_giphy',
+            'command_tests.test_iss',
+            'command_tests.test_place',
+            'command_tests.test_rand',
+            'command_tests.test_torrent',
+            'command_tests.test_translate',
+            'command_tests.test_urban',
+            'command_tests.test_wiki',
+            'command_tests.test_define',
+            'command_tests.test_getanswer',
+            'command_tests.test_getgame',
+            'command_tests.test_getsound',
+            'command_tests.test_imgur',
+            'command_tests.test_isis',
+            'command_tests.test_launch',
+            'command_tests.test_mc',
+            'command_tests.test_reverseimage',
+            'command_tests.test_define',
+            'command_tests.test_getanswer',
+            'command_tests.test_getgame',
+            'command_tests.test_getsound',
+            'command_tests.test_imgur',
+            'command_tests.test_isis',
+            'command_tests.test_launch',
+            'command_tests.test_mc',
+            'command_tests.test_reverseimage',
         ]
         suite = unittest.TestSuite()
 

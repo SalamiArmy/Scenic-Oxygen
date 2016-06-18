@@ -11,8 +11,8 @@ engine.register_intent_parser(intend_getsound.generate_vocab(engine))
 import intend_get
 engine.register_intent_parser(intend_get.generate_vocab(engine))
 
-import intend_wiki
-engine.register_intent_parser(intend_wiki.generate_vocab(engine))
+import intend_getinfo
+engine.register_intent_parser(intend_getinfo.generate_vocab(engine))
 
-import intend_getanswer
-engine.register_intent_parser(intend_getanswer.generate_vocab(engine))
+import intend_getinfo
+engine.register_intent_parser(intend_getinfo.generate_vocab(engine))
