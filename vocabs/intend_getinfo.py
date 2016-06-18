@@ -37,13 +37,13 @@ def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, con
 
     canDefine = False
     for word in requestText.split(' '):
-        if len(word) > 3:
+        if len(word) > 4:
             canDefine = define.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
         if canDefine:
             return True
 
     for word in requestText.split(' '):
-        if len(word) > 3:
+        if len(word) > 4:
             canDefine = urban.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
         if canDefine:
             return True
