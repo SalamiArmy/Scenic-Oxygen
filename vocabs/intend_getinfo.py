@@ -29,10 +29,29 @@ def generate_vocab(engine):
         .build()
 
 def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
-    if not getanswer.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
-        if not wiki.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
-            if not define.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
-                if not urban.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
-                    print('Get info ' + confidence_percent +
-                          '% intention with request text ' + requestText +
-                          ' could not be satisfied.')
+    if getanswer.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
+        return True
+
+    if wiki.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
+        return True
+
+    canDefine = False
+    for word in requestText.split(' '):
+        if len(word) > 3:
+            canDefine = define.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
+        if canDefine:
+            pass
+    if canDefine:
+        return True
+
+    for word in requestText.split(' '):
+        if len(word) > 3:
+            canDefine = urban.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
+        if canDefine:
+            pass
+    if canDefine:
+        return True
+
+    print('Get info ' + str(confidence_percent) +
+          '% intention with request text ' + requestText +
+          ' could not be satisfied.')

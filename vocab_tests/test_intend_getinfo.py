@@ -8,7 +8,7 @@ import vocabs
 
 class TestIntentions(unittest.TestCase):
     def test_intend_getinfo_run_command_hierarchy(self):
-        requestText = 'How many jupiters?'
+        requestText = '@Bashs_Bot I asked you when will i ascend?'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

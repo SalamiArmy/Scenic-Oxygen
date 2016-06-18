@@ -9,8 +9,10 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
 
     dicUrl = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml/'
-    realUrl = dicUrl + requestText.encode('utf-8') + '?key=' + keyConfig.get('Merriam-Webster', 'API_KEY')
+    realUrl = dicUrl + requestText.encode('utf-8').replace('?', '').replace('&', '') + '?key=' + keyConfig.get('Merriam-Webster', 'API_KEY')
     getXml = urllib.urlopen(realUrl).read()
+    if not getXml or 'invalid' in getXml.lower():
+        return False
     data = xmltodict.parse(getXml)
     getAllEntries = data['entry_list']
     if len(getAllEntries) >= 1 and 'entry' in getAllEntries:
