@@ -35,17 +35,43 @@ def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, Who
     if wiki.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
         return True
 
-    canDefine = False
-    for word in requestText.split(' '):
+    if define.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
+        return True
+
+    if urban.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
+        return True
+
+    found_info = False
+    text_split = requestText.split()
+
+    for word in text_split:
         if len(word) > 4:
-            canDefine = define.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
-        if canDefine:
+            found_info = wiki.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
+        if found_info:
             return True
 
-    for word in requestText.split(' '):
+    for word_pair in [text_split[i]+' '+text_split[i+1] for i in range(len(text_split)-1)]:
         if len(word) > 4:
-            canDefine = urban.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
-        if canDefine:
+            found_info = wiki.run(bot, keyConfig, chat_id, fr_username, word_pair, confidence_percent)
+        if found_info:
+            return True
+
+    for word in text_split:
+        if len(word) > 4:
+            found_info = define.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
+        if found_info:
+            return True
+
+    for word in text_split:
+        if len(word) > 4:
+            found_info = urban.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
+        if found_info:
+            return True
+
+    for word_pair in [text_split[i]+' '+text_split[i+1] for i in range(len(text_split)-1)]:
+        if len(word) > 4:
+            found_info = urban.run(bot, keyConfig, chat_id, fr_username, word_pair, confidence_percent)
+        if found_info:
             return True
 
     print('Get info ' + str(confidence_percent) +
