@@ -6,7 +6,7 @@ import commands.urban as urban
 
 
 def generate_vocab(engine):
-    engine.register_regex_entity('(who|what|how|why|when) (is|was|much|many|does) (?P<WhoWhatHow>.*)')
+    engine.register_regex_entity('(who|what|how|why|when) (is|was|much|many|does|will) (?P<WhoWhatHow>.*)')
 
     info_keywords = [
         'know',
