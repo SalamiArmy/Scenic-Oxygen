@@ -28,11 +28,11 @@ def generate_vocab(engine):
         .optionally('InfoKeywords')\
         .build()
 
-def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
+def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, WhoWhatHow, confidence_percent):
     if getanswer.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
         return True
 
-    if wiki.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
+    if wiki.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
         return True
 
     canDefine = False

@@ -124,7 +124,7 @@ class WebhookHandler(webapp2.RequestHandler):
                         import commands.get as get
                         get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'), confidence_percent)
                     if 'WhoWhatHow' in intent:
-                        vocabs.intend_getinfo.run_command_hierarchy(bot, keyConfig, chat_id, fr_username, intent.get('WhoWhatHow'), confidence_percent)
+                        vocabs.intend_getinfo.run_command_hierarchy(bot, keyConfig, chat_id, fr_username, text, intent.get('WhoWhatHow'), confidence_percent)
             except:
                 print("Unexpected error running command:" + str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 

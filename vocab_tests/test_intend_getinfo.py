@@ -8,7 +8,8 @@ import vocabs
 
 class TestIntentions(unittest.TestCase):
     def test_intend_getinfo_run_command_hierarchy(self):
-        requestText = 'that mean'
+        requestText = 'what does that mean'
+        WhoWhatHow = 'that mean'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -18,4 +19,4 @@ class TestIntentions(unittest.TestCase):
         #for bot group:
         chatId = -1001048076684
 
-        vocabs.intend_getinfo.run_command_hierarchy(bot, keyConfig, chatId, 'Admin', requestText, 50)
+        vocabs.intend_getinfo.run_command_hierarchy(bot, keyConfig, chatId, 'Admin', requestText, WhoWhatHow, 50)
