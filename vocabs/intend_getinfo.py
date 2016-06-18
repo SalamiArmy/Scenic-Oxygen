@@ -40,17 +40,13 @@ def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, con
         if len(word) > 3:
             canDefine = define.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
         if canDefine:
-            pass
-    if canDefine:
-        return True
+            return True
 
     for word in requestText.split(' '):
         if len(word) > 3:
             canDefine = urban.run(bot, keyConfig, chat_id, fr_username, word, confidence_percent)
         if canDefine:
-            pass
-    if canDefine:
-        return True
+            return True
 
     print('Get info ' + str(confidence_percent) +
           '% intention with request text ' + requestText +

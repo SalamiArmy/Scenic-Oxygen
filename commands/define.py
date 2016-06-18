@@ -63,7 +63,7 @@ def format_entry(entry, bot, chat_id, user, requestText, intention_confidence):
                 count += 1
             if 'sound' in entry:
                 soundFilename = entry['sound']['wav']
-                soundUrl = 'http://media.merriam-webster.com/soundc11/' + soundFilename[:1] + '/' + soundFilename
+                soundUrl = 'http://media.merriam-webster.com/soundc11/' + str(soundFilename[:1]) + '/' + str(soundFilename)
                 return (user + ': ' if not user == '' else '') + requestText.title() + "\n" + partOfSpeech + ".\n\n" + definitionText + '\n' + soundUrl
 
     elif 'cx' in entry:
