@@ -6,7 +6,18 @@ import commands.urban as urban
 
 
 def generate_vocab(engine):
-    engine.register_regex_entity('(who|what|how|why|when) (is|was|can|much|many|does|will|far|near|close) (?P<WhoWhatHow>.*)')
+    engine.register_regex_entity('(is|was|can|much|many|does|will|far|near|close) (?P<WhoWhatHow>.*)')
+
+    question_keywords = [
+        'who',
+        'what',
+        'how',
+        'why',
+        'when'
+    ]
+
+    for wt in question_keywords:
+        engine.register_entity(wt, 'QuestionKeywords')
 
     info_keywords = [
         'know',
@@ -23,8 +34,9 @@ def generate_vocab(engine):
     for wt in info_keywords:
         engine.register_entity(wt, 'InfoKeywords')
 
-    return IntentBuilder("ImageIntent")\
-        .require('WhoWhatHow')\
+    return IntentBuilder('ImageIntent')\
+        .require('QuestionKeywords')\
+        .optionally('WhoWhatHow')\
         .optionally('InfoKeywords')\
         .build()
 
