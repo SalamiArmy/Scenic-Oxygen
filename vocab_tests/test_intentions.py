@@ -56,3 +56,12 @@ class TestIntentions(unittest.TestCase):
                             'Cannot get location for intention to get weather.')
             count += 1
         self.assertEqual(count, 3, 'Not enough intentions found.')
+
+    def test_intend_get_info(self):
+        testPassed = False
+        for intent in vocabs.engine.determine_intent('How big is the sun?'):
+            self.assertIsNotNone(intent, 'Could not parse intent to get info.')
+            self.assertTrue('Image' in intent, 'Could not parse Image from intent to get info.')
+            self.assertTrue(intent.get('Image') == 'gaben', 'Parsed wrong Image from intent to get info.')
+            testPassed = True
+        self.assertTrue(testPassed, 'Cannot find intent to get info in multi-intent parser')

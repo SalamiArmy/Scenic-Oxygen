@@ -6,7 +6,7 @@ import commands.urban as urban
 
 
 def generate_vocab(engine):
-    engine.register_regex_entity('(is|was|can|much|many|does|will|far|near|close) (?P<WhoWhatHow>.*)')
+    engine.register_regex_entity('(is|do|was|can|much|many|does|will|far|near|close) (?P<WhoWhatHow>.*)')
 
     question_keywords = [
         'who',
@@ -34,24 +34,26 @@ def generate_vocab(engine):
     for wt in info_keywords:
         engine.register_entity(wt, 'InfoKeywords')
 
-    return IntentBuilder('ImageIntent')\
+    return IntentBuilder('InfoIntent')\
         .require('QuestionKeywords')\
         .optionally('WhoWhatHow')\
         .optionally('InfoKeywords')\
         .build()
 
 def run_command_hierarchy(bot, keyConfig, chat_id, fr_username, requestText, WhoWhatHow, confidence_percent):
+
     if getanswer.run(bot, keyConfig, chat_id, fr_username, requestText, confidence_percent):
         return True
 
-    if wiki.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
-        return True
+    if WhoWhatHow != '':
+        if wiki.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
+            return True
 
-    if define.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
-        return True
+        if define.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
+            return True
 
-    if urban.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
-        return True
+        if urban.run(bot, keyConfig, chat_id, fr_username, WhoWhatHow, confidence_percent):
+            return True
 
     found_info = False
     text_split = requestText.split()
