@@ -5,7 +5,7 @@ import string
 import urllib
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
 
     dicurl = 'http://api.urbandictionary.com/v0/define?term='
@@ -15,9 +15,13 @@ def run(bot, keyConfig, chat_id, user, message):
         resultNum = data['list'][random.randint(0, len(data['list']) - 1)]
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +\
                                               'Urban Definition For ' + string.capwords(requestText.encode('utf-8')) + ":\n" + resultNum['definition'] +\
-                                              '\n\nExample:\n' + resultNum['example'])
+                                              '\n\nExample:\n' + resultNum['example'] +
+                                              ('\nMight I add that I am ' +
+                                               str(intention_confidence) + '% confident you wanted to know this.'
+                                               if intention_confidence > 0.0 else ''))
         return True
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                                              ', I\'m afraid I can\'t find any urban definitions for ' +\
-                                              string.capwords(requestText.encode('utf-8')) + '.')
+        if intention_confidence == 0.0:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                                                  ', I\'m afraid I can\'t find any urban definitions for ' +\
+                                                  string.capwords(requestText.encode('utf-8')) + '.')

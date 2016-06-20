@@ -5,12 +5,14 @@ import urllib
 import xmltodict
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
 
     dicUrl = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml/'
-    realUrl = dicUrl + requestText.encode('utf-8') + '?key=' + keyConfig.get('Merriam-Webster', 'API_KEY')
+    realUrl = dicUrl + requestText.encode('utf-8').replace('?', '').replace('&', '') + '?key=' + keyConfig.get('Merriam-Webster', 'API_KEY')
     getXml = urllib.urlopen(realUrl).read()
+    if not getXml or 'invalid' in getXml.lower():
+        return False
     data = xmltodict.parse(getXml)
     getAllEntries = data['entry_list']
     if len(getAllEntries) >= 1 and 'entry' in getAllEntries:
@@ -20,21 +22,27 @@ def run(bot, keyConfig, chat_id, user, message):
                 entry = getEntry[random.randint(0, len(getEntry) - 1)]
             else:
                 entry = getEntry
-            formatted_entry = format_entry(entry, bot, chat_id, user, requestText)
-            bot.sendMessage(chat_id=chat_id, text=formatted_entry)
-            return True
+            formatted_entry = format_entry(entry, bot, chat_id, user, requestText, intention_confidence)
+            if formatted_entry:
+                bot.sendMessage(chat_id=chat_id, text=formatted_entry +
+                                                      ('\nMight I add that I am ' +
+                                                       str(intention_confidence) + '% confident you wanted to know this.'
+                                                       if intention_confidence > 0.0 else ''))
+                return True
         else:
+            if intention_confidence == 0.0:
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid I can\'t find any definitions for the word ' +
+                                                      requestText +
+                                                      '. Did you mean ' + ' '.join(getAllEntries['suggestion']) + '?')
+    else:
+        if intention_confidence == 0.0:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any definitions for the word ' +
-                                                  requestText +
-                                                  '. Did you mean ' + ' '.join(getAllEntries['suggestion']) + '?')
-    else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find any definitions for the word ' +
-                                              requestText + '.')
+                                                  requestText + '.')
 
 
-def format_entry(entry, bot, chat_id, user, requestText):
+def format_entry(entry, bot, chat_id, user, requestText, intention_confidence):
     if 'fl' in entry:
         partOfSpeech = entry['fl']
         if len(partOfSpeech) >= 1:
@@ -55,13 +63,16 @@ def format_entry(entry, bot, chat_id, user, requestText):
                 count += 1
             if 'sound' in entry:
                 soundFilename = entry['sound']['wav']
-                soundUrl = 'http://media.merriam-webster.com/soundc11/' + soundFilename[:1] + '/' + soundFilename
+                soundUrl = 'http://media.merriam-webster.com/soundc11/' + str(soundFilename[:1]) + '/' + str(soundFilename)
                 return (user + ': ' if not user == '' else '') + requestText.title() + "\n" + partOfSpeech + ".\n\n" + definitionText + '\n' + soundUrl
 
     elif 'cx' in entry:
         return (user + ': ' if not user == '' else '') + requestText.title() + ":\n" + entry['cx']['cl'] + ' ' + entry['ew']
     else:
-        return 'I\'m sorry ' + (user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any definitions for the word ' + requestText + '.'
+        if intention_confidence == 0.0:
+            return 'I\'m sorry ' + (user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any definitions for the word ' + requestText + '.'
+        else:
+            return ''
 
 
         ############################# Ashley: http://dictionaryapi.net/ is down! ###############################
