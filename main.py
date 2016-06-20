@@ -122,7 +122,9 @@ class WebhookHandler(webapp2.RequestHandler):
                         getsound.run(bot, keyConfig, chat_id, fr_username, intent.get('Sound'), confidence_percent)
                     if 'ImageVerb' in intent and 'Image' in intent:
                         import commands.get as get
-                        get.run(bot, keyConfig, chat_id, fr_username, intent.get('Image'), confidence_percent)
+                        intent_get = intent.get('Image')
+                        if len(intent_get) > 4:
+                            get.run(bot, keyConfig, chat_id, fr_username, intent_get, confidence_percent)
                     if 'WhatWhoIs' in intent:
                         import commands.wiki as wiki
                         wiki.run(bot, keyConfig, chat_id, fr_username, intent.get('WhatWhoIs'), confidence_percent)
