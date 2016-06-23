@@ -59,9 +59,10 @@ class TestIntentions(unittest.TestCase):
 
     def test_intend_get_info(self):
         testPassed = False
-        for intent in vocabs.engine.determine_intent('How big is the sun?'):
+        for intent in vocabs.engine.determine_intent('How big is the sun'):
             self.assertIsNotNone(intent, 'Could not parse intent to get info.')
-            self.assertTrue('Image' in intent, 'Could not parse Image from intent to get info.')
-            self.assertTrue(intent.get('Image') == 'gaben', 'Parsed wrong Image from intent to get info.')
+            self.assertTrue('WhoWhatHow' in intent, 'Could not parse WhoWhatHow from intent to get info.')
+            gotValue = intent.get('WhoWhatHow')
+            self.assertTrue(gotValue == 'the sun', 'Parsed wrong WhoWhatHow from intent to get info, got: ' + gotValue)
             testPassed = True
         self.assertTrue(testPassed, 'Cannot find intent to get info in multi-intent parser')

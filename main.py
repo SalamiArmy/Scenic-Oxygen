@@ -99,7 +99,8 @@ class WebhookHandler(webapp2.RequestHandler):
             if text.startswith('/'):
                 self.TryExecuteExplicitCommand(chat_id, user, text)
             else:
-                self.TryParseIntent(chat_id, user, text)
+                if len(text) < 200:
+                    self.TryParseIntent(chat_id, user, text)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(" ", 1)
