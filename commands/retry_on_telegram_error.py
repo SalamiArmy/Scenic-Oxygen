@@ -14,6 +14,8 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     return numberOfRetries > 0
 
 def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_confidence=0.0):
+    if imagelink[:4] == '.gif':
+        return False
     numberOfRetries = 6
     sendException = True
     while sendException and numberOfRetries > 0:
