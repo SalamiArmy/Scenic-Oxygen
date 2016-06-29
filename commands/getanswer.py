@@ -12,7 +12,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         fullAnswer = ''
         for question in allAnswers[0].format['plaintext']:
             if question is not None:
-                fullAnswer += question.encode('ascii', 'ignore') + '?\n'
+                fullAnswer += question + '?\n'
         if len(allAnswers) > 1:
             for pod in allAnswers[1:]:
                 for answer in pod.format['plaintext']:
