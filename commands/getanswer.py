@@ -17,7 +17,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             for pod in allAnswers[1:]:
                 for answer in pod.format['plaintext']:
                     if answer is not None:
-                        fullAnswer += answer.encode('ascii', 'ignore') + '.\n'
+                        fullAnswer += answer + '.\n'
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + fullAnswer +
                                               ('\nMight I add that I am ' + str(intention_confidence) +
                                                '% confident your question was not rhetorical.'
