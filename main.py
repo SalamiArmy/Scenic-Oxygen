@@ -114,7 +114,7 @@ class WebhookHandler(webapp2.RequestHandler):
         for intent in vocabs.engine.determine_intent(text):
             try:
                 confidence_percent = intent.get('confidence', 0.0)*100
-                if intent and (confidence_percent > 0 or bot.name in text):
+                if intent and (confidence_percent > 33 or bot.name in text):
                     if 'WeatherKeyword' in intent and 'Location' in intent:
                         import commands.getweather as getweather
                         getweather.run(bot, keyConfig, chat_id, fr_username, intent.get('Location'), confidence_percent)
