@@ -19,6 +19,7 @@ def generate_vocab(engine):
         "pictures",
         "images",
         "look",
+        "look like",
         "visage",
         "gaze"
     ]
