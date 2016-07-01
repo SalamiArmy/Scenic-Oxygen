@@ -121,9 +121,14 @@ class WebhookHandler(webapp2.RequestHandler):
                     if 'MusicVerb' in intent and 'Sound' in intent:
                         import commands.getsound as getsound
                         getsound.run(bot, keyConfig, chat_id, fr_username, intent.get('Sound'), confidence_percent)
-                    if 'ImageVerb' in intent and 'Image' in intent:
+                    if 'ImageVerb' in intent:
                         import commands.get as get
-                        intent_get = intent.get('Image')
+                        if 'ShowMeImage' in intent:
+                            intent_get = intent.get('ShowMeImage')
+                        elif 'OfImage' in intent:
+                            intent_get = intent.get('OfImage')
+                        else:
+                            intent_get = text
                         if len(intent_get) > 4:
                             get.run(bot, keyConfig, chat_id, fr_username, intent_get, confidence_percent)
                     if 'QuestionKeyword' in intent:
