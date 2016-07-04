@@ -2,14 +2,12 @@ from adapt.intent import IntentBuilder
 
 
 def generate_vocab(engine):
-    engine.register_regex_entity("(of|show) (?P<OfImage>.*)")
-    engine.register_regex_entity("(show me|show us|show all of us|show us all) (?P<ShowMeImage>.*)")
+    engine.register_regex_entity("(of|show|show me|show us|show all of us|show us all|get) (?P<OfImage>.*)")
 
     image_verbs = [
         "picture",
         "image",
-        "see",
-        "show"
+        "see"
     ]
 
     for mv in image_verbs:
@@ -31,5 +29,4 @@ def generate_vocab(engine):
         .require("ImageVerb") \
         .optionally("ImageKeyword") \
         .optionally("OfImage") \
-        .optionally("ShowMeImage") \
         .build()
