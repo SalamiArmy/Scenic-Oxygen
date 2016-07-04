@@ -51,7 +51,12 @@ def steam_game_parser(code, link):
         gamePrice = priceDiv.string
         AllGameDetailsFormatted += ' - ' + gamePrice.strip() + '*\n'
     else:
-        AllGameDetailsFormatted += ' - Free to Play*\n'
+        priceDiv = soup.find('div', attrs={'class':'discount_final_price'})
+        if priceDiv:
+            gamePrice = priceDiv.string
+            AllGameDetailsFormatted += ' - ' + gamePrice.strip() + '*\n'
+        else:
+            AllGameDetailsFormatted += ' - Free to Play*\n'
 
     descriptionDiv = soup.find('div', attrs={'class':'game_description_snippet'})
     if descriptionDiv:
