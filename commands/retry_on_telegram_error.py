@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 
 
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
@@ -11,6 +12,8 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
         except:
             sendException = True
             numberOfRetries -= 1
+            print(sys.exc_info()[0])
+            sleep(10)
     return numberOfRetries > 0
 
 def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_confidence=0.0):
@@ -30,4 +33,5 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_con
             sendException = True
             numberOfRetries -= 1
             print(sys.exc_info()[0])
+            sleep(10)
     return numberOfRetries > 0

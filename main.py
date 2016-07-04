@@ -114,16 +114,21 @@ class WebhookHandler(webapp2.RequestHandler):
         for intent in vocabs.engine.determine_intent(text):
             try:
                 confidence_percent = intent.get('confidence', 0.0)*100
-                if intent and (confidence_percent > 0 or bot.name in text):
+                if intent and (confidence_percent > 33 or bot.name in text):
                     if 'WeatherKeyword' in intent and 'Location' in intent:
                         import commands.getweather as getweather
                         getweather.run(bot, keyConfig, chat_id, fr_username, intent.get('Location'), confidence_percent)
                     if 'MusicVerb' in intent and 'Sound' in intent:
                         import commands.getsound as getsound
                         getsound.run(bot, keyConfig, chat_id, fr_username, intent.get('Sound'), confidence_percent)
-                    if 'ImageVerb' in intent and 'Image' in intent:
+                    if 'ImageVerb' in intent:
                         import commands.get as get
-                        intent_get = intent.get('Image')
+                        if 'ShowMeImage' in intent:
+                            intent_get = intent.get('ShowMeImage')
+                        elif 'OfImage' in intent:
+                            intent_get = intent.get('OfImage')
+                        else:
+                            intent_get = text
                         if len(intent_get) > 4:
                             get.run(bot, keyConfig, chat_id, fr_username, intent_get, confidence_percent)
                     if 'QuestionKeyword' in intent:
