@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+install: 
+  - "pip install -t lib python-telegram-bot bs4 xmltodict six soundcloud feedparser requests tungsten"
+  - "git -C 'lib' clone https://github.com/Imgur/imgurpython.git"
+  - "git -C 'lib' clone https://github.com/MycroftAI/adapt.git"
+  - "cp /lib/adapt/adapt ."
+  - "pip install -t adapt pyee"
+  - "git clone https://github.com/jhs/google-app-engine.git"
+  - "google-app-engine/appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update ."
+script: python -m unittest discover tests/
