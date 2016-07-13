@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, '').strip()
 
-    code = urllib.urlopen('http://store.steampowered.com/search/?term=' + requestText).read()
+    code = urllib.urlopen('http://store.steampowered.com/search/?category1=998&term=' + requestText).read()
     appId = steam_results_parser(code)
     if appId:
         steamGameLink = 'http://store.steampowered.com/app/' + appId
