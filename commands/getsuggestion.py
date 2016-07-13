@@ -15,7 +15,7 @@ def run(bot, keyConfig, chat_id, user, message):
     req.add_header('Ocp-Apim-Subscription-Key', keyConfig.get('Bing', 'AutoSuggestApiKey'))
     data = json.load(urllib2.urlopen(req))
 
-    if 'suggestionGroups' in data and len(data['suggestionGroups']) >= 1 and 'searchSuggestions' in data['suggestionGroups'][0] and len(data['suggestionGroups'][0]['searchSuggestions']) >= 1 and 'displayText' in data['suggestionGroups'][0]['searchSuggestions'][0]:
+    if 'suggestionGroups' in data and len(data['suggestionGroups']) >= 1 and 'searchSuggestions' in data['suggestionGroups'][0] and len(data['suggestionGroups'][0]['searchSuggestions']) >= 1 and 'displayText' in data['suggestionGroups'][0]['searchSuggestions'][0] and data['suggestionGroups'][0]['searchSuggestions'][0]['displayText'] != requestText:
         displayText = data['suggestionGroups'][0]['searchSuggestions'][0]['displayText']
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + displayText)
     else:
