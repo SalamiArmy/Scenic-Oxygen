@@ -7,7 +7,7 @@ import commands.get as get
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        requestText = 'stable table flip'
+        requestText = 'dat boi'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

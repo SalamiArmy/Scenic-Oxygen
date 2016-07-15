@@ -26,7 +26,10 @@ def run(bot, keyConfig, chat_id, user, message):
     resultLinks = code[code.index('Search Results'):].split('href=')
     for resultLink in resultLinks[1:]:
         resultLink = resultLink[1:]
-        foundLink = resultLink[:resultLink.index('"')]
+        if ('"' in resultLink and len(resultLink) > resultLink.index('"')):
+            foundLink = resultLink[:resultLink.index('"')]
+        else:
+            foundLink = '#'
         if foundLink != '#' and \
                         foundLink != 'javascript:;' and \
                         foundLink != 'javascript:void(0)' and \
