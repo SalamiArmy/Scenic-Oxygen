@@ -37,3 +37,6 @@ API_KEY: (Your OpenWeatherMap Api Key from openweathermap.org here}
 [SightEngine]
 API_user: {Your SightEngine User ID}
 API_secret: {Your SightEngine Api Secret Key}
+
+[Bing]
+AutoSuggestApiKey: {Your Bing AutoSuggest Api Key}

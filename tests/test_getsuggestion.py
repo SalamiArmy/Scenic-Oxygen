@@ -2,12 +2,12 @@ import ConfigParser
 import unittest
 import telegram
 
-import commands.get as get
+import commands.getsuggestion as getsuggestion
 
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        requestText = 'dat boi'
+        requestText = 'pokemon g'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -17,4 +17,4 @@ class TestGet(unittest.TestCase):
         #for bot group:
         #chatId = -1001048076684
 
-        get.run(bot, keyConfig, chatId, 'Admin', requestText)
+        getsuggestion.run(bot, keyConfig, chatId, 'Admin', requestText)

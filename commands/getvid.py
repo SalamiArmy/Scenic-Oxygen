@@ -5,8 +5,8 @@ import urllib
 
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
-    vidurl = 'https://www.googleapis.com/youtube/v3/search?safeSearch=none&type=video&key=' + keyConfig.get \
-        ('Google', 'GCSE_APP_ID') + '&part=snippet&q='
+    vidurl = 'https://www.googleapis.com/youtube/v3/search?safeSearch=none&type=video&key=' + \
+             keyConfig.get('Google', 'GCSE_APP_ID') + '&part=snippet&q='
     realUrl = vidurl + requestText.encode('utf-8')
     data = json.load(urllib.urlopen(realUrl))
     if 'items' in data and len(data['items']) >= 1:
