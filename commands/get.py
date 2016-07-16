@@ -1,8 +1,7 @@
-import ConfigParser
+# coding=utf-8
 import json
 import random
 import string
-import sys
 import urllib
 
 import telegram
