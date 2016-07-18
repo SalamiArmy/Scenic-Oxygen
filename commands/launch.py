@@ -62,22 +62,22 @@ def run(bot, keyConfig, chat_id, user, message):
                               '\n*' + b1['name'] + \
                               '*\nLaunching from [' + b1['location']['pads'][0]['name'] + '](' + b1['location']['pads'][0][
                                   'mapURL'] + ')' + \
-                              ('\nWatch live at ' + b1['vidURL'] if 'vidURL' in b1 else '') + '\n\n' + \
+                              ('\nWatch live at ' + b1['vidURL'] if 'vidURL' in b1 and b1['vidURL'] != '' else '') + '\n\n' + \
                               str(blast2LocalTime) + \
                               '\n*' + b2['name'] + \
                               '*\nLaunching from [' + b2['location']['pads'][0]['name'] + '](' + b2['location']['pads'][0][
                                   'mapURL'] + ')' + \
-                              ('\nWatch live at ' + b2['vidURL'] if 'vidURL' in b2 else '') + '\n\n' + \
+                              ('\nWatch live at ' + b2['vidURL'] if 'vidURL' in b2 and b2['vidURL'] != '' else '') + '\n\n' + \
                               str(blast3LocalTime) + \
                               '\n*' + b3['name'] + \
                               '*\nLaunching from [' + b3['location']['pads'][0]['name'] + '](' + b3['location']['pads'][0][
                                   'mapURL'] + ')' + \
-                              ('\nWatch live at ' + b3['vidURL'] if 'vidURL' in b3 else '') + '\n\n' + \
+                              ('\nWatch live at ' + b3['vidURL'] if 'vidURL' in b3 and b3['vidURL'] != '' else '') + '\n\n' + \
                               str(blast4LocalTime) + \
                               '\n*' + b4['name'] + \
                               '*\nLaunching from [' + b4['location']['pads'][0]['name'] + '](' + b4['location']['pads'][0][
                                   'mapURL'] + ')' + \
-                              ('\nWatch live at ' + b4['vidURL'] if 'vidURL' in b4 else '') + '\n\n' + \
+                              ('\nWatch live at ' + b4['vidURL'] if 'vidURL' in b4 and b4['vidURL'] != '' else '') + '\n\n' + \
                               str(blast5LocalTime) + \
                               '\n*' + b5['name'] + \
                               '*\nLaunching from [' + b5['location']['pads'][0]['name'] + '](' + b5['location']['pads'][0][
