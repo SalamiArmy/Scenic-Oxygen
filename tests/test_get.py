@@ -15,6 +15,6 @@ class TestGet(unittest.TestCase):
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         #for bot group:
-        #chatId = -1001048076684
+        #chatId = -130436192
 
         get.run(bot, keyConfig, chatId, 'Admin', requestText)
