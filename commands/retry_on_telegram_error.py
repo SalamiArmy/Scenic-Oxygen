@@ -8,6 +8,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     while sendException and numberOfRetries > 0:
         try:
             bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
+            bot.sendMessage(chat_id=chat_id, text=imagelink, disable_web_page_preview=True)
             sendException = False
         except:
             sendException = True
@@ -23,11 +24,14 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_con
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
+            IsUrlTooLongForCaption = len(imagelink) > 100
             bot.sendPhoto(chat_id=chat_id,
                           photo=imagelink.encode('utf-8'),
                           caption=(user + ': ' if not user == '' else '') + captionText.encode('utf-8') +
-                                  (' ' + imagelink if len(imagelink) < 100 else '').encode('utf-8') +
+                                  (' ' + imagelink if not IsUrlTooLongForCaption else '').encode('utf-8') +
                                   ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to see this.' if intention_confidence > 0.0 else ''))
+            if (IsUrlTooLongForCaption):
+                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + imagelink, disable_web_page_preview=True)
             sendException = False
         except:
             sendException = True
