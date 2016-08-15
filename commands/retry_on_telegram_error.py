@@ -30,8 +30,8 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_con
                           caption=(user + ': ' if not user == '' else '') + captionText.encode('utf-8') +
                                   (' ' + imagelink if not IsUrlTooLongForCaption else '').encode('utf-8') +
                                   ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to see this.' if intention_confidence > 0.0 else ''))
-            #if (IsUrlTooLongForCaption):
-                #bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + imagelink, disable_web_page_preview=True)
+            if (IsUrlTooLongForCaption):
+                print imagelink
             sendException = False
         except:
             sendException = True
