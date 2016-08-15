@@ -7,7 +7,7 @@ import commands.getquote as getquote
 
 class TestGetQuote(unittest.TestCase):
     def test_getquote(self):
-        requestText = 'no more hairy bush nuns'
+        requestText = 'the universe is a big place, perhaps the biggest'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
