@@ -31,6 +31,7 @@ def run(bot, keyConfig, chat_id, user, message):
                and 'xhamster.com/stories_search' not in xlink \
                and 'redtube.com/pornstar/' not in xlink \
                and 'search?search=' not in xlink \
+               and 'xhamster.com/forums/' not in xlink \
                :
                 bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
                 return True
