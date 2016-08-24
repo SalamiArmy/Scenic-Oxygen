@@ -35,7 +35,7 @@ also clone https://github.com/MycroftAI/adapt.git and copy it's "adapt" folder i
 also run "(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t adapt pyee" from the root
 oh ja, /launch command needs a module called "dateutil", pip can't find it, GAE can't find it, I can't find it on GitHub, a better man than I can fix that, I'm out.
 
-Finally go to https://project-id.appspot.com/set_webhook?url=https://project-id.appspot.com/webhook (replace both project-ids with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father to use web hooks.
+Finally go to https://project-id.appspot.com/set_webhook?url=https://project-id.appspot.com/webhook (replace both project-ids with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father anything about web hooks.
 
 When you add commands Thorin will pick them up when he's asked to perform them while running, this means that you don't need to restart Thorin to add 
 new commands. However if you edit an existing command Thorin won't reload it until you restart him.
