@@ -28,7 +28,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                               ' are expected during the day with conditions being ' +
                               forecast[0]['text'] + '.\nSunrise: ' + astronomy['sunrise'] +
                               '\nSunset: ' + astronomy['sunset']) +
-                        '\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know this about the weather.' if intention_confidence > 0.0 else '',
+                             ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know this about the weather.' if intention_confidence > 0.0 else ''),
                         parse_mode=telegram.ParseMode.MARKDOWN)
         return True
     else:
