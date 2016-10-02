@@ -7,7 +7,7 @@ import commands.getsuggestion as getsuggestion
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        requestText = 'pokemon g'
+        requestText = 'so you take a pristine pussy and then you'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
