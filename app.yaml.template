@@ -22,3 +22,6 @@ libraries:
 - name: ssl
   version: latest
 
+libraries:
+  - name: PIL
+    version: latest

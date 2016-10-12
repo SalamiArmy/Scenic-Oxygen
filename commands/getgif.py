@@ -3,6 +3,7 @@ import json
 import random
 import string
 import urllib
+import io
 from PIL import Image
 
 import telegram
@@ -31,7 +32,10 @@ def run(bot, keyConfig, chat_id, user, message):
             randint_offset = randint + offset
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
-            gif = Image.open(urllib.urlopen(imagelink))
+            #gif = Image.open(urllib.urlopen(imagelink))
+            fd = urllib.urlopen(imagelink)
+            image_file = io.BytesIO(fd.read())
+            gif = Image.open(image_file)
             try:
                 gif.seek(1)
             except EOFError:
