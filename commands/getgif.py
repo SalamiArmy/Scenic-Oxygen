@@ -33,14 +33,18 @@ def run(bot, keyConfig, chat_id, user, message):
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
             #gif = Image.open(urllib.urlopen(imagelink))
+            print("Openning url " + imagelink)
             fd = urllib.urlopen(imagelink)
+            print("Reading gif...")
             image_file = io.BytesIO(fd.read())
+            print("Parsing gif...")
             gif = Image.open(image_file)
             try:
                 gif.seek(1)
             except EOFError:
                 thereWasAnError = True
             else:
+                print("...gif is animated, confirmed!")
                 if imagelink.endswith('.gif'):
                     thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 10:
