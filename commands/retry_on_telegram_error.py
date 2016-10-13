@@ -39,5 +39,6 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_con
             sendException = True
             numberOfRetries -= 1
             print(sys.exc_info()[0])
+            print(sys.exc_info()[1])
             sleep(10)
     return numberOfRetries > 0

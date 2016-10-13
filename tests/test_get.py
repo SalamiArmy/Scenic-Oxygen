@@ -7,7 +7,7 @@ import commands.get as get
 
 class TestGet(unittest.TestCase):
     def test_get(self):
-        requestText = 'this is where my babies come from'
+        requestText = 'steam dev days'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
