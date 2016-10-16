@@ -30,7 +30,7 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < 10:
             randint_offset = randint + offset
-            imagelink = data['items'][randint_offset if randint_offset < 9 else randint_offset - 9]['link']
+            imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
             print("Openning url " + imagelink)
             fd = urllib.urlopen(imagelink)
