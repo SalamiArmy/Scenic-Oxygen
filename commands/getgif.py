@@ -26,11 +26,11 @@ def run(bot, keyConfig, chat_id, user, message):
     offset = 0
     thereWasAnError = True
     if 'items' in data and len(data['items']) >= 1:
-        randint = random.randint(0, 5)
+        randint = random.randint(0, 9)
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < 10:
             randint_offset = randint + offset
-            imagelink = data['items'][randint_offset if randint_offset < 5 else randint_offset - 5]['link']
+            imagelink = data['items'][randint_offset if randint_offset < 9 else randint_offset - 9]['link']
             offset += 1
             print("Openning url " + imagelink)
             fd = urllib.urlopen(imagelink)
@@ -40,7 +40,7 @@ def run(bot, keyConfig, chat_id, user, message):
                 print("Parsing gif...")
                 gif = Image.open(image_file)
             except IOError:
-                gif.close()
+                gif.fp.close()
                 print("...not a gif")
                 thereWasAnError = True
             else:
@@ -48,7 +48,7 @@ def run(bot, keyConfig, chat_id, user, message):
                     print("Checking gif for animation...")
                     gif.seek(1)
                 except EOFError:
-                    gif.close()
+                    gif.fp.close()
                     print("...not animated")
                     thereWasAnError = True
                 else:

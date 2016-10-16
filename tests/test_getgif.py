@@ -7,7 +7,7 @@ import commands.getgif as getgif
 
 class TestGetGif(unittest.TestCase):
     def test_getgif(self):
-        requestText = 'dashcam boat flip'
+        requestText = 'coconut slaughter'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
