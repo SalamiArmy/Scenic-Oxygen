@@ -26,27 +26,33 @@ def run(bot, keyConfig, chat_id, user, message):
     offset = 0
     thereWasAnError = True
     if 'items' in data and len(data['items']) >= 1:
-        randint = random.randint(0, 9)
+        randint = random.randint(0, 5)
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < 10:
             randint_offset = randint + offset
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
-            #gif = Image.open(urllib.urlopen(imagelink))
             print("Openning url " + imagelink)
             fd = urllib.urlopen(imagelink)
             print("Reading gif...")
             image_file = io.BytesIO(fd.read())
-            print("Parsing gif...")
-            gif = Image.open(image_file)
             try:
-                gif.seek(1)
-            except EOFError:
+                print("Parsing gif...")
+                gif = Image.open(image_file)
+            except IOError:
+                print("...not a gif")
                 thereWasAnError = True
             else:
-                print("...gif is animated, confirmed!")
-                if imagelink.endswith('.gif'):
-                    thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+                try:
+                    print("Checking gif for animation...")
+                    gif.seek(1)
+                except EOFError:
+                    print("...not animated")
+                    thereWasAnError = True
+                else:
+                    print("...gif is animated, confirmed!")
+                    if imagelink.endswith('.gif'):
+                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 10:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
