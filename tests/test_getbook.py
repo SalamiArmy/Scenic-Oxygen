@@ -10,7 +10,7 @@ import commands.getbook as getbook
 
 class TestGetBook(unittest.TestCase):
     def test_getbook(self):
-        requestText = 'trippy swirl'
+        requestText = 'four roads cross'
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
