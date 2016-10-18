@@ -60,29 +60,29 @@ def run(bot, keyConfig, chat_id, user, message):
         formattedLaunchInfo = 'Upcoming Rocket Launches:\n\n' + \
                               str(blast1LocalTime) + \
                               '\n*' + b1['name'] + \
-                              '*\nLaunching from [' + b1['location']['pads'][0]['name'] + '](' + b1['location']['pads'][0][
-                                  'mapURL'] + ')' + \
+                              '*\nLaunching from ' + ('[' if b3['location']['pads'][0]['mapURL'] != '' else '') + b1['location']['pads'][0]['name'] + ('](' + b1['location']['pads'][0][
+                                  'mapURL'] + ')' if b3['location']['pads'][0]['mapURL'] != '' else '') + \
                               ('\nWatch live at ' + b1['vidURL'] if 'vidURL' in b1 and b1['vidURL'] != '' else '') + '\n\n' + \
                               str(blast2LocalTime) + \
                               '\n*' + b2['name'] + \
-                              '*\nLaunching from [' + b2['location']['pads'][0]['name'] + '](' + b2['location']['pads'][0][
-                                  'mapURL'] + ')' + \
+                              '*\nLaunching from ' + ('[' if b3['location']['pads'][0]['mapURL'] != '' else '') + b2['location']['pads'][0]['name'] + ('](' + b2['location']['pads'][0][
+                                  'mapURL'] + ')' if b3['location']['pads'][0]['mapURL'] != '' else '') + \
                               ('\nWatch live at ' + b2['vidURL'] if 'vidURL' in b2 and b2['vidURL'] != '' else '') + '\n\n' + \
                               str(blast3LocalTime) + \
                               '\n*' + b3['name'] + \
-                              '*\nLaunching from [' + b3['location']['pads'][0]['name'] + '](' + b3['location']['pads'][0][
-                                  'mapURL'] + ')' + \
+                              '*\nLaunching from ' + ('[' if b3['location']['pads'][0]['mapURL'] != '' else '') + b3['location']['pads'][0]['name'] + ('](' + b3['location']['pads'][0][
+                                  'mapURL'] + ')' if b3['location']['pads'][0]['mapURL'] != '' else '') + \
                               ('\nWatch live at ' + b3['vidURL'] if 'vidURL' in b3 and b3['vidURL'] != '' else '') + '\n\n' + \
                               str(blast4LocalTime) + \
                               '\n*' + b4['name'] + \
-                              '*\nLaunching from [' + b4['location']['pads'][0]['name'] + '](' + b4['location']['pads'][0][
-                                  'mapURL'] + ')' + \
+                              '*\nLaunching from ' + ('[' if b3['location']['pads'][0]['mapURL'] != '' else '') + b4['location']['pads'][0]['name'] + ('](' + b4['location']['pads'][0][
+                                  'mapURL'] + ')' if b3['location']['pads'][0]['mapURL'] != '' else '') + \
                               ('\nWatch live at ' + b4['vidURL'] if 'vidURL' in b4 and b4['vidURL'] != '' else '') + '\n\n' + \
                               str(blast5LocalTime) + \
                               '\n*' + b5['name'] + \
-                              '*\nLaunching from [' + b5['location']['pads'][0]['name'] + '](' + b5['location']['pads'][0][
-                                  'mapURL'] + ')' + \
-                              ('\nWatch live at ' + b5['vidURL'] if 'vidURL' in b5 else '')
+                              '*\nLaunching from ' + ('[' if b3['location']['pads'][0]['mapURL'] != '' else '') + b5['location']['pads'][0]['name'] + ('](' + b5['location']['pads'][0][
+                                  'mapURL'] + ')' if b3['location']['pads'][0]['mapURL'] != '' else '') + \
+                            ('\nWatch live at ' + b5['vidURL'] if 'vidURL' in b5 and b5['vidURL'] != '' else '')
         bot.sendMessage(chat_id=chat_id, text=formattedLaunchInfo,
                         parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         return True
