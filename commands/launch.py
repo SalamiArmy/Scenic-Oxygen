@@ -82,7 +82,7 @@ def run(bot, keyConfig, chat_id, user, message):
                               '\n*' + b5['name'] + \
                               '*\nLaunching from [' + b5['location']['pads'][0]['name'] + '](' + b5['location']['pads'][0][
                                   'mapURL'] + ')' + \
-                              ('\nWatch live at ' + b5['vidURL'] if 'vidURL' in b5 else '')
+                              ('\nWatch live at ' + b5['vidURL'] if 'vidURL' in b5 and b5['vidURL'] != '' else '')
         bot.sendMessage(chat_id=chat_id, text=formattedLaunchInfo,
                         parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         return True
