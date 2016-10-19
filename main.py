@@ -79,8 +79,8 @@ class WebhookHandler(webapp2.RequestHandler):
         logging.info(body)
         self.response.write(json.dumps(body))
 
-        if 'message' in body:
-            message = body['message']
+        if 'message' in body or 'edited_message' in body:
+            message = body['message'] if 'message' in body else body['edited_message']
             text = message.get('text')
             fr = message.get('from')
             user = fr['username'] \
