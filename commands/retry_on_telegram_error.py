@@ -9,7 +9,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
         try:
             print("Trying to send " + imagelink)
             bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
-            bot.sendMessage(chat_id=chat_id, text=imagelink, disable_web_page_preview=True)
+            bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
             sendException = False
         except:
             sendException = True
