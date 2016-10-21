@@ -7,7 +7,7 @@ import commands.getlyrics as getlyrics
 
 class TestGetLyrics(unittest.TestCase):
     def test_getlyrics(self):
-        requestText = 'trippy swirl'
+        requestText = 'killing with kindness drive by'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

@@ -14,10 +14,14 @@ def run(bot, keyConfig, chat_id, user, message):
                     len(data['message']['body']['track_list']) >= 1 and \
                     'track' in data['message']['body']['track_list'][0] and \
                     'artist_name' in data['message']['body']['track_list'][0]['track'] and \
-                    'track_name' in data['message']['body']['track_list'][0]['track']:
+                    'track_name' in data['message']['body']['track_list'][0]['track'] and \
+                    'track_id' in data['message']['body']['track_list'][0]['track']:
         artist_name = data['message']['body']['track_list'][0]['track']['artist_name']
         track_name = data['message']['body']['track_list'][0]['track']['track_name']
-        track_soundcloud_id = str(data['message']['body']['track_list'][0]['track']['track_soundcloud_id'])
+        if 'track_soundcloud_id' in data['message']['body']['track_list'][0]['track']:
+            track_soundcloud_id = str(data['message']['body']['track_list'][0]['track']['track_soundcloud_id'])
+        else:
+            track_soundcloud_id = '0'
         trackId = str(data['message']['body']['track_list'][0]['track']['track_id'])
         lyricsUrl = 'http://api.musixmatch.com/ws/1.1/track.lyrics.get?apikey='
         data = json.load(urllib.urlopen(lyricsUrl + keyConfig.get('MusixMatch', 'APP_ID') + '&track_id=' + trackId))
