@@ -18,7 +18,7 @@ def run(bot, keyConfig, chat_id, user, message):
                     'track_id' in data['message']['body']['track_list'][0]['track']:
         artist_name = data['message']['body']['track_list'][0]['track']['artist_name']
         track_name = data['message']['body']['track_list'][0]['track']['track_name']
-        if 'track_soundcloud_id' in data['message']['body']['track_list'][0]['track']:
+        if 'track_soundcloud_id' in data['message']['body']['track_list'][0]['track'] and str(data['message']['body']['track_list'][0]['track']['track_soundcloud_id']) != '':
             track_soundcloud_id = str(data['message']['body']['track_list'][0]['track']['track_soundcloud_id'])
         else:
             track_soundcloud_id = '0'
