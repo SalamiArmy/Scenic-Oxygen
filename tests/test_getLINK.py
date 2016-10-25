@@ -1,18 +1,20 @@
 import ConfigParser
 import unittest
-
 import telegram
 
-import commands.getgame as getgame
+import commands.getlink as getlink
 
 
-class TestGetGame(unittest.TestCase):
-    def test_getgame(self):
-        requestText = 'negligee'
+class TestGet(unittest.TestCase):
+    def test_get(self):
+        requestText = 'steam dev days'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        getgame.run(bot, keyConfig, chatId, 'Admin', requestText)
+        #for bot group:
+        #chatId = -130436192
+
+        getlink.run(bot, keyConfig, chatId, 'SalamiArmy', requestText)
