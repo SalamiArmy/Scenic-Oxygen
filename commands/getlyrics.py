@@ -32,7 +32,7 @@ def run(bot, keyConfig, chat_id, user, message):
                         len(data['message']['body']['lyrics']) >= 1 and \
                         'lyrics_body' in data['message']['body']['lyrics']:
             lyrics_body = data['message']['body']['lyrics']['lyrics_body'].replace(
-                '******* This Lyrics is NOT for Commercial use *******', '')
+                '******* This Lyrics is NOT for Commercial use *******\n(1409612423371)', '')
         bot.sendMessage(chat_id=chat_id, text=((user + ': ') if not user == '' else '') + track_name + ' by ' + artist_name + \
                                               ((
                                                    '\nListen at: https://api.soundcloud.com/tracks/' + track_soundcloud_id) if not track_soundcloud_id == '0' else '') + \
