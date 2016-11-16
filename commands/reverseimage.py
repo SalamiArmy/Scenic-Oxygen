@@ -9,41 +9,32 @@ def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
 
     code = retrieve_google_image_search_results(requestText)
-    jsonResults = json.loads(google_image_results_parser(code))
-    resultsText = ''
-    if 'result_qty' in jsonResults and len(jsonResults['result_qty']) > 0:
-        for jsonResult in jsonResults['result_qty']:
-            resultsText += jsonResult + '\n'
-    if 'title' in jsonResults and len(jsonResults['title']) > 0:
-        for jsonResult in jsonResults['title']:
-            resultsText += jsonResult + '\n'
-    if 'description' in jsonResults and len(jsonResults['description']) > 0:
-        for jsonResult in jsonResults['description']:
-            resultsText += (jsonResult[jsonResult.index('-') + 2:] + '\n' if '-' in jsonResult else '')
-    if 'links' in jsonResults and len(jsonResults['links']) > 0:
-        for jsonResult in jsonResults['links']:
-            resultsText += jsonResult + '\n'
-    resultLinks = code[code.index('Search Results'):].split('href=')
-    for resultLink in resultLinks[1:]:
-        resultLink = resultLink[1:]
-        if ('"' in resultLink and len(resultLink) > resultLink.index('"')):
-            foundLink = resultLink[:resultLink.index('"')]
+    parsedCode = google_image_results_parser(code)
+    if parsedCode[:len("Error: ")] != "Error: ":
+        jsonResults = json.loads(parsedCode)
+        resultsText = ''
+        if 'result_qty' in jsonResults and len(jsonResults['result_qty']) > 0:
+            for jsonResult in jsonResults['result_qty']:
+                resultsText += jsonResult + '\n'
+        if 'title' in jsonResults and len(jsonResults['title']) > 0:
+            for jsonResult in jsonResults['title']:
+                resultsText += jsonResult + '\n'
+        if 'description' in jsonResults and len(jsonResults['description']) > 0:
+            for jsonResult in jsonResults['description']:
+                resultsText += (jsonResult[jsonResult.index('-') + 2:] + '\n' if '-' in jsonResult else '')
+        if 'links' in jsonResults and len(jsonResults['links']) > 0:
+            for jsonResult in jsonResults['links']:
+                resultsText += jsonResult + '\n'
+        if resultsText:
+            bot.sendMessage(chat_id=chat_id, text=resultsText, disable_web_page_preview=True)
+            return True
         else:
-            foundLink = '#'
-        if foundLink != '#' and \
-                        foundLink != 'javascript:;' and \
-                        foundLink != 'javascript:void(0)' and \
-                        foundLink != '//www.google.com/intl/en/policies/privacy/?fg=1' and \
-                        foundLink != '//www.google.com/intl/en/policies/terms/?fg=1' and \
-                        len(foundLink) < 50:
-            resultsText += foundLink + '\n'
-    if resultsText:
-        bot.sendMessage(chat_id=chat_id, text=resultsText, disable_web_page_preview=True)
-        return True
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                                  ', I\'m afraid I can\'t find any reverse image results for ' + \
+                                                  requestText.encode('utf-8'))
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                              ', I\'m afraid I can\'t find any reverse image results for ' + \
-                                              requestText.encode('utf-8'))
+                                              " there was an " + parsedCode)
 
 
 # retrieves reverse search html for processing. This spoofs a fake user-agent, so it's morally dubious.
@@ -56,6 +47,9 @@ def retrieve_google_image_search_results(image_url):
 # Parses reverse search html and assigns to array using beautifulsoup
 def google_image_results_parser(code):
     soup = BeautifulSoup(code, 'html.parser')
+
+    for card in soup.findAll('div', attrs={'class': 'card-section'}):
+        return "Error: " + card.get_text()
 
     # initialize 2d array
     whole_array = {'links': [],
