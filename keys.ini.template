@@ -7,8 +7,8 @@ Timezone: {Timezone of bot host eg: +02}
 
 [Google]
 GCSE_APP_ID: {Your Google Api Key here}
-GCSE_SE_ID: {Your Google Image Custom Search Engine ID here}
-GCSE_OTHER_SE_ID: {Your Non-Image Google Custom Search Engine ID here}
+GCSE_SE_ID: {Your Google Image Custom Search Engine ID here (for /get command)}
+GCSE_GETLINK_SE_ID: {Your Non-Image Google Custom Search Engine ID here (for /getlink command)}
 GCSE_XSE_ID: {Your x-rated Google Custom Search Engine ID here}
 
 [Soundcloud]

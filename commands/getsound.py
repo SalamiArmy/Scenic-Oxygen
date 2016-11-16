@@ -9,8 +9,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
 
     client = soundcloud.Client(client_id=keyConfig.get('Soundcloud', 'SC_CLIENT_ID'))
     track = client.get('/tracks', q=requestText.encode('utf-8'), sharing='public')
-    if len(track) >= 1:
-        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + track[random.randint(0, 9)].permalink_url +
+    if len(track)-1 >= 0:
+        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + track[random.randint(0, len(track)-1)].permalink_url +
                                               ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to hear this.' if intention_confidence > 0.0 else ''))
         return True
     else:

@@ -12,6 +12,7 @@ from commands import retry_on_telegram_error
 
 
 def run(bot, keyConfig, chat_id, user, message):
+    global gif
     requestText = message.replace(bot.name, "").strip()
 
     googurl = 'https://www.googleapis.com/customsearch/v1'
@@ -25,8 +26,8 @@ def run(bot, keyConfig, chat_id, user, message):
     data = json.load(urllib.urlopen(realUrl))
     offset = 0
     thereWasAnError = True
-    if 'items' in data and len(data['items']) >= 1:
-        randint = random.randint(0, 9)
+    if 'items' in data and len(data['items'])-1 >= 0:
+        randint = random.randint(0, len(data['items'])-1)
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < 10:
             randint_offset = randint + offset
@@ -53,8 +54,7 @@ def run(bot, keyConfig, chat_id, user, message):
                     thereWasAnError = True
                 else:
                     print("...gif is animated, confirmed!")
-                    if imagelink.endswith('.gif'):
-                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+                    thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 10:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
