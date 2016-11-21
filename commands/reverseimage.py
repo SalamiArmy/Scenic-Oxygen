@@ -41,7 +41,7 @@ def run(bot, keyConfig, chat_id, user, message):
 def retrieve_google_image_search_results(image_url):
     searchUrl = 'https://www.google.com/searchbyimage?&image_url=' + image_url
     searchOpener = urllib2.build_opener()
-    searchOpener.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11')]
+    searchOpener.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17')]
     return searchOpener.open(searchUrl).read()
 
 # Parses reverse search html and assigns to array using beautifulsoup
