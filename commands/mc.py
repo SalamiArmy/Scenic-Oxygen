@@ -7,7 +7,6 @@ from mcstatus import MinecraftServer
 
 def run(bot, keyConfig, chat_id, user, message):
     mcApiUrl = 'http://minecraft-server.li/server/api.php?ip=' + keyConfig.get('Minecraft', 'SVR_ADDR')
-    #rawData = urllib.urlopen(mcApiUrl).read()
     mcOpener = urllib2.build_opener()
     mcOpener.addheaders = [('User-agent',
                                 'Mozilla/5.0 (X11; Linux i686) ApleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17')]
