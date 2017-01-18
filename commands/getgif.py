@@ -34,10 +34,10 @@ def run(bot, keyConfig, chat_id, user, message):
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
             print("Openning url " + imagelink)
-            fd = urllib.urlopen(imagelink)
-            print("Reading gif...")
-            image_file = io.BytesIO(fd.read())
             try:
+                fd = urllib.urlopen(imagelink)
+                print("Reading gif...")
+                image_file = io.BytesIO(fd.read())
                 print("Parsing gif...")
                 gif = Image.open(image_file)
             except IOError:

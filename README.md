@@ -30,10 +30,7 @@ cd ~/bot
 (PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 
-You might want to clone https://github.com/Imgur/imgurpython.git and copy out the "imgurpython" folder into that lib folder that pip created
-also clone https://github.com/MycroftAI/adapt.git and copy it's "adapt" folder into the root
-also run "(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t adapt pyee" from the root
-oh ja, /launch command needs a module called "dateutil", pip can't find it, GAE can't find it, I can't find it on GitHub, a better man than I can fix that, I'm out.
+oh ja, /launch command needs a module called "dateutil" clone and copy that folder into lib: https://github.com/dateutil/dateutil
 
 Finally go to https://project-id.appspot.com/set_webhook?url=https://project-id.appspot.com/webhook (replace both project-ids with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father anything about web hooks.
 
