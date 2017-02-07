@@ -1,5 +1,8 @@
 import ConfigParser
+import json
 import unittest
+import urllib
+
 import telegram
 
 import commands.getgif as getgif
