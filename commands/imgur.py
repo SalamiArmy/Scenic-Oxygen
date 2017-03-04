@@ -12,14 +12,18 @@ def run(bot, keyConfig, chat_id, user, message):
     client_id = keyConfig.get('Imgur', 'CLIENT_ID')
     client_secret = keyConfig.get('Imgur', 'CLIENT_SECRET')
     client = ImgurClient(client_id, client_secret)
-    items = client.gallery_search(q=string.capwords(requestText.encode('utf-8')),
-                                  advanced={'q_type': 'anigif'},
+    items = client.gallery_search(q=requestText,
                                   sort='top',
                                   window='all',
-                                  page=random.randint(0, 9))
-    for item in items:
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        bot.sendDocument(chat_id=chat_id,
-                         filename=requestText.encode('utf-8'),
-                         document=item.link.encode('utf-8'))
-        return True
+                                  page=1)
+    if len(items) > 0:
+        for item in items:
+            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+            bot.sendDocument(chat_id=chat_id,
+                             filename=requestText.encode('utf-8'),
+                             document=item.link.encode('utf-8'))
+            return True
+    else:
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find any Imgur images for ' +
+                                              string.capwords(requestText.encode('utf-8')))

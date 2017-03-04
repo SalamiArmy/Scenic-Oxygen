@@ -29,9 +29,11 @@ def run(bot, keyConfig, chat_id, user, message):
     if 'items' in data and len(data['items'])-1 >= 0:
         randint = random.randint(0, len(data['items'])-1)
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        while thereWasAnError and offset < 10:
+        while thereWasAnError and offset < 9:
             randint_offset = randint + offset
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
+            if '?' in imagelink:
+                imagelink = imagelink[:imagelink.index('?')]
             offset += 1
             print("Openning url " + imagelink)
             try:
@@ -55,7 +57,7 @@ def run(bot, keyConfig, chat_id, user, message):
                 else:
                     print("...gif is animated, confirmed!")
                     thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
-        if thereWasAnError or not offset < 10:
+        if thereWasAnError or not offset < 9:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
                                                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
