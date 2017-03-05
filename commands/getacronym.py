@@ -29,7 +29,7 @@ def acronym_results_parser(code):
     return resultList
 
 def acronym_results_printer(request, list):
-    AllGameDetailsFormatted= '*' + request + '* could mean:'
+    AllGameDetailsFormatted= '*' + str(request).upper() + '* could mean:'
     for item in list:
         if (str(item) != 'None'):
             AllGameDetailsFormatted += '\n'
