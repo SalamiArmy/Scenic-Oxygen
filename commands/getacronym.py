@@ -7,7 +7,7 @@ import re
 
 
 def run(bot, keyConfig, chat_id, user, message):
-    requestText = message.replace(bot.name, '').strip()
+    requestText = message.replace(bot.name, '').strip().upper()
 
     code = urllib.urlopen('http://www.acronymsearch.com/index.php?acronym=' + requestText).read()
     resultsList = acronym_results_parser(code)
@@ -18,8 +18,8 @@ def run(bot, keyConfig, chat_id, user, message):
         return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                              ', I\'m afraid I can\'t find the acronym ' + \
-                                              requestText.encode('utf-8'))
+                                              ', I\'m afraid I can\'t find the acronym *' + \
+                                              requestText.encode('utf-8') + '*')
 
 
 def acronym_results_parser(code):
@@ -30,7 +30,7 @@ def acronym_results_parser(code):
     return resultList
 
 def acronym_results_printer(request, list):
-    AllGameDetailsFormatted= '*' + str(request).upper() + '* could mean:'
+    AllGameDetailsFormatted= '*' + str(request) + '* could mean:'
     for item in list:
         if (str(item) != 'None'):
             AllGameDetailsFormatted += '\n'
