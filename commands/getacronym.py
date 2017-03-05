@@ -58,5 +58,11 @@ def acronym_results_printer(request, list):
                 AllGameDetailsFormatted += '\n_' + str(item).rstrip(abbreviationSuffix) + '_'
             slangSuffix = '[slang]'
             if (str(item).endswith(slangSuffix)):
-                AllGameDetailsFormatted += '\n_' + str(item).rstrip(slangSuffix) + '_'
+                AllGameDetailsFormatted += '\n_'
+                for char in str(item).rstrip(slangSuffix):
+                    if char.isupper():
+                        AllGameDetailsFormatted += '*' + char + '*'
+                    else:
+                        AllGameDetailsFormatted += char
+                AllGameDetailsFormatted += '_'
     return AllGameDetailsFormatted
