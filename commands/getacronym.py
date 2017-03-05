@@ -32,37 +32,19 @@ def acronym_results_printer(request, list):
     AllGameDetailsFormatted= '*' + request + '* could mean:'
     for item in list:
         if (str(item) != 'None'):
-            militarySuffix = '[military]'
-            if (str(item).endswith(militarySuffix)):
-                AllGameDetailsFormatted += '\n*' + str(item).rstrip(militarySuffix) + '*'
-            insuranceSuffix = '(insurance)'
-            if (str(item).endswith(insuranceSuffix)):
-                AllGameDetailsFormatted += '\n_' + str(item).rstrip(insuranceSuffix) + '_'
-            transportationSuffix = '[transportation]'
-            if (str(item).endswith(transportationSuffix)):
-                AllGameDetailsFormatted += '\n_' + str(item).rstrip(transportationSuffix) + '_'
-            computerSuffix = '[computer]'
-            if (str(item).endswith(computerSuffix)):
-                AllGameDetailsFormatted += '\n`' + str(item).rstrip(computerSuffix) + '`'
-            technologySuffix = '(technology)'
-            if (str(item).endswith(technologySuffix)):
-                AllGameDetailsFormatted += '\n`' + str(item).rstrip(technologySuffix) + '`'
-            medicalSuffix = '[medical]'
-            if (str(item).endswith(medicalSuffix)):
-                AllGameDetailsFormatted += '\n_' + str(item).rstrip(medicalSuffix) + '_'
-            automotiveSuffix = '[automotive]'
-            if (str(item).endswith(automotiveSuffix)):
-                AllGameDetailsFormatted += '\n_' + str(item).rstrip(automotiveSuffix) + '_'
-            abbreviationSuffix = '[abbreviation]'
-            if (str(item).endswith(abbreviationSuffix)):
-                AllGameDetailsFormatted += '\n_' + str(item).rstrip(abbreviationSuffix) + '_'
-            slangSuffix = '[slang]'
-            if (str(item).endswith(slangSuffix)):
-                AllGameDetailsFormatted += '\n_'
-                for char in str(item).rstrip(slangSuffix):
-                    if char.isupper():
-                        AllGameDetailsFormatted += '*' + char + '*'
-                    else:
-                        AllGameDetailsFormatted += char
-                AllGameDetailsFormatted += '_'
+            AllGameDetailsFormatted += '\n'
+            for char in str(item)\
+                    .rstrip('[military]')\
+                    .rstrip('(insurance)')\
+                    .rstrip('[transportation]')\
+                    .rstrip('[computer]')\
+                    .rstrip('(technology)')\
+                    .rstrip('[medical]')\
+                    .rstrip('[automotive]')\
+                    .rstrip('[abbreviation]')\
+                    .rstrip('[slang]'):
+                if char.isupper():
+                    AllGameDetailsFormatted += '*' + char + '*'
+                else:
+                    AllGameDetailsFormatted += char
     return AllGameDetailsFormatted
