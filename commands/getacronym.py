@@ -50,4 +50,13 @@ def acronym_results_printer(request, list):
             medicalSuffix = '[medical]'
             if (str(item).endswith(medicalSuffix)):
                 AllGameDetailsFormatted += '\n_' + str(item).rstrip(medicalSuffix) + '_'
+            automotiveSuffix = '[automotive]'
+            if (str(item).endswith(automotiveSuffix)):
+                AllGameDetailsFormatted += '\n_' + str(item).rstrip(automotiveSuffix) + '_'
+            abbreviationSuffix = '[abbreviation]'
+            if (str(item).endswith(abbreviationSuffix)):
+                AllGameDetailsFormatted += '\n_' + str(item).rstrip(abbreviationSuffix) + '_'
+            slangSuffix = '[slang]'
+            if (str(item).endswith(slangSuffix)):
+                AllGameDetailsFormatted += '\n_' + str(item).rstrip(slangSuffix) + '_'
     return AllGameDetailsFormatted
