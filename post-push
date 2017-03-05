@@ -1,0 +1,3 @@
+#!/bin/sh
+
+"%localappdata%\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.cmd" app deploy app.yaml
