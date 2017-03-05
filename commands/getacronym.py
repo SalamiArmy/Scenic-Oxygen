@@ -11,8 +11,8 @@ def run(bot, keyConfig, chat_id, user, message):
     code = urllib.urlopen('http://www.acronymsearch.com/index.php?acronym=' + requestText).read()
     resultsList = acronym_results_parser(code)
     if resultsList:
-        searchResults = acronym_search_parser(resultsList)
-        bot.sendMessage(chat_id=chat_id, text=user + ', ' + requestText + ' has ' + searchResults,
+        searchResults = acronym_results_printer(requestText, resultsList)
+        bot.sendMessage(chat_id=chat_id, text=user + ', ' + searchResults,
                         disable_web_page_preview=True, parse_mode='Markdown')
         return True
     else:
@@ -28,9 +28,26 @@ def acronym_results_parser(code):
         resultList.append(resultRow.string)
     return resultList
 
-def acronym_search_parser(list):
-    AllGameDetailsFormatted= 'Possible Acronym Meanings:'
+def acronym_results_printer(request, list):
+    AllGameDetailsFormatted= '*' + request + '* could mean:'
     for item in list:
         if (str(item) != 'None'):
-            AllGameDetailsFormatted += '\n*' + str(item) + '*'
+            militarySuffix = '[military]'
+            if (str(item).endswith(militarySuffix)):
+                AllGameDetailsFormatted += '\n*' + str(item).rstrip(militarySuffix) + '*'
+            insuranceSuffix = '(insurance)'
+            if (str(item).endswith(insuranceSuffix)):
+                AllGameDetailsFormatted += '\n_' + str(item).rstrip(insuranceSuffix) + '_'
+            transportationSuffix = '[transportation]'
+            if (str(item).endswith(transportationSuffix)):
+                AllGameDetailsFormatted += '\n_' + str(item).rstrip(transportationSuffix) + '_'
+            computerSuffix = '[computer]'
+            if (str(item).endswith(computerSuffix)):
+                AllGameDetailsFormatted += '\n`' + str(item).rstrip(computerSuffix) + '`'
+            technologySuffix = '(technology)'
+            if (str(item).endswith(technologySuffix)):
+                AllGameDetailsFormatted += '\n`' + str(item).rstrip(technologySuffix) + '`'
+            medicalSuffix = '[medical]'
+            if (str(item).endswith(medicalSuffix)):
+                AllGameDetailsFormatted += '\n_' + str(item).rstrip(medicalSuffix) + '_'
     return AllGameDetailsFormatted
