@@ -3,6 +3,7 @@ import urllib
 import urllib2
 
 from bs4 import BeautifulSoup
+import re
 
 
 def run(bot, keyConfig, chat_id, user, message):
@@ -17,7 +18,7 @@ def run(bot, keyConfig, chat_id, user, message):
         return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                                              ', I\'m afraid I can\'t find the steam game ' + \
+                                              ', I\'m afraid I can\'t find the acronym ' + \
                                               requestText.encode('utf-8'))
 
 
@@ -33,16 +34,8 @@ def acronym_results_printer(request, list):
     for item in list:
         if (str(item) != 'None'):
             AllGameDetailsFormatted += '\n'
-            for char in str(item)\
-                    .rstrip('[military]')\
-                    .rstrip('(insurance)')\
-                    .rstrip('[transportation]')\
-                    .rstrip('[computer]')\
-                    .rstrip('(technology)')\
-                    .rstrip('[medical]')\
-                    .rstrip('[automotive]')\
-                    .rstrip('[abbreviation]')\
-                    .rstrip('[slang]'):
+            stripped = re.sub('\[military]$|\\(insurance\)$|\[transportation]$|\[computer]$|\\(technology\)$|\[medical]$|\[automotive]$|\[abbreviation]$|\[slang]$|', '', str(item))
+            for char in stripped:
                 if char.isupper():
                     AllGameDetailsFormatted += '*' + char + '*'
                 else:
