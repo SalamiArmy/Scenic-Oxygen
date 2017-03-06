@@ -25,23 +25,34 @@ bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
 # ================================
 
-class EnableStatus(ndb.Model):
-    # key name: str(chat_id)
-    enabled = ndb.BooleanProperty(indexed=False, default=False)
 
+class AllWatchesValue(ndb.Model):
+    # key name: AllWatches
+    currentValue = ndb.StringProperty(indexed=False, default='')
 
 # ================================
 
-def setEnabled(chat_id, yes):
-    es = EnableStatus.get_or_insert(str(chat_id))
-    es.enabled = yes
+def addToAllWatches(chat_id, request):
+    es = AllWatchesValue.get_or_insert('AllWatches')
+    es.currentValue += ',' + chat_id + ':' + request
     es.put()
 
-def getEnabled(chat_id):
-    es = EnableStatus.get_by_id(str(chat_id))
+def AllWatchesContains(chat_id, request):
+    es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return es.enabled
+        return (chat_id + ':'  + request) in str(es.currentValue)
     return False
+
+def setAllWatchesValue(NewValue):
+    es = AllWatchesValue.get_or_insert('AllWatches')
+    es.currentValue = NewValue
+    es.put()
+
+def getAllWatches():
+    es = AllWatchesValue.get_by_id('AllWatches')
+    if es:
+        return es.currentValue
+    return ''
 
 
 # ================================
@@ -96,9 +107,6 @@ class WebhookHandler(webapp2.RequestHandler):
 
             if text.startswith('/'):
                 self.TryExecuteExplicitCommand(chat_id, user, text)
-#            else:
-#                if len(text) < 200:
-#                    self.TryParseIntent(chat_id, user, text)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(" ", 1)
@@ -174,6 +182,13 @@ class RunTestsHandler(webapp2.RequestHandler):
 
 class WebCommandRunHandler(webapp2.RequestHandler):
     def get(self):
+        AllWatches = getAllWatches()
+        for watch in AllWatches.split(','):
+            WebhookHandler.TryExecuteExplicitCommand(watch.split(':')[0], "Admin", "/watch " + watch.split(':')[1])
+
+
+class TriggerAllWatches(webapp2.RequestHandler):
+    def get(self):
         urlfetch.set_default_fetch_deadline(60)
         text = self.request.get('text')
         if not text:
@@ -194,5 +209,6 @@ app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/run_tests', RunTestsHandler),
-    ('/run', WebCommandRunHandler)
+    ('/run', WebCommandRunHandler),
+    ('/allwatches', TriggerAllWatches)
 ], debug=True)

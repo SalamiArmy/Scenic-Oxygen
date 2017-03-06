@@ -1,13 +1,11 @@
 # coding=utf-8
 import hashlib
 import string
-
-import sys
 import urllib
 
-import io
 from google.appengine.ext import ndb
 
+import main
 from commands import get
 from commands import retry_on_telegram_error
 
@@ -18,13 +16,13 @@ class WatchValue(ndb.Model):
 
 # ================================
 
-def setWatchValue(chat_id, NewValue):
-    es = WatchValue.get_or_insert(str(chat_id))
+def setWatchValue(chat_id, request, NewValue):
+    es = WatchValue.get_or_insert(str(chat_id) + ':' + request)
     es.currentValue = NewValue
     es.put()
 
-def getWatchValue(chat_id):
-    es = WatchValue.get_by_id(str(chat_id))
+def getWatchValue(chat_id, request):
+    es = WatchValue.get_by_id(str(chat_id) + ':' + request)
     if es:
         return es.currentValue
     return ''
@@ -38,16 +36,19 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         print("reading file...")
         fileHash = md5(fd.read())
         print("read hash as " + fileHash)
-        OldValue = getWatchValue(chat_id)
+        OldValue = getWatchValue(chat_id, requestText)
         if OldValue != fileHash:
-            setWatchValue(chat_id, fileHash)
-            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Now watching /get ' + requestText, user)
+            if not main.AllWatchesContains(chat_id, requestText):
+                main.addToAllWatches(chat_id, requestText)
+            setWatchValue(chat_id, requestText, fileHash)
+            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Now watching /get ' + requestText + '.', user)
         else:
-            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Watched /get has not changed.', user)
+            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Watch for /get ' + requestText + ' has not changed.', user)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +
-                                              string.capwords(requestText.encode('utf-8')) + '. ')
+                                              'because I did not find any results for /get ' +
+                                              string.capwords(requestText.encode('utf-8')))
 
 
 def md5(byteStream):
