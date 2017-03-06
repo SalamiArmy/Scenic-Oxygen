@@ -42,7 +42,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             OldValue = 'blank'
         if OldValue != fileHash:
             setWatchValue(fileHash, requestText)
-            bot.sendMessage(chat_id=chat_id, text='Chat ' + str(chat_id) + ' was:\n' + OldValue + '\nnow:\n' + imagelink)
+            bot.sendMessage(chat_id=chat_id, text='Chat ' + str(chat_id) + ' was:\n' + OldValue + '\nnow:\n' + fileHash)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +
