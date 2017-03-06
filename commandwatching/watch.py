@@ -19,10 +19,7 @@ class WatchValue(ndb.Model):
 
 def setWatchValue(chat_id, NewValue):
     es = WatchValue.get_or_insert(str(chat_id))
-    if es.currentValue == '':
-        es.currentValue = NewValue
-    else:
-        es.currentValue = es.currentValue + ',' + NewValue
+    es.currentValue = NewValue
     es.put()
 
 def getWatchValue(chat_id):
