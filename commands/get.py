@@ -11,14 +11,7 @@ from commands import retry_on_telegram_error
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
-    googurl = 'https://www.googleapis.com/customsearch/v1'
-    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
-            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
-            'searchType': "image",
-            'safe': "off",
-            'q': requestText}
-    realUrl = googurl + '?' + urllib.urlencode(args)
-    data = json.load(urllib.urlopen(realUrl))
+    data = Google_Image_Search(keyConfig, requestText)
     if 'items' in data and len(data['items']) >= 9:
         thereWasAnError = True
         offset = 0
@@ -45,5 +38,17 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find any images for ' +
                                                       string.capwords(requestText.encode('utf-8')))
+
+
+def Google_Image_Search(keyConfig, requestText):
+    googurl = 'https://www.googleapis.com/customsearch/v1'
+    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'searchType': "image",
+            'safe': "off",
+            'q': requestText}
+    realUrl = googurl + '?' + urllib.urlencode(args)
+    data = json.load(urllib.urlopen(realUrl))
+    return data
 
 
