@@ -34,13 +34,13 @@ class AllWatchesValue(ndb.Model):
 
 def addToAllWatches(chat_id, request):
     es = AllWatchesValue.get_or_insert('AllWatches')
-    es.currentValue += ',' + chat_id + ':' + request
+    es.currentValue += ',' + str(chat_id) + ':' + request
     es.put()
 
 def AllWatchesContains(chat_id, request):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (chat_id + ':'  + request) in str(es.currentValue)
+        return (str(chat_id) + ':'  + request) in str(es.currentValue)
     return False
 
 def setAllWatchesValue(NewValue):

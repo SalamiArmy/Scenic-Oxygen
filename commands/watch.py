@@ -33,9 +33,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     if 'items' in data and len(data['items']) >= 1:
         imagelink = data['items'][0]['link']
         fd = urllib.urlopen(imagelink)
-        print("reading file...")
         fileHash = md5(fd.read())
-        print("read hash as " + fileHash)
         OldValue = getWatchValue(chat_id, requestText)
         if OldValue != fileHash:
             if not main.AllWatchesContains(chat_id, requestText):
