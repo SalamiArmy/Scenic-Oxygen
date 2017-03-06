@@ -106,7 +106,11 @@ class WebhookHandler(webapp2.RequestHandler):
             mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ""))
             mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
         except:
-            print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            try:
+                mod = importlib.import_module('commandwatching.' + split[0].lower().replace(bot.name.lower(), ""))
+                mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
+            except:
+                print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
 
 class RunTestsHandler(webapp2.RequestHandler):

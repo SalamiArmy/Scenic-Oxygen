@@ -7,7 +7,7 @@ import commands.reverseimage as reverseimage
 
 class TestReverseImage(unittest.TestCase):
     def test_reverseimage(self):
-        requestText = 'http://cdn.skim.gs/images/v1/msi/bt7jpt3wd6djuwc4rdn1/women-banned-from-instagram-for-being-too-hairy-down-there'
+        requestText = 'https://i.kinja-img.com/gawker-media/image/upload/t_original/jvv7ixccfzr1sueeed5f.gif'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
