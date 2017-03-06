@@ -41,7 +41,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         OldValue = getWatchValue(chat_id)
         if OldValue != fileHash:
             setWatchValue(chat_id, fileHash)
-            bot.sendMessage(chat_id=chat_id, text='Chat ' + str(chat_id) + ' was:\n' + OldValue + '\nnow:\n' + fileHash)
+            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Now watching /get ' + requestText, user)
         else:
             retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Watched /get has not changed.', user)
     else:
