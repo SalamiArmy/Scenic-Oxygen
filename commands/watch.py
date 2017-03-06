@@ -9,6 +9,7 @@ import io
 from google.appengine.ext import ndb
 
 from commands import get
+from commands import retry_on_telegram_error
 
 
 class WatchValue(ndb.Model):
@@ -38,11 +39,11 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         fileHash = md5(fd.read())
         print("read hash as " + fileHash)
         OldValue = getWatchValue(chat_id)
-        if OldValue == '':
-            OldValue = 'blank'
         if OldValue != fileHash:
             setWatchValue(chat_id, fileHash)
             bot.sendMessage(chat_id=chat_id, text='Chat ' + str(chat_id) + ' was:\n' + OldValue + '\nnow:\n' + fileHash)
+        else:
+            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Watched /get has not changed.', user)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +

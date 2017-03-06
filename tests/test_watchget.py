@@ -1,8 +1,9 @@
 import ConfigParser
 import unittest
+
 import telegram
 
-import commandwatching.watch as watch
+import commands.watch as watch
 
 
 class TestGet(unittest.TestCase):
