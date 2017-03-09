@@ -115,6 +115,12 @@ class WebhookHandler(webapp2.RequestHandler):
             mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
         except:
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            try:
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
+                                                      ', I\'m afraid command ' + split[0] + ' threw an error:\n' +
+                                                      str(sys.exc_info()[0]) + '\n' + str(sys.exc_info()[1]))
+            except:
+                print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
 
 class RunTestsHandler(webapp2.RequestHandler):
