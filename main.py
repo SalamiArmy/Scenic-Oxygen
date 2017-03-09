@@ -118,8 +118,8 @@ class WebhookHandler(webapp2.RequestHandler):
             try:
                 bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
                                 text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
-                                     '. Command ' + split[0] + ' threw:\n' + str(sys.exc_info()[0]) + '\n' +
-                                     str(sys.exc_info()[1]))
+                                     '\'s request ' + (split[1] if len(split) > 1 else '') + '. Command ' +
+                                     split[0] + ' threw:\n' + str(sys.exc_info()[0]) + '\n' + str(sys.exc_info()[1]))
             except:
                 print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
