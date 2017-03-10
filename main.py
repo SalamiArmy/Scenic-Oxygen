@@ -40,7 +40,9 @@ def addToAllWatches(chat_id, request):
 def AllWatchesContains(chat_id, request):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (str(chat_id) + ':'  + request) in str(es.currentValue)
+        return (',' + str(chat_id) + ':'  + request + ',') in str(es.currentValue) or \
+               (',' + str(chat_id) + ':' + request) in str(es.currentValue) or \
+               (str(chat_id) + ':' + request + ',') in str(es.currentValue)
     return False
 
 def setAllWatchesValue(NewValue):
@@ -54,6 +56,8 @@ def getAllWatches():
         return es.currentValue
     return ''
 
+def removeFromAllWatches(watch):
+    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', '').replace(',' + watch, '').replace(watch + ',', ''))
 
 # ================================
 
@@ -109,7 +113,7 @@ class WebhookHandler(webapp2.RequestHandler):
                 self.TryExecuteExplicitCommand(chat_id, user, text)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
-        split = text[1:].lower().split(" ", 1)
+        split = text[1:].lower().split(' ', 1)
         try:
             mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ""))
             mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
@@ -193,8 +197,11 @@ class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
         AllWatches = getAllWatches()
         for watch in AllWatches.split(','):
-            print watch
-            WebhookHandler.TryExecuteExplicitCommand(watch.split(':')[0], "Admin", "/watch " + watch.split(':')[1])
+            split = watch.split(':')
+            if len(split) > 1:
+                WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
+            else:
+                removeFromAllWatches(watch)
 
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
