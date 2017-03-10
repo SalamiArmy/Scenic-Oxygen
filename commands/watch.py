@@ -9,10 +9,13 @@ import main
 from commands import get
 from commands import retry_on_telegram_error
 
+watchedCommandName = 'get'
+
 
 class WatchValue(ndb.Model):
     # key name: str(chat_id)
     currentValue = ndb.StringProperty(indexed=False, default='')
+
 
 # ================================
 
@@ -21,11 +24,13 @@ def setWatchValue(chat_id, request, NewValue):
     es.currentValue = NewValue
     es.put()
 
+
 def getWatchValue(chat_id, request):
     es = WatchValue.get_by_id(str(chat_id) + ':' + request)
     if es:
         return es.currentValue
     return ''
+
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
@@ -42,8 +47,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         else:
             retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, 'Watch for /get ' + requestText +
                                                        ' has not changed.', user)
-        if not main.AllWatchesContains(chat_id, requestText):
-            main.addToAllWatches(chat_id, requestText)
+        if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
+            main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +

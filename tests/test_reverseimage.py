@@ -19,7 +19,7 @@ class TestReverseImage(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        #for personal chat 
+        #for personal chat
         #chatId = 33166369
 
         reverseimage.run(bot, keyConfig, chatId, 'Admin', requestText)

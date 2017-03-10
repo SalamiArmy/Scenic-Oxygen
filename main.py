@@ -32,17 +32,17 @@ class AllWatchesValue(ndb.Model):
 
 # ================================
 
-def addToAllWatches(chat_id, request):
+def addToAllWatches(command,chat_id, request):
     es = AllWatchesValue.get_or_insert('AllWatches')
-    es.currentValue += ',' + str(chat_id) + ':' + request
+    es.currentValue += ',' + command + ':' + str(chat_id) + ':' + request
     es.put()
 
-def AllWatchesContains(chat_id, request):
+def AllWatchesContains(command, chat_id, request):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (',' + str(chat_id) + ':' + request + ',') in str(es.currentValue) or \
-               (',' + str(chat_id) + ':' + request) in str(es.currentValue) or \
-               (str(chat_id) + ':' + request + ',') in str(es.currentValue)
+        return (',' + command + ':' + str(chat_id) + ':' + request + ',') in str(es.currentValue) or \
+               (',' + command + ':' + str(chat_id) + ':' + request) in str(es.currentValue) or \
+               (command + ':' + str(chat_id) + ':' + request + ',') in str(es.currentValue)
     return False
 
 def setAllWatchesValue(NewValue):
@@ -57,7 +57,7 @@ def getAllWatches():
     return ''
 
 def removeFromAllWatches(watch):
-    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', '').replace(',' + watch, '').replace(watch + ',', ''))
+    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', ',').replace(',' + watch, ''))
 
 # ================================
 
@@ -115,7 +115,7 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(' ', 1)
         try:
-            mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ""))
+            mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ''))
             mod.run(bot, keyConfig, chat_id, fr_username, split[1] if len(split) > 1 else '')
         except:
             print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
@@ -200,10 +200,11 @@ class TriggerAllWatches(webapp2.RequestHandler):
         if len(watches_split) >= 1:
             for watch in watches_split:
                 split = watch.split(':')
-                if len(split) > 1:
+                if len(split) > 2:
                     #WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
-                    from commands import watch
-                    watch.run(bot, keyConfig, split[0], "Admin", split[1])
+                    mod = importlib.import_module('commands.watch' +
+                                                  split[0].lower().replace(bot.name.lower(), '').replace('get', ''))
+                    mod.run(bot, keyConfig, split[1], 'watcher', split[2])
                 else:
                     removeFromAllWatches(watch)
 
