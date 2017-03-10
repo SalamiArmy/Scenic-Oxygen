@@ -6,10 +6,10 @@ import urllib
 from google.appengine.ext import ndb
 
 import main
-from commands import get
+from commands import getgif
 from commands import retry_on_telegram_error
 
-watchedCommandName = 'get'
+watchedCommandName = 'getgif'
 
 
 class WatchValue(ndb.Model):
@@ -34,7 +34,7 @@ def getWatchValue(chat_id, request):
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
-    data = get.Google_Image_Search(keyConfig, message)
+    data = getgif.search_google_for_gifs(keyConfig, message)
     if 'items' in data and len(data['items']) >= 1:
         imagelink = data['items'][0]['link']
         fd = urllib.urlopen(imagelink)

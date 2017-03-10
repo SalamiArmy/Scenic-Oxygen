@@ -15,15 +15,7 @@ def run(bot, keyConfig, chat_id, user, message):
     global gif
     requestText = message.replace(bot.name, "").strip()
 
-    googurl = 'https://www.googleapis.com/customsearch/v1'
-    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
-            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
-            'searchType': "image",
-            'safe': "off",
-            'q': requestText,
-            'fileType': 'gif'}
-    realUrl = googurl + '?' + urllib.urlencode(args)
-    data = json.load(urllib.urlopen(realUrl))
+    data = search_google_for_gifs(keyConfig, requestText)
     offset = 0
     thereWasAnError = True
     if 'items' in data and len(data['items'])-1 >= 0:
@@ -67,4 +59,17 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
+
+def search_google_for_gifs(keyConfig, requestText):
+    googurl = 'https://www.googleapis.com/customsearch/v1'
+    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'searchType': "image",
+            'safe': "off",
+            'q': requestText,
+            'fileType': 'gif'}
+    realUrl = googurl + '?' + urllib.urlencode(args)
+    data = json.load(urllib.urlopen(realUrl))
+    return data
 
