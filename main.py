@@ -40,7 +40,7 @@ def addToAllWatches(chat_id, request):
 def AllWatchesContains(chat_id, request):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (',' + str(chat_id) + ':'  + request + ',') in str(es.currentValue) or \
+        return (',' + str(chat_id) + ':' + request + ',') in str(es.currentValue) or \
                (',' + str(chat_id) + ':' + request) in str(es.currentValue) or \
                (str(chat_id) + ':' + request + ',') in str(es.currentValue)
     return False
@@ -197,11 +197,14 @@ class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
         AllWatches = getAllWatches()
         for watch in AllWatches.split(','):
+            bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
+                            text='I\'m sorry Admin, I\'ve got debug logging for you.\n' + watch +
+                                 '\nWho watches the watchers?\nThey will guard themselves against themselves.')
             split = watch.split(':')
             if len(split) > 1:
-                #WebhookHandler().TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
+                #WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
                 from commands import watch
-                watch.run(bot, keyConfig, split[0], "Admin", split[1] if len(split) > 1 else '')
+                watch.run(bot, keyConfig, split[0], "Admin", split[1])
             else:
                 removeFromAllWatches(watch)
 
