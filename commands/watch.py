@@ -42,9 +42,14 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         OldValue = getWatchValue(chat_id, requestText)
         if OldValue != fileHash:
             setWatchValue(chat_id, requestText, fileHash)
-            retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                       'Now watching /' + watchedCommandName + ' ' + requestText + '.',
-                                                       user)
+            if user != 'Watcher':
+                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
+                                                           'Now watching /' + watchedCommandName + ' ' + requestText + '.',
+                                                           user)
+            else:
+                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
+                                                           'Watched /' + watchedCommandName + ' ' + requestText +
+                                                           ' changed.', user)
         else:
             if user != 'Watcher':
                 retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
