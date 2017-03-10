@@ -1,3 +1,5 @@
 #!/bin/sh
 
-"%localappdata%\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.cmd" app deploy app.yaml
+"[[GoogleCloudSDKInstallation]]/Google/Cloud SDK/google-cloud-sdk/bin/gcloud.cmd" app deploy app.yaml
+OR
+"[[PythonInstallation]]/python.exe" "[[GooglePythonAppEngineSDKInstallation]]/Google/google_appengine/appcfg.py" update "./"
