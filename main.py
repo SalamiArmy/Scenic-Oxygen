@@ -199,7 +199,9 @@ class TriggerAllWatches(webapp2.RequestHandler):
         for watch in AllWatches.split(','):
             split = watch.split(':')
             if len(split) > 1:
-                WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
+                #WebhookHandler().TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
+                mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ""))
+                mod.run(bot, keyConfig, split[0], "Admin", split[1] if len(split) > 1 else '')
             else:
                 removeFromAllWatches(watch)
 
