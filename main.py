@@ -193,6 +193,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
         AllWatches = getAllWatches()
         for watch in AllWatches.split(','):
+            print watch
             WebhookHandler.TryExecuteExplicitCommand(watch.split(':')[0], "Admin", "/watch " + watch.split(':')[1])
 
 app = webapp2.WSGIApplication([
