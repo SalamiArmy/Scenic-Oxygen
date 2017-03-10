@@ -214,11 +214,16 @@ class TriggerAllWatches(webapp2.RequestHandler):
         bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
                         text='\nWho watches the watchers?\nThey will guard themselves against themselves.')
 
+class ClearAllWatches(webapp2.RequestHandler):
+    def get(self):
+        setAllWatchesValue('')
+
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
     ('/updates', GetUpdatesHandler),
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/run_tests', RunTestsHandler),
-    ('/allwatches', TriggerAllWatches)
+    ('/allwatches', TriggerAllWatches),
+    ('/clearallwatches', ClearAllWatches)
 ], debug=True)
