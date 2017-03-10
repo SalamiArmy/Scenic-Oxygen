@@ -199,7 +199,8 @@ class TriggerAllWatches(webapp2.RequestHandler):
         watches_split = AllWatches.split(',')
         if len(watches_split) >= 1:
             bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
-                            text='I\'m sorry Admin, I\'ve got debug logging for you.')
+                            text='I\'m sorry Admin, I\'ve got debug logging for you.\n' +
+                            'For the new /watch command.')
             for watch in watches_split:
                 bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
                                 text=watch)
