@@ -204,7 +204,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
                     #WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
                     mod = importlib.import_module('commands.watch' +
                                                   split[0].lower().replace(bot.name.lower(), '').replace('get', ''))
-                    mod.run(bot, keyConfig, split[1], 'watcher', split[2])
+                    mod.run(bot, keyConfig, split[1], 'Watcher', split[2])
                 else:
                     removeFromAllWatches(watch)
 
