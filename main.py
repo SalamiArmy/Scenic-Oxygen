@@ -189,28 +189,11 @@ class RunTestsHandler(webapp2.RequestHandler):
         self.response.write(formattedResultText)
 
 
-class WebCommandRunHandler(webapp2.RequestHandler):
+class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
         AllWatches = getAllWatches()
         for watch in AllWatches.split(','):
             WebhookHandler.TryExecuteExplicitCommand(watch.split(':')[0], "Admin", "/watch " + watch.split(':')[1])
-
-
-class TriggerAllWatches(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        text = self.request.get('text')
-        if not text:
-            self.response.write('Argument missing: \'text\'.')
-            return
-        chat_id = self.request.get('chat_id')
-        if not chat_id:
-            chat_id = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
-
-        if text.startswith('/'):
-            WebhookHandler.TryExecuteExplicitCommand(chat_id, "Admin", text)
-        else:
-            WebhookHandler.TryParseIntent(chat_id, "Admin", text)
 
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
@@ -218,6 +201,5 @@ app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/run_tests', RunTestsHandler),
-    ('/run', WebCommandRunHandler),
     ('/allwatches', TriggerAllWatches)
 ], debug=True)
