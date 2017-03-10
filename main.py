@@ -196,17 +196,22 @@ class RunTestsHandler(webapp2.RequestHandler):
 class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
         AllWatches = getAllWatches()
-        for watch in AllWatches.split(','):
+        watches_split = AllWatches.split(',')
+        if len(watches_split) >= 1:
             bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
-                            text='I\'m sorry Admin, I\'ve got debug logging for you.\n' + watch +
-                                 '\nWho watches the watchers?\nThey will guard themselves against themselves.')
-            split = watch.split(':')
-            if len(split) > 1:
-                #WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
-                from commands import watch
-                watch.run(bot, keyConfig, split[0], "Admin", split[1])
-            else:
-                removeFromAllWatches(watch)
+                            text='I\'m sorry Admin, I\'ve got debug logging for you.')
+            for watch in watches_split:
+                bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
+                                text=watch)
+                split = watch.split(':')
+                if len(split) > 1:
+                    #WebhookHandler.TryExecuteExplicitCommand(split[0], "Admin", "/watch " + split[1])
+                    from commands import watch
+                    watch.run(bot, keyConfig, split[0], "Admin", split[1])
+                else:
+                    removeFromAllWatches(watch)
+        bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
+                        text='\nWho watches the watchers?\nThey will guard themselves against themselves.')
 
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
