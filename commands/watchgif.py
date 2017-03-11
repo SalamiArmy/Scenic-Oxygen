@@ -37,6 +37,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     data = getgif.search_google_for_gifs(keyConfig, message)
     if 'items' in data and len(data['items']) >= 1:
         offset = -1
+        thereWasAnError = True
         while thereWasAnError and offset < len(data['items'])-1:
             offset += 1
             imagelink = data['items'][offset]['link']
