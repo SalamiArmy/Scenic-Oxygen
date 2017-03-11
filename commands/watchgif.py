@@ -50,6 +50,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                     if not thereWasAnError:
                         setWatchValue(chat_id, requestText, fileHash)
                         bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + requestText + '.')
+                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                 else:
                     bot.sendMessage(chat_id=chat_id, text='Watched /' +
                                                           watchedCommandName + ' ' + requestText + ' changed.')
