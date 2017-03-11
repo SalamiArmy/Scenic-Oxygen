@@ -63,7 +63,6 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                               'because I did not find any results for /get ' +
                                               string.capwords(requestText.encode('utf-8')))
 
-
 def md5(byteStream):
     hash_md5 = hashlib.md5()
     hash_md5.update(byteStream)
