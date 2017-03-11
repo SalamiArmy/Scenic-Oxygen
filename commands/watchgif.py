@@ -43,18 +43,15 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         if OldValue != fileHash:
             setWatchValue(chat_id, requestText, fileHash)
             if user != 'Watcher':
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
-                                                              'Now watching /' + watchedCommandName + ' ' + requestText + '.',
-                                                              user)
+                bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + requestText + '.')
+                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
-                                                              'Watched /' + watchedCommandName + ' ' + requestText +
-                                                              ' changed.', user)
+                bot.sendMessage(chat_id=chat_id, text='Watched /' + watchedCommandName + ' ' + requestText + ' changed.')
+                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         else:
             if user != 'Watcher':
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
-                                                              'Watch for /' + watchedCommandName + ' ' + requestText +
-                                                              ' has not changed.', user)
+                bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + requestText + ' has not changed.')
+                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
