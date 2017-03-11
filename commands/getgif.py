@@ -18,37 +18,18 @@ def run(bot, keyConfig, chat_id, user, message):
     data = search_google_for_gifs(keyConfig, requestText)
     offset = 0
     thereWasAnError = True
-    if 'items' in data and len(data['items'])-1 >= 0:
-        randint = random.randint(0, len(data['items'])-1)
+    if 'items' in data and len(data['items']) >= 1:
+        randint = random.randint(0, len(data['items']))
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < 9:
             randint_offset = randint + offset
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
+            offset += 1
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
-            offset += 1
-            print("Openning url " + imagelink)
-            try:
-                fd = urllib.urlopen(imagelink)
-                print("Reading gif...")
-                image_file = io.BytesIO(fd.read())
-                print("Parsing gif...")
-                gif = Image.open(image_file)
-            except IOError:
-                gif.fp.close()
-                print("...not a gif")
-                thereWasAnError = True
-            else:
-                try:
-                    print("Checking gif for animation...")
-                    gif.seek(1)
-                except EOFError:
-                    gif.fp.close()
-                    print("...not animated")
-                    thereWasAnError = True
-                else:
-                    print("...gif is animated, confirmed!")
-                    thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+            thereWasAnError = not isGifAnimated(imagelink)
+            if not thereWasAnError:
+                thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 9:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
@@ -59,6 +40,32 @@ def run(bot, keyConfig, chat_id, user, message):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
+
+def isGifAnimated(imagelink):
+    global gif
+    print("Openning url " + imagelink)
+    try:
+        fd = urllib.urlopen(imagelink)
+        print("Reading gif...")
+        image_file = io.BytesIO(fd.read())
+        print("Parsing gif...")
+        gif = Image.open(image_file)
+    except IOError:
+        gif.fp.close()
+        print("...not a gif")
+        return False
+    else:
+        try:
+            print("Checking gif for animation...")
+            gif.seek(1)
+        except EOFError:
+            gif.fp.close()
+            print("...not animated")
+            return False
+        else:
+            print("...gif is animated, confirmed!")
+    return True
 
 
 def search_google_for_gifs(keyConfig, requestText):
