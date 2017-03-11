@@ -9,8 +9,6 @@ import main
 from commands import get
 from commands import retry_on_telegram_error
 
-watchedCommandName = 'get'
-
 
 class WatchValue(ndb.Model):
     # key name: str(chat_id)
