@@ -47,20 +47,17 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             if OldValue != fileHash:
                 if user != 'Watcher':
                     thereWasAnError = not getgif.isGifAnimated(imagelink)
-                    if thereWasAnError:
-                        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                              ', I\'m afraid I can\'t watch ' +
-                                                              'because I did not find any results for /getgif ' +
-                                                              string.capwords(requestText.encode('utf-8')))
-                    else:
+                    if not thereWasAnError:
                         setWatchValue(chat_id, requestText, fileHash)
                         bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + requestText + '.')
                 else:
-                    bot.sendMessage(chat_id=chat_id, text='Watched /' + watchedCommandName + ' ' + requestText + ' changed.')
+                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                          watchedCommandName + ' ' + requestText + ' changed.')
                     retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
-                    bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + requestText + ' has not changed.')
+                    bot.sendMessage(chat_id=chat_id, text='Watch for /' +
+                                                          watchedCommandName + ' ' + requestText + ' has not changed.')
                     retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         if not thereWasAnError and not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
