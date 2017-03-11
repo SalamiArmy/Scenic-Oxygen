@@ -43,18 +43,18 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         if OldValue != fileHash:
             setWatchValue(chat_id, requestText, fileHash)
             if user != 'Watcher':
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                           'Now watching /' + watchedCommandName + ' ' + requestText + '.',
-                                                           user)
+                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
+                                                              'Now watching /' + watchedCommandName + ' ' + requestText + '.',
+                                                              user)
             else:
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                           'Watched /' + watchedCommandName + ' ' + requestText +
-                                                           ' changed.', user)
+                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
+                                                              'Watched /' + watchedCommandName + ' ' + requestText +
+                                                              ' changed.', user)
         else:
             if user != 'Watcher':
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                           'Watch for /' + watchedCommandName + ' ' + requestText +
-                                                           ' has not changed.', user)
+                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
+                                                              'Watch for /' + watchedCommandName + ' ' + requestText +
+                                                              ' has not changed.', user)
         if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
