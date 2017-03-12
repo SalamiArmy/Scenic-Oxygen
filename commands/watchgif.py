@@ -52,7 +52,9 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                             retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                     else:
                         bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                              watchedCommandName + ' ' + requestText + ' changed.')
+                                                              watchedCommandName + ' ' + requestText +
+                                                              ' (with current url ' + imagelink + ')' +
+                                                               ' changed. (From old url ' + OldValue + ')')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
