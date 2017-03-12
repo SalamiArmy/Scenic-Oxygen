@@ -40,6 +40,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         fd = urllib.urlopen(imagelink)
         fileHash = md5(fd.read())
         OldValue = getWatchValue(chat_id, requestText)
+        print('Comparing ' + OldValue + ' with ' + imagelink)
         if OldValue != fileHash:
             setWatchValue(chat_id, requestText, fileHash)
             if user != 'Watcher':
