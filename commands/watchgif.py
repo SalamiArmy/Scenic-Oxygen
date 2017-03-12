@@ -49,16 +49,16 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                             setWatchValue(chat_id, requestText, imagelink)
                             bot.sendMessage(chat_id=chat_id, text='Now watching /' +
                                                                   watchedCommandName + ' ' + requestText + '.')
-                            thereWasAnError = retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                            thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                     else:
                         bot.sendMessage(chat_id=chat_id, text='Watched /' +
                                                               watchedCommandName + ' ' + requestText + ' changed.')
-                        thereWasAnError = retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                           watchedCommandName + ' ' + requestText + ' has not changed.')
-                    thereWasAnError = retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                    thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         if not thereWasAnError and not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
