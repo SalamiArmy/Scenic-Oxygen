@@ -41,22 +41,18 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         while thereWasAnError and offset < len(data['items'])-1:
             offset += 1
             imagelink = data['items'][offset]['link']
-            fd = urllib.urlopen(imagelink)
-            fileHash = md5(fd.read())
             OldValue = getWatchValue(chat_id, requestText)
-            if OldValue != fileHash:
+            if OldValue != imagelink:
                 thereWasAnError = not getgif.isGifAnimated(imagelink)
                 if not thereWasAnError:
                     if user != 'Watcher':
-                            setWatchValue(chat_id, requestText, fileHash)
+                            setWatchValue(chat_id, requestText, imagelink)
                             bot.sendMessage(chat_id=chat_id, text='Now watching /' +
                                                                   watchedCommandName + ' ' + requestText + '.')
                             retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                     else:
                         bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                              watchedCommandName + ' ' + requestText + ' (with current hashcode ' +
-                                                              fileHash + ')' +
-                                                              ' changed. (From old hashcode ' + OldValue + ')')
+                                                              watchedCommandName + ' ' + requestText + ' changed.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
@@ -70,9 +66,3 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                               ', I\'m afraid I can\'t watch ' +
                                               'because I did not find any results for /getgif ' +
                                               string.capwords(requestText.encode('utf-8')))
-
-
-def md5(byteStream):
-    hash_md5 = hashlib.md5()
-    hash_md5.update(byteStream)
-    return hash_md5.hexdigest()
