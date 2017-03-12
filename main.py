@@ -32,7 +32,7 @@ class AllWatchesValue(ndb.Model):
 
 # ================================
 
-def addToAllWatches(command,chat_id, request):
+def addToAllWatches(command, chat_id, request):
     es = AllWatchesValue.get_or_insert('AllWatches')
     es.currentValue += ',' + command + ':' + str(chat_id) + ':' + request
     es.put()

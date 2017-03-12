@@ -36,7 +36,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
     data = get.Google_Image_Search(keyConfig, message)
     if 'items' in data and len(data['items']) >= 1:
-        imagelink = urllib.quote_plus(data['items'][0]['link'])
+        imagelink = data['items'][0]['link']
         print('got image link for ' + requestText + ' as ' + imagelink)
         fd = urllib.urlopen(imagelink)
         fileHash = md5(fd.read())

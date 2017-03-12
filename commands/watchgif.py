@@ -40,35 +40,36 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         thereWasAnError = True
         while thereWasAnError and offset < len(data['items'])-1:
             offset += 1
-            imagelink = urllib.quote_plus(data['items'][offset]['link'])
+            imagelink = data['items'][offset]['link']
+            thereWasAnError = not getgif.isGifAnimated(imagelink)
+        if not thereWasAnError:
             print('got image link for ' + requestText + ' as ' + imagelink)
             print('requesting the value for ' + str(chat_id) + ':' + requestText)
             OldValue = getWatchValue(chat_id, requestText)
             print('Got watch value as ' + OldValue)
             print('Comparing ' + OldValue + ' with ' + imagelink)
             if OldValue != imagelink:
-                thereWasAnError = not getgif.isGifAnimated(imagelink)
+                if user != 'Watcher':
+                    bot.sendMessage(chat_id=chat_id, text='Now watching /' +
+                                                          watchedCommandName + ' ' + requestText + '.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                else:
+                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                          watchedCommandName + ' ' + requestText + ' changed.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                 if not thereWasAnError:
-                    if user != 'Watcher':
-                            bot.sendMessage(chat_id=chat_id, text='Now watching /' +
-                                                                  watchedCommandName + ' ' + requestText + '.')
-                            thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    else:
-                        bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                              watchedCommandName + ' ' + requestText + ' changed.')
-                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    if not thereWasAnError:
-                        print('Setting watch value to ' + imagelink)
-                        setWatchValue(chat_id, requestText, imagelink)
+                    print('Setting watch value to ' + imagelink)
+                    setWatchValue(chat_id, requestText, imagelink)
             else:
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                           watchedCommandName + ' ' + requestText + ' has not changed.')
-                    thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-        if not thereWasAnError and not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
-            main.addToAllWatches(watchedCommandName, chat_id, requestText)
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+            if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
+                main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t watch ' +
-                                              'because I did not find any results for /getgif ' +
-                                              string.capwords(requestText.encode('utf-8')))
+        if user != 'Watcher':
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t watch ' +
+                                                  'because I did not find any results for /getgif ' +
+                                                  string.capwords(requestText.encode('utf-8')))
