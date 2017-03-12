@@ -42,7 +42,6 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             offset += 1
             imagelink = data['items'][offset]['link']
             OldValue = getWatchValue(chat_id, requestText)
-            print('Comparing ' + OldValue + ' with ' + imagelink)
             if OldValue != imagelink:
                 thereWasAnError = not getgif.isGifAnimated(imagelink)
                 if not thereWasAnError:
