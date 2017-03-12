@@ -56,7 +56,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
-                    bot.sendMessage(chat_id=chat_id, text='Watch for /' +
+                    bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                           watchedCommandName + ' ' + requestText + ' has not changed.')
                     retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         if not thereWasAnError and not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
