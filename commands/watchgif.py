@@ -41,6 +41,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         while thereWasAnError and offset < len(data['items'])-1:
             offset += 1
             imagelink = data['items'][offset]['link']
+            print('got image link for ' + requestText + ' as ' + imagelink)
+            print('requesting the value for ' + str(chat_id) + ':' + requestText)
             OldValue = getWatchValue(chat_id, requestText)
             print('Comparing ' + OldValue + ' with ' + imagelink)
             if OldValue != imagelink:

@@ -37,10 +37,12 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     data = get.Google_Image_Search(keyConfig, message)
     if 'items' in data and len(data['items']) >= 1:
         imagelink = data['items'][0]['link']
+        print('got image link for ' + requestText + ' as ' + imagelink)
         fd = urllib.urlopen(imagelink)
         fileHash = md5(fd.read())
+        print('requesting the value for ' + str(chat_id) + ':' + requestText)
         OldValue = getWatchValue(chat_id, requestText)
-        print('Comparing ' + OldValue + ' with ' + imagelink)
+        print('Comparing ' + OldValue + ' with ' + fileHash)
         if OldValue != fileHash:
             setWatchValue(chat_id, requestText, fileHash)
             if user != 'Watcher':
