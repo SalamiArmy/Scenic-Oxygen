@@ -41,24 +41,25 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         while thereWasAnError and offset < len(data['items'])-1:
             offset += 1
             imagelink = data['items'][offset]['link']
-            OldValue = getWatchValue(chat_id, requestText)
-            if OldValue != imagelink:
-                thereWasAnError = not getgif.isGifAnimated(imagelink)
-                if not thereWasAnError:
-                    if user != 'Watcher':
-                            setWatchValue(chat_id, requestText, imagelink)
-                            bot.sendMessage(chat_id=chat_id, text='Now watching /' +
-                                                                  watchedCommandName + ' ' + requestText + '.')
+            if imagelink != 'http://media.nj.com/jets_impact/photo/15011891-large.gif':
+                OldValue = getWatchValue(chat_id, requestText)
+                if OldValue != imagelink:
+                    thereWasAnError = not getgif.isGifAnimated(imagelink)
+                    if not thereWasAnError:
+                        if user != 'Watcher':
+                                setWatchValue(chat_id, requestText, imagelink)
+                                bot.sendMessage(chat_id=chat_id, text='Now watching /' +
+                                                                      watchedCommandName + ' ' + requestText + '.')
+                                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                        else:
+                            bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                                  watchedCommandName + ' ' + requestText + ' changed.')
                             retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    else:
-                        bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                              watchedCommandName + ' ' + requestText + ' changed.')
+                else:
+                    if user != 'Watcher':
+                        bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
+                                                              watchedCommandName + ' ' + requestText + ' has not changed.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-            else:
-                if user != 'Watcher':
-                    bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
-                                                          watchedCommandName + ' ' + requestText + ' has not changed.')
-                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         if not thereWasAnError and not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
