@@ -40,10 +40,11 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         thereWasAnError = True
         while thereWasAnError and offset < len(data['items'])-1:
             offset += 1
-            imagelink = data['items'][offset]['link']
+            imagelink = urllib.quote_plus(data['items'][offset]['link'])
             print('got image link for ' + requestText + ' as ' + imagelink)
             print('requesting the value for ' + str(chat_id) + ':' + requestText)
             OldValue = getWatchValue(chat_id, requestText)
+            print('Got watch value as ' + OldValue)
             print('Comparing ' + OldValue + ' with ' + imagelink)
             if OldValue != imagelink:
                 thereWasAnError = not getgif.isGifAnimated(imagelink)
@@ -57,6 +58,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                                               watchedCommandName + ' ' + requestText + ' changed.')
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                     if not thereWasAnError:
+                        print('Setting watch value to ' + imagelink)
                         setWatchValue(chat_id, requestText, imagelink)
             else:
                 if user != 'Watcher':
