@@ -20,13 +20,13 @@ class WatchValue(ndb.Model):
 # ================================
 
 def setWatchValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert(str(chat_id) + ':' + request)
+    es = WatchValue.get_or_insert('get:' + str(chat_id) + ':' + request)
     es.currentValue = NewValue
     es.put()
 
 
 def getWatchValue(chat_id, request):
-    es = WatchValue.get_by_id(str(chat_id) + ':' + request)
+    es = WatchValue.get_by_id('getgif:' + str(chat_id) + ':' + request)
     if es:
         return es.currentValue
     return ''
