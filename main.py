@@ -205,7 +205,9 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 if len(split) >= 2:
                     print('executing command: ' + split[0].replace('get', ''))
                     mod = importlib.import_module('commands.watch' + split[0].replace('get', ''))
-                    mod.run(bot, keyConfig, split[1], 'Watcher', (split[2] if len(watches_split) >= 2 else ''))
+                    chat_id = split[1]
+                    request_text = (split[2] if len(watches_split) >= 2 else '')
+                    mod.run(bot, keyConfig, chat_id, 'Watcher', request_text)
                 else:
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
