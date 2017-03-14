@@ -26,7 +26,7 @@ def setWatchValue(chat_id, request, NewValue):
 
 
 def getWatchValue(chat_id, request):
-    es = WatchValue.get_by_id('getgif:' + str(chat_id) + ':' + request)
+    es = WatchValue.get_by_id('get:' + str(chat_id) + ':' + request)
     if es:
         return es.currentValue
     return ''

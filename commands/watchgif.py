@@ -1,7 +1,5 @@
 # coding=utf-8
-import hashlib
 import string
-import urllib
 
 from google.appengine.ext import ndb
 
