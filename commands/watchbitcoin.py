@@ -30,7 +30,7 @@ def getWatchValue(chat_id):
 
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
-    priceGB, priceUS, priceZA, updateTime = bitcoin.get_bitcoin_prices(keyConfig, message)
+    priceGB, priceUS, priceZA, updateTime = bitcoin.get_bitcoin_prices()
     if priceZA:
         OldValue = getWatchValue(chat_id)
         if OldValue != priceZA:
@@ -56,6 +56,5 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +
-                                              'because I did not find any results from /bitcoin ' +
-                                              string.capwords(requestText.encode('utf-8')))
+                                              'because I did not find any results from /bitcoin')
 
