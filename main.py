@@ -32,17 +32,16 @@ class AllWatchesValue(ndb.Model):
 
 # ================================
 
-def addToAllWatches(command, chat_id, request):
+def addToAllWatches(command, chat_id, request=''):
     es = AllWatchesValue.get_or_insert('AllWatches')
-    es.currentValue += ',' + command + ':' + str(chat_id) + ':' + request
+    es.currentValue += ',' + command + ':' + str(chat_id) + (':' + request if request != '' else '')
     es.put()
 
-def AllWatchesContains(command, chat_id, request):
+def AllWatchesContains(command, chat_id, request=''):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (',' + command + ':' + str(chat_id) + ':' + request + ',') in str(es.currentValue) or \
-               (',' + command + ':' + str(chat_id) + ':' + request) in str(es.currentValue) or \
-               (command + ':' + str(chat_id) + ':' + request + ',') in str(es.currentValue)
+        return (',' + command + ':' + str(chat_id) + (':' + request if request != '' else '')) in str(es.currentValue) or \
+               (command + ':' + str(chat_id) + (':' + request if request != '' else '') + ',') in str(es.currentValue)
     return False
 
 def setAllWatchesValue(NewValue):

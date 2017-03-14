@@ -16,26 +16,25 @@ class WatchValue(ndb.Model):
 
 # ================================
 
-def setWatchValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert('bitcoin:' + str(chat_id) + ':' + request)
+def setWatchValue(chat_id, NewValue):
+    es = WatchValue.get_or_insert('bitcoin:' + str(chat_id))
     es.currentValue = NewValue
     es.put()
 
 
-def getWatchValue(chat_id, request):
-    es = WatchValue.get_by_id('bitcoin:' + str(chat_id) + ':' + request)
+def getWatchValue(chat_id):
+    es = WatchValue.get_by_id('bitcoin:' + str(chat_id))
     if es:
         return es.currentValue
     return ''
 
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
-    requestText = message.replace(bot.name, "").strip()
     priceGB, priceUS, priceZA, updateTime = bitcoin.get_bitcoin_prices(keyConfig, message)
     if priceZA:
-        OldValue = getWatchValue(chat_id, requestText)
+        OldValue = getWatchValue(chat_id)
         if OldValue != priceZA:
-            setWatchValue(chat_id, requestText, priceZA)
+            setWatchValue(chat_id, priceZA)
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id,
                                 text='Now watching /' + watchedCommandName + '\n' +
@@ -52,8 +51,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                 text='Watch for /' + watchedCommandName + ' has not changed:\n' +
                                      'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
-            main.addToAllWatches(watchedCommandName, chat_id, requestText)
+        if not main.AllWatchesContains(watchedCommandName, chat_id):
+            main.addToAllWatches(watchedCommandName, chat_id)
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +
