@@ -203,9 +203,11 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 print('got watch ' + watch)
                 split = watch.split(':')
                 if len(split) >= 2 and not split[0].isalnum():
+                    print('executing command: ' + split[0].replace('get', ''))
                     mod = importlib.import_module('commands.watch' + split[0].replace('get', ''))
                     mod.run(bot, keyConfig, split[1], 'Watcher', (split[2] if len(watches_split) >= 2 else ''))
                 else:
+                    print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
 
 class ClearAllWatches(webapp2.RequestHandler):
