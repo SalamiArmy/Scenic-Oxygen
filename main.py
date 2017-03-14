@@ -202,7 +202,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
             for watch in watches_split:
                 print('got watch ' + watch)
                 split = watch.split(':')
-                if len(split) >= 2 and not split[0].isalnum():
+                if len(split) >= 2:
                     print('executing command: ' + split[0].replace('get', ''))
                     mod = importlib.import_module('commands.watch' + split[0].replace('get', ''))
                     mod.run(bot, keyConfig, split[1], 'Watcher', (split[2] if len(watches_split) >= 2 else ''))
