@@ -56,7 +56,9 @@ def getAllWatches():
     return ''
 
 def removeFromAllWatches(watch):
-    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', ',').replace(',' + watch, ''))
+    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', ',')
+                       .replace(',' + watch, '')
+                       .replace(watch + ',', ''))
 
 # ================================
 
@@ -200,8 +202,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
             for watch in watches_split:
                 split = watch.split(':')
                 if len(split) >= 2 and not split[0].isalnum():
-                    mod = importlib.import_module('commands.watch' +
-                                                  split[0].lower().replace(bot.name.lower(), '').replace('get', ''))
+                    mod = importlib.import_module('commands.watch' + split[0].replace('get', ''))
                     mod.run(bot, keyConfig, split[1], 'Watcher', (split[2] if len(watches_split) >= 2 else ''))
                 else:
                     removeFromAllWatches(watch)
