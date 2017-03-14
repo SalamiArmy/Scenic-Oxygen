@@ -42,7 +42,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             thereWasAnError = not getgif.isGifAnimated(imagelink)
         if not thereWasAnError:
             print('got image link for ' + requestText + ' as ' + imagelink)
-            print('requesting the value for ' + str(chat_id) + ':' + requestText)
+            print('requesting the value for getgif:' + str(chat_id) + ':' + requestText)
             OldValue = getWatchValue(chat_id, requestText)
             print('Got watch value as ' + OldValue)
             print('Comparing ' + OldValue + ' with ' + imagelink)
@@ -65,6 +65,12 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                     retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
                 main.addToAllWatches(watchedCommandName, chat_id, requestText)
+        else:
+            if user != 'Watcher':
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid I can\'t watch ' +
+                                                      'because I did not find any results for /getgif ' +
+                                                      string.capwords(requestText.encode('utf-8')))
     else:
         if user != 'Watcher':
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
