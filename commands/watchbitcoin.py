@@ -36,10 +36,16 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         if OldValue != priceZA:
             setWatchValue(chat_id, priceZA)
             if user != 'Watcher':
-                bot.sendMessage(chat_id=chat_id,
-                                text='Now watching /' + watchedCommandName + '\n' +
-                                     'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
-                                     ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+                if OldValue == '':
+                    bot.sendMessage(chat_id=chat_id,
+                                    text='Now watching /' + watchedCommandName + '\n' +
+                                         'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                         ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+                else:
+                    bot.sendMessage(chat_id=chat_id,
+                                    text='Watch for /' + watchedCommandName + ' has changed:\n' +
+                                         'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                         ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
             else:
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watched /' + watchedCommandName + ' changed:\n' +
