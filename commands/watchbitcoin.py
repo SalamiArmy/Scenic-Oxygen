@@ -43,7 +43,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                          ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
                 else:
                     bot.sendMessage(chat_id=chat_id,
-                                    text='Watch for /' + watchedCommandName + ' has changed:\n' +
+                                    text='Watch for /' + watchedCommandName + ' has changed by ' + str(int(OldValue.replace(',','')) - int(priceZA.replace(',',''))) + ' ZAR:\n' +
                                          'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                          ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
             else:
