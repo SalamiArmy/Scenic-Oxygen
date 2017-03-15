@@ -48,7 +48,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                          ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
             else:
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watched /' + watchedCommandName + ' changed:\n' +
+                                text='Watched /' + watchedCommandName + ' changed by ' + str(float(priceZA.replace(',','')) - float(OldValue.replace(',',''))) + ' ZAR:\n' +
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         else:
