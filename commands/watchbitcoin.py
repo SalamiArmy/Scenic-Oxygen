@@ -22,18 +22,20 @@ def setWatchValue(chat_id, request_text, NewValue):
     es.put()
 
 
-def getWatchValue(chat_id, request_text):
+def getWatchValue(chat_id):
     es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id))
     if es:
-        return es.currentValue + (':' + request_text if request_text != '' else '')
+        return es.currentValue
     return ''
 
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     priceGB, priceUS, priceZA, updateTime = bitcoin.get_bitcoin_prices()
     if priceZA:
-        OldValue = getWatchValue(chat_id, message)
-        price_diff = float(priceZA.replace(',', '')) - float(OldValue.replace(',', ''))
+        OldValue = getWatchValue(chat_id)
+        old_value_split = OldValue.split(':')
+        float_ready_old_price = (old_value_split[1] if len(old_value_split) == 2 else OldValue).replace(',', '')
+        price_diff = float(priceZA.replace(',', '')) - float(float_ready_old_price)
         if OldValue != (priceZA + (':' + message if message != '' else '')):
             setWatchValue(chat_id, message, priceZA)
             if user != 'Watcher':
@@ -44,8 +46,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                          ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
                 else:
                     bot.sendMessage(chat_id=chat_id,
-                                    text='Watch for /' + watchedCommandName + ' has changed by ' + str(
-                                        price_diff) + ' ZAR:\n' +
+                                    text='Watch for /' + watchedCommandName + ' has changed by ' + str(price_diff) + ' ZAR:\n' +
                                          'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                          ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
             else:
