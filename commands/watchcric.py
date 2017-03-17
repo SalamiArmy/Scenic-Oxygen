@@ -4,7 +4,6 @@ from google.appengine.ext import ndb
 
 import main
 from commands import cric
-from commands.unwatchcric import watchedCommandName
 
 watchedCommandName = 'cric'
 

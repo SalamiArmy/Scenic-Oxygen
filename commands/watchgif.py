@@ -6,7 +6,6 @@ from google.appengine.ext import ndb
 import main
 from commands import getgif
 from commands import retry_on_telegram_error
-from commands.unwatchgif import watchedCommandName
 
 watchedCommandName = 'getgif'
 

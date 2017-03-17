@@ -8,7 +8,6 @@ from google.appengine.ext import ndb
 import main
 from commands import get
 from commands import retry_on_telegram_error
-from commands.unwatch import watchedCommandName
 
 watchedCommandName = 'get'
 

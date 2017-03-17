@@ -3,7 +3,6 @@ from google.appengine.ext import ndb
 
 import main
 from commands import define
-from commands.unwatchdefine import watchedCommandName
 
 watchedCommandName = 'define'
 
