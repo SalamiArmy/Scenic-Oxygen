@@ -26,7 +26,7 @@ def get_steam_top_games():
         if 'data-ds-bundleid' in resultRow.attrs:
             resultList.append(resultRow['data-ds-bundleid'])
     resultsListLength = len(resultList)
-    hot_games = '*Top Steam Games*'
+    hot_games = '*Top Steam Games:*'
     if resultsListLength > 0:
         SearchResultsInterator = 0
         while (SearchResultsInterator<resultsListLength):
