@@ -35,12 +35,10 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         OldValue = getWatchValue(chat_id, message)
         if OldValue != track:
             setWatchValue(chat_id, message, track)
-            if user != 'Watcher':
-                if OldValue == '':
-                    bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + message + '\n' + track)
-                else:
+            if OldValue == '':
+                if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id,
-                                    text='Now watching /' + watchedCommandName + ' ' + message + '\n' + track)
+                                        text='Now watching /' + watchedCommandName + ' ' + message + '\n' + track)
             else:
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.\n' + track)

@@ -34,10 +34,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         OldValue = getWatchValue(chat_id, message)
         if OldValue != exchange_data:
             setWatchValue(chat_id, message, exchange_data)
-            if user != 'Watcher':
-                if OldValue == '':
-                    bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + message + '\n' + exchange_data)
-                else:
+            if OldValue == '':
+                if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id,
                                     text='Now watching /' + watchedCommandName + ' ' + message + '\n' + exchange_data)
             else:

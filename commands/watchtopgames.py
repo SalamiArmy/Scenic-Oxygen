@@ -28,21 +28,35 @@ def getWatchValue(chat_id, request):
     return ''
 
 
+def get_add_removed_games(new_list, old_list):
+    added_games = "*New Games:*"
+    for item in new_list.split('\n'):
+        if item not in old_list:
+            added_games += '\n' + item
+    removed_games = "*Removed Games:*"
+    for item in old_list.split('\n'):
+        if item not in new_list:
+            removed_games += '\n' + item
+    return added_games, removed_games
+
+
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     top_games = get_steam_top_games()
     if top_games:
         OldValue = getWatchValue(chat_id, message)
         if OldValue != top_games:
             setWatchValue(chat_id, message, top_games)
-            if user != 'Watcher':
-                if OldValue == '':
-                    bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games, parse_mode='Markdown')
-                else:
+            if OldValue == '':
+                if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id,
                                     text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games, parse_mode='Markdown')
             else:
+                games_added, games_removed = get_add_removed_games(top_games, OldValue)
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.\n' + top_games, parse_mode='Markdown')
+                                text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.' +
+                                     '\n' + top_games +
+                                     '\n' + games_added +
+                                     '\n' + games_removed, parse_mode='Markdown')
         else:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id,
