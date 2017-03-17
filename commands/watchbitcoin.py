@@ -74,7 +74,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                 text='Watched /' + watchedCommandName + ' ' + message + ' changed by ' + str(price_diff) + ' ZAR:\n' +
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif float(float_ready_old_price)-float(float_ready_current_price) > float(message) and (message[:1] == '+' or message[:1] == '-'):
+        elif (float(float_ready_old_price)-float(float_ready_current_price) > float(message) and message[:1] == '+') or \
+                (float(float_ready_old_price)-float(float_ready_current_price) < float(message) and message[:1] == '-'):
             if user != 'Watcher':
                 if OldValue != '':
                     bot.sendMessage(chat_id=chat_id,
