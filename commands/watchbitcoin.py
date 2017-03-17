@@ -40,7 +40,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             float_ready_old_price = old_price.replace(',', '')
             old_request_text = split_OldValue[1] if len(split_OldValue) == 2 else ''
             if old_request_text != message:
-                unwatch(bot, keyConfig, chat_id, user, old_request_text)
+                unwatch(bot, chat_id, old_request_text)
         else:
             old_price = ''
             float_ready_old_price = 0.0
@@ -50,7 +50,6 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                 text='Now watching /' + watchedCommandName + ' ' + message + '\n' +
                                      'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-
         elif OldValue == '' and (message[:1]=='+' or message[:1]=='-'):
                 bot.sendMessage(chat_id=chat_id,
                                 text='Now watching /' + watchedCommandName + ' changes by ' + message + '\n' +
@@ -115,12 +114,14 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                               ', I\'m afraid I can\'t watch ' +
                                               'because I did not find any results from /bitcoin')
 
-def unwatch(bot, chat_id, message):
+def unwatch(bot, chat_id, message, sendmessage=False):
     watches = main.getAllWatches()
     if ',' + watchedCommandName + ':' + str(chat_id) + ':' + message + ',' in watches or ',' + watchedCommandName + ':' + str(chat_id) + ':' + message in watches:
         main.removeFromAllWatches(watchedCommandName + ':' + str(chat_id) + ':' + message)
-        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
+        if sendmessage:
+            bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
     else:
-        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
+        if sendmessage:
+            bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
     if getWatchValue(chat_id) != '':
         setWatchValue(chat_id, '')
