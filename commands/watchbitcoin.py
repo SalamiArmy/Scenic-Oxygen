@@ -44,24 +44,24 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         else:
             old_price = ''
             float_ready_old_price = 0.0
+        setWatchValue(chat_id, message, priceZA)
         price_diff = float(float_ready_current_price) - float(float_ready_old_price)
         if OldValue == '' and message == '':
-                bot.sendMessage(chat_id=chat_id,
-                                text='Now watching /' + watchedCommandName + ' ' + message + '\n' +
-                                     'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
-                                     ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+            bot.sendMessage(chat_id=chat_id,
+                            text='Now watching /' + watchedCommandName + ' ' + message + '\n' +
+                                 'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                 ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif OldValue == '' and (message[:1]=='+' or message[:1]=='-'):
-                bot.sendMessage(chat_id=chat_id,
-                                text='Now watching /' + watchedCommandName + ' changes by ' + message + '\n' +
-                                     'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
-                                     ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+            bot.sendMessage(chat_id=chat_id,
+                            text='Now watching /' + watchedCommandName + ' changes by ' + message + '\n' +
+                                 'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                 ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif OldValue == '' and message[:1]!='+' and message[:1]!='-':
-                bot.sendMessage(chat_id=chat_id,
-                                text='Now watching /' + watchedCommandName + ' changes below threshhold of ' + message + '\n' +
-                                     'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
-                                     ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+            bot.sendMessage(chat_id=chat_id,
+                            text='Now watching /' + watchedCommandName + ' changes below threshhold of ' + message + '\n' +
+                                 'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                 ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif old_price != priceZA and message == '':
-            setWatchValue(chat_id, message, priceZA)
             if user != 'Watcher':
                 if OldValue != '':
                     bot.sendMessage(chat_id=chat_id,
@@ -74,7 +74,6 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif float(float_ready_old_price)-float(float_ready_current_price)>float(message) and (message[:1]=='+' or message[:1]=='-'):
-            setWatchValue(chat_id, message, priceZA)
             if user != 'Watcher':
                 if OldValue != '':
                     bot.sendMessage(chat_id=chat_id,
@@ -89,7 +88,6 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif float(float_ready_current_price)<float(message) and (message[:1]!='+' and message[:1]!='-'):
-            setWatchValue(chat_id, message, priceZA)
             if user != 'Watcher':
                 if OldValue != '':
                     bot.sendMessage(chat_id=chat_id,
@@ -124,4 +122,4 @@ def unwatch(bot, chat_id, message, sendmessage=False):
         if sendmessage:
             bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
     if getWatchValue(chat_id) != '':
-        setWatchValue(chat_id, '')
+        setWatchValue(chat_id, message, '')
