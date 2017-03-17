@@ -50,7 +50,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                  ' GBP\n' + new_price + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif OldValue == '' and message[:1] != '+' and message[:1] != '-' and user != 'Watcher':
             bot.sendMessage(chat_id=chat_id,
-                            text='Now watching /' + watchedCommandName + ' changes below threshhold of ' + message + '\n' +
+                            text='Now watching /' + watchedCommandName + ' drops below threshold of ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                  ' GBP\n' + new_price + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         elif old_price_float != new_price_float and message == '' and user != 'Watcher':
@@ -59,13 +59,13 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                 text='Watch for /' + watchedCommandName + ' ' + message + ' has changed by ' + str(price_diff) + ' ZAR:\n' +
                                      'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + new_price + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif old_price_float != new_price_float and message == '' and user == 'Watcher':
+        elif old_price_float != new_price_float and message == '':
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watched /' + watchedCommandName + ' ' + message + ' changed by ' + str(price_diff) + ' ZAR:\n' +
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + new_price + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif ((old_price_float - new_price_float > float(message) and message[:1] == '+') or
-             (old_price_float - new_price_float < float(message) and message[:1] == '-')):
+        elif ((price_diff > float(message) and message[:1] == '+') or
+             (price_diff < float(message) and message[:1] == '-')):
             bot.sendMessage(chat_id=chat_id,
                             text='Watch for /' + watchedCommandName + ' has changed by ' + str(price_diff) +
                                  ' ZAR. Which is greater than the tolerance of ' + message +':\n' +
