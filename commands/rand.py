@@ -4,6 +4,10 @@ import urllib
 
 
 def run(bot, keyConfig, chat_id, user, message):
+    bot.sendMessage(chat_id=chat_id, text=get_exchange_data())
+    return True
+
+def get_exchange_data():
     usdurl = 'http://api.fixer.io/latest?base=USD'
     gbpurl = 'http://api.fixer.io/latest?base=GBP'
     eururl = 'http://api.fixer.io/latest?base=EUR'
@@ -13,6 +17,5 @@ def run(bot, keyConfig, chat_id, user, message):
     zarusd = float(data1['rates']['ZAR'])
     zargbp = float(data2['rates']['ZAR'])
     zareur = float(data3['rates']['ZAR'])
-    bot.sendMessage(chat_id=chat_id, text='1 USD = ' + str(zarusd) + ' ZAR\n1 GBP = ' + str(zargbp) + \
-                                          ' ZAR\n1 EUR = ' + str(zareur) + ' ZAR')
-    return True
+    formatted_exchange_data = '1 USD = ' + str(zarusd) + ' ZAR\n1 GBP = ' + str(zargbp) + ' ZAR\n1 EUR = ' + str(zareur) + ' ZAR'
+    return formatted_exchange_data
