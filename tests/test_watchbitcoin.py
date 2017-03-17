@@ -3,10 +3,8 @@ import ConfigParser
 import telegram
 
 import unittest
-import sys
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
-from google.appengine.api import memcache
 
 import commands.watchbitcoin as watchbitcoin
 
