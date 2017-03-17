@@ -51,12 +51,12 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                             text='Now watching /' + watchedCommandName + ' ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                  ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif OldValue == '' and (message[:1]=='+' or message[:1]=='-'):
+        elif OldValue == '' and (message[:1] == '+' or message[:1] == '-'):
             bot.sendMessage(chat_id=chat_id,
                             text='Now watching /' + watchedCommandName + ' changes by ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                  ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif OldValue == '' and message[:1]!='+' and message[:1]!='-':
+        elif OldValue == '' and message[:1] != '+' and message[:1] != '-':
             bot.sendMessage(chat_id=chat_id,
                             text='Now watching /' + watchedCommandName + ' changes below threshhold of ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
@@ -73,7 +73,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                 text='Watched /' + watchedCommandName + ' ' + message + ' changed by ' + str(price_diff) + ' ZAR:\n' +
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif float(float_ready_old_price)-float(float_ready_current_price)>float(message) and (message[:1]=='+' or message[:1]=='-'):
+        elif float(float_ready_old_price)-float(float_ready_current_price) > float(message) and (message[:1] == '+' or message[:1] == '-'):
             if user != 'Watcher':
                 if OldValue != '':
                     bot.sendMessage(chat_id=chat_id,
@@ -87,7 +87,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                      ' ZAR. Which is greater than the tolerance of ' + message +':\n' +
                                      'The New Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif float(float_ready_current_price)<float(message) and (message[:1]!='+' and message[:1]!='-'):
+        elif float(float_ready_current_price) < float(message) and (message[:1] != '+' and message[:1] != '-'):
             if user != 'Watcher':
                 if OldValue != '':
                     bot.sendMessage(chat_id=chat_id,
@@ -101,10 +101,21 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                      ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         else:
             if user != 'Watcher':
-                bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' has dropped below ' + message +' ZAR:\n' +
-                                     'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
-                                     ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+                if message == '':
+                    bot.sendMessage(chat_id=chat_id,
+                                    text='Watch for /' + watchedCommandName + ' has not changed.' +
+                                         'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                         ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+                elif message[:1] == '+' or message[:1] == '-':
+                    bot.sendMessage(chat_id=chat_id,
+                                    text='Watch for /' + watchedCommandName + ' has not changed by ' + message + '\n' +
+                                         'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                         ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
+                elif message[:1] != '+' and message[:1] != '-':
+                    bot.sendMessage(chat_id=chat_id,
+                                    text='Watch for /' + watchedCommandName + ' has not dropped below ' + message +' ZAR:\n' +
+                                         'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
+                                         ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
         if not main.AllWatchesContains(watchedCommandName, chat_id, message):
             main.addToAllWatches(watchedCommandName, chat_id, message)
     else:
