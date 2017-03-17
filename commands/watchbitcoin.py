@@ -85,7 +85,8 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                          ' GBP\n' + new_price + ' ZAR' + '\n\nTime Updated: ' + updateTime)
                 elif message[:1] == '+' or message[:1] == '-':
                     bot.sendMessage(chat_id=chat_id,
-                                    text='Watch for /' + watchedCommandName + ' has not changed by ' + message + '\n' +
+                                    text='Watch for /' + watchedCommandName + ' has changed by ' + str(price_diff) +
+                                         ' ZAR. Which is not greater than the tolerance of ' + message +':\n' +
                                          'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                          ' GBP\n' + new_price + ' ZAR' + '\n\nTime Updated: ' + updateTime)
                 elif message[:1] != '+' and message[:1] != '-':
