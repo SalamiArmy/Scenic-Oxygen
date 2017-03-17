@@ -47,17 +47,17 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             float_ready_old_price = 0.0
         setWatchValue(chat_id, message, priceZA)
         price_diff = float(float_ready_current_price) - float(float_ready_old_price)
-        if OldValue == '' and message == '':
+        if OldValue == '' and message == '' and user != 'Watcher':
             bot.sendMessage(chat_id=chat_id,
                             text='Now watching /' + watchedCommandName + ' ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                  ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif OldValue == '' and (message[:1] == '+' or message[:1] == '-'):
+        elif OldValue == '' and (message[:1] == '+' or message[:1] == '-') and user != 'Watcher':
             bot.sendMessage(chat_id=chat_id,
                             text='Now watching /' + watchedCommandName + ' changes by ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
                                  ' GBP\n' + priceZA + ' ZAR' + '\n\nTime Updated: ' + updateTime)
-        elif OldValue == '' and message[:1] != '+' and message[:1] != '-':
+        elif OldValue == '' and message[:1] != '+' and message[:1] != '-' and user != 'Watcher':
             bot.sendMessage(chat_id=chat_id,
                             text='Now watching /' + watchedCommandName + ' changes below threshhold of ' + message + '\n' +
                                  'The Current Price of 1 Bitcoin:\n\n' + priceUS + ' USD\n' + priceGB +
