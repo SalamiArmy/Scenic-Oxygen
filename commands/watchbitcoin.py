@@ -41,6 +41,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             old_request_text = split_OldValue[1] if len(split_OldValue) == 2 else ''
             if old_request_text != message:
                 unwatch(bot, chat_id, old_request_text)
+                OldValue = ''
         else:
             old_price = ''
             float_ready_old_price = 0.0
