@@ -6,6 +6,7 @@ from google.appengine.ext import ndb
 import main
 from commands import getgif
 from commands import retry_on_telegram_error
+from commands.unwatchgif import watchedCommandName
 
 watchedCommandName = 'getgif'
 
@@ -77,3 +78,16 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                                   ', I\'m afraid I can\'t watch ' +
                                                   'because I did not find any results for /getgif ' +
                                                   string.capwords(requestText.encode('utf-8')))
+
+
+def unwatch(bot, chat_id, message):
+    watches = main.getAllWatches()
+    if ',' + watchedCommandName + ':' + str(
+            chat_id) + ':' + message + ',' in watches or ',' + watchedCommandName + ':' + str(
+            chat_id) + ':' + message in watches:
+        main.removeFromAllWatches(watchedCommandName + ':' + str(chat_id) + ':' + message)
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
+    else:
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
+    if watchgif.getWatchValue(chat_id, message) != '':
+        watchgif.setWatchValue(chat_id, message, '')

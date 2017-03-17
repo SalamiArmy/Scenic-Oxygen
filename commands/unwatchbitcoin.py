@@ -1,5 +1,5 @@
 # coding=utf-8
-from commands import watchbitcoin
+from commands.watchbitcoin import unwatch
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
-    watchbitcoin.unwatch(bot, chat_id, message, True)
+    unwatch(bot, chat_id, message, True)

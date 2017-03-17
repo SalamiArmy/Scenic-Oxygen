@@ -4,6 +4,7 @@ from google.appengine.ext import ndb
 
 import main
 from commands import cric
+from commands.unwatchcric import watchedCommandName
 
 watchedCommandName = 'cric'
 
@@ -54,3 +55,16 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +
                                               'because I did not find any results from /' + watchedCommandName)
+
+
+def unwatch(bot, chat_id, message):
+    watches = main.getAllWatches()
+    if ',' + watchedCommandName + ':' + str(
+            chat_id) + ':' + message + ',' in watches or ',' + watchedCommandName + ':' + str(
+            chat_id) + ':' + message in watches:
+        main.removeFromAllWatches(watchedCommandName + ':' + str(chat_id) + ':' + message)
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
+    else:
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
+    if watchcric.getWatchValue(chat_id) != '':
+        watchcric.setWatchValue(chat_id, '')
