@@ -1,11 +1,11 @@
 # coding=utf-8
+
 from google.appengine.ext import ndb
 
 import main
-from commands import define
-from commands.unwatchdefine import watchedCommandName
+from commands.gettopgames import get_steam_top_games
 
-watchedCommandName = 'define'
+watchedCommandName = 'gettopgames'
 
 
 class WatchValue(ndb.Model):
@@ -29,24 +29,24 @@ def getWatchValue(chat_id, request):
 
 
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
-    getData = define.get_define_data(keyConfig, user, message, intention_confidence)
-    if ('<blockquote>' not in getData):
+    top_games = get_steam_top_games()
+    if top_games:
         OldValue = getWatchValue(chat_id, message)
-        if OldValue != getData:
-            setWatchValue(chat_id, message, getData)
+        if OldValue != top_games:
+            setWatchValue(chat_id, message, top_games)
             if user != 'Watcher':
                 if OldValue == '':
-                    bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + message + '\n' + getData)
+                    bot.sendMessage(chat_id=chat_id, text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games)
                 else:
                     bot.sendMessage(chat_id=chat_id,
-                                    text='Now watching /' + watchedCommandName + ' ' + message + '\n' + getData)
+                                    text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games)
             else:
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.\n' + getData)
+                                text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.\n' + top_games)
         else:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' ' + message + ' has not changed:\n' + getData)
+                                text='Watch for /' + watchedCommandName + ' ' + message + ' has not changed:\n' + top_games)
         if not main.AllWatchesContains(watchedCommandName, chat_id, message):
             main.addToAllWatches(watchedCommandName, chat_id, message)
     else:

@@ -1,5 +1,5 @@
 # coding=utf-8
-from commands.watchdefine import unwatch
+from commands.watchtopgames import unwatch
 
 watchedCommandName = 'define'
 

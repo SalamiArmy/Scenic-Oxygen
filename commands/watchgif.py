@@ -89,5 +89,5 @@ def unwatch(bot, chat_id, message):
         bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
     else:
         bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
-    if watchgif.getWatchValue(chat_id, message) != '':
-        watchgif.setWatchValue(chat_id, message, '')
+    if getWatchValue(chat_id, message) != '':
+        setWatchValue(chat_id, message, '')
