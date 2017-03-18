@@ -55,11 +55,14 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
         elif old_price_float != new_price_float and message == '':
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watched /' + watchedCommandName + ' ' + message + ' changed by ' + str(price_diff) + ' ZAR:\n' + formatted_price)
-        elif ((price_diff > float(message) and message[:1] == '+') or
-             (price_diff < float(message) and message[:1] == '-')):
+        elif price_diff > float(message) and message[:1] == '+':
             bot.sendMessage(chat_id=chat_id,
-                            text='Watch for /' + watchedCommandName + ' has changed by ' + str(price_diff) +
-                                 ' ZAR. Which is ' + ('higher' if message[:1] == '+' else 'lower') + ' than the tolerance of ' + message +':\n' + formatted_price)
+                            text='Watch for /' + watchedCommandName + ' has jumped by ' + str(price_diff) +
+                                 ' ZAR. Which is higher than the tolerance of ' + message +':\n' + formatted_price)
+        elif price_diff < float(message) and message[:1] == '-':
+            bot.sendMessage(chat_id=chat_id,
+                            text='Watch for /' + watchedCommandName + ' has dropped by ' + str(price_diff) +
+                                 ' ZAR. Which is lower than the tolerance of ' + message +':\n' + formatted_price)
         elif new_price_float < float(message) and (message[:1] != '+' and message[:1] != '-'):
             bot.sendMessage(chat_id=chat_id,
                             text='Watch for /' + watchedCommandName + ' has dropped below ' + message +' ZAR:\n' + formatted_price)
