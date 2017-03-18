@@ -6,6 +6,8 @@ import main
 from commands.gettopgames import get_steam_top_games
 
 watchedCommandName = 'gettopgames'
+removed_games_title = '*Removed Games:*'
+added_games_title = '*New Games:*'
 
 
 class WatchValue(ndb.Model):
@@ -29,11 +31,11 @@ def getWatchValue(chat_id, request):
 
 
 def get_add_removed_games(new_list, old_list):
-    added_games = '*New Games:*'
+    added_games = added_games_title
     for item in new_list.split('\n'):
         if item not in old_list:
             added_games += '\n' + item
-    removed_games = '*Removed Games:*'
+    removed_games = removed_games_title
     for item in old_list.split('\n'):
         if item not in new_list:
             removed_games += '\n' + item
@@ -52,12 +54,11 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                     text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games, parse_mode='Markdown')
             else:
                 games_added, games_removed = get_add_removed_games(top_games, OldValue)
-                print('showing change in top games\nadded games:\n' + games_added + '\nremoved games:\n' + games_removed)
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.' +
                                      '\n' + top_games +
-                                     ('\n' + games_added if games_added != '*New Games:*' else '') +
-                                      ('\n' + games_removed if games_added != '*Removed Games:*' else ''), parse_mode='Markdown')
+                                     ('\n' + games_added if games_added != added_games_title else '') +
+                                     ('\n' + games_removed if games_added != removed_games_title else ''), parse_mode='Markdown')
         else:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id,
