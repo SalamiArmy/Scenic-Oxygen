@@ -52,6 +52,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                     text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games, parse_mode='Markdown')
             else:
                 games_added, games_removed = get_add_removed_games(top_games, OldValue)
+                print('showing change in top games\nadded games:\n' + games_added + '\nremoved games:\n' + games_removed)
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.' +
                                      '\n' + top_games +
