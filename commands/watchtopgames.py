@@ -51,24 +51,29 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
             if OldValue == '':
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id,
-                                    text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games, parse_mode='Markdown')
+                                    text='Now watching /' + watchedCommandName + ' ' + message + '\n' + top_games,
+                                    parse_mode='Markdown')
             else:
                 games_added, games_removed = get_add_removed_games(top_games, OldValue)
                 bot.sendMessage(chat_id=chat_id,
                                 text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.' +
                                      '\n' + top_games +
                                      ('\n' + games_added if games_added != added_games_title else '') +
-                                     ('\n' + games_removed if games_added != removed_games_title else ''), parse_mode='Markdown')
+                                     ('\n' + games_removed if games_added != removed_games_title else ''),
+                                parse_mode='Markdown')
         else:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' ' + message + ' has not changed:\n' + top_games, parse_mode='Markdown')
+                                text='Watch for /' + watchedCommandName + ' ' + message + ' has not changed:\n' + top_games,
+                                parse_mode='Markdown')
         if not main.AllWatchesContains(watchedCommandName, chat_id, message):
             main.addToAllWatches(watchedCommandName, chat_id, message)
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t watch ' +
-                                              'because I did not find any results from /' + watchedCommandName, parse_mode='Markdown')
+        bot.sendMessage(chat_id=chat_id,
+                        text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                             ', I\'m afraid I can\'t watch ' +
+                             'because I did not find any results from /' + watchedCommandName,
+                        parse_mode='Markdown')
 
 
 def unwatch(bot, chat_id, message):
