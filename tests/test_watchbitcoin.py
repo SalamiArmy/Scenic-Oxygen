@@ -25,7 +25,7 @@ class TestWatchBitcoin(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_watchbitcoin(self):
-        requestText = '15000'
+        requestText = '10000'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -35,4 +35,7 @@ class TestWatchBitcoin(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', requestText)
+        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', '15000')
+        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', '-100')
+        watchbitcoin.unwatch(bot, chatId, '15000')
+        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', '10000')

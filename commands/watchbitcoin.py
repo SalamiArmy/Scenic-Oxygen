@@ -96,7 +96,7 @@ def parse_old_price_float(OldValue, bot, chat_id, message):
             unwatch(bot, chat_id, old_request_text)
             OldValue = ''
     else:
-        float_ready_old_price = 0.0
+        float_ready_old_price = '0.0'
     old_price_float = float(float_ready_old_price)
     return OldValue, old_price_float
 
@@ -111,4 +111,4 @@ def unwatch(bot, chat_id, message, sendmessage=False):
         if sendmessage:
             bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
     if getWatchValue(chat_id) != '':
-        setWatchValue(chat_id, message, '')
+        setWatchValue(chat_id, '', '')
