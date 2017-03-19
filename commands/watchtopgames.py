@@ -17,14 +17,14 @@ class WatchValue(ndb.Model):
 
 # ================================
 
-def setWatchValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id) + ':' + request)
+def setWatchValue(chat_id, NewValue):
+    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id))
     es.currentValue = NewValue
     es.put()
 
 
-def getWatchValue(chat_id, request):
-    es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id) + ':' + request)
+def getWatchValue(chat_id):
+    es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id))
     if es:
         return es.currentValue
     return ''
@@ -45,9 +45,9 @@ def get_add_removed_games(new_list, old_list):
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     top_games = get_steam_top_games()
     if top_games:
-        OldValue = getWatchValue(chat_id, message)
+        OldValue = getWatchValue(chat_id)
         if OldValue != top_games:
-            setWatchValue(chat_id, message, top_games)
+            setWatchValue(chat_id, top_games)
             if OldValue == '':
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id,
@@ -84,5 +84,5 @@ def unwatch(bot, chat_id, message):
         bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
     else:
         bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
-    if getWatchValue(chat_id, message) != '':
-        setWatchValue(chat_id, message, '')
+    if getWatchValue(chat_id) != '':
+        setWatchValue(chat_id, '')
