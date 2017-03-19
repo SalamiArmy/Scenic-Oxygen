@@ -74,12 +74,11 @@ def md5(byteStream):
 
 def unwatch(bot, chat_id, message):
     watches = main.getAllWatches()
-    if ',' + watchedCommandName + ':' + str(
-            chat_id) + ':' + message + ',' in watches or ',' + watchedCommandName + ':' + str(
-            chat_id) + ':' + message in watches:
-        main.removeFromAllWatches(watchedCommandName + ':' + str(chat_id) + ':' + message)
+    if ',' + str(chat_id) + ':' + watchedCommandName + ':' + message + ',' in watches or \
+                                                            ',' + str(chat_id) + ':' + watchedCommandName + ':' + message in watches:
+        main.removeFromAllWatches(str(chat_id) + ':' + watchedCommandName + ':' + message)
         bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
     else:
         bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
-    if watch.getWatchValue(chat_id, message) != '':
-        watch.setWatchValue(chat_id, message, '')
+    if getWatchValue(chat_id, message) != '':
+        setWatchValue(chat_id, message, '')

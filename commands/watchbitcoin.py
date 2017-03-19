@@ -103,8 +103,8 @@ def parse_old_price_float(OldValue, bot, chat_id, message):
 
 def unwatch(bot, chat_id, message, sendmessage=False):
     watches = main.getAllWatches()
-    if ',' + watchedCommandName + ':' + str(chat_id) + ':' + message + ',' in watches or ',' + watchedCommandName + ':' + str(chat_id) + ':' + message in watches:
-        main.removeFromAllWatches(watchedCommandName + ':' + str(chat_id) + ':' + message)
+    if ',' + str(chat_id) + ':' + watchedCommandName + ':' + message + ',' in watches or ',' + str(chat_id) + ':' + watchedCommandName + ':' + message in watches:
+        main.removeFromAllWatches(str(chat_id) + ':' + watchedCommandName + ':' + message)
         if sendmessage:
             bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
     else:
