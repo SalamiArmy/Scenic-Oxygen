@@ -42,7 +42,7 @@ def get_add_removed_games(new_list, old_list):
     return added_games, removed_games
 
 
-def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
+def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
     top_games = get_steam_top_games()
     if top_games:
         OldValue = getWatchValue(chat_id)
@@ -59,7 +59,7 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                                 text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.' +
                                      '\n' + top_games +
                                      ('\n' + games_added if games_added != added_games_title else '') +
-                                     ('\n' + games_removed if games_added != removed_games_title else ''),
+                                     ('\n' + games_removed if games_removed != removed_games_title else ''),
                                 parse_mode='Markdown')
         else:
             if user != 'Watcher':
