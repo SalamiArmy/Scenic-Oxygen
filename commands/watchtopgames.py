@@ -76,13 +76,12 @@ def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
                         parse_mode='Markdown')
 
 
-def unwatch(bot, chat_id, message):
+def unwatch(bot, chat_id):
     watches = main.getAllWatches()
-    if ',' + str(chat_id) + ':' + watchedCommandName + ':' + message + ',' in watches or ',' + str(chat_id) + ':' + watchedCommandName + \
-            ':' + message in watches:
-        main.removeFromAllWatches(str(chat_id) + ':' + watchedCommandName + ':' + message)
-        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
+    if ',' + str(chat_id) + ':' + watchedCommandName + ',' in watches or ',' + str(chat_id) + ':' + watchedCommandName in watches:
+        main.removeFromAllWatches(str(chat_id) + ':' + watchedCommandName)
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' has been removed.')
     else:
-        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' not found.')
     if getWatchValue(chat_id) != '':
         setWatchValue(chat_id, '')
