@@ -36,7 +36,7 @@ def get_steam_top_games():
             code = bypassAgeGate.open(steamGameLink).read()
             game_name = steam_game_name_parser(code, steamGameLink)
             if game_name:
-                hot_games += '\n' + game_name.translate(None, '™®')
+                hot_games += '\n' + game_name.replace('™', '').replace('®', '')
             SearchResultsInterator += 1
     return hot_games
 
