@@ -35,5 +35,5 @@ class TestWatchBitcoin(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        watchtopgames.setWatchValue(chatId, 'NieR:Automata™\nTom Clancy\'s Ghost Recon® Wildlands\nTotal War: WARHAMMER\nH1Z1: King of the Kill\nCounter-Strike: Global Offensive\nDOOM\nBorderlands 2\nGrim Dawn\nXCOM® 2\nRocket League®\nSid Meier’s Civilization® VI\nHITMAN™\nGrand Theft Auto V\nMafia III\nARK: Survival Evolved\nNBA 2K17\nRimWorld\nSpider-Man™: Shattered Dimensions\nFOR HONOR™\nSid Meier\'s Civilization® V')
+        #watchtopgames.setWatchValue(chatId, 'NieR:Automata™\nTom Clancy\'s Ghost Recon® Wildlands\nTotal War: WARHAMMER\nH1Z1: King of the Kill\nCounter-Strike: Global Offensive\nDOOM\nBorderlands 2\nGrim Dawn\nXCOM® 2\nRocket League®\nSid Meier’s Civilization® VI\nHITMAN™\nGrand Theft Auto V\nMafia III\nARK: Survival Evolved\nNBA 2K17\nRimWorld\nSpider-Man™: Shattered Dimensions\nFOR HONOR™\nSid Meier\'s Civilization® V')
         watchtopgames.run(bot, keyConfig, chatId, 'SalamiArmy')
