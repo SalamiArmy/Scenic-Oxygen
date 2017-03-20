@@ -56,7 +56,8 @@ def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
             else:
                 games_added, games_removed = get_add_removed_games(top_games, OldValue)
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' ' + message + ' has changed.' +
+                                text='Watch for /' + watchedCommandName + ' ' + message + ' has changed' +
+                                     (' order.' + games_added if (games_added == added_games_title and games_removed == removed_games_title) else '.') +
                                      '\n' + top_games +
                                      ('\n' + games_added if games_added != added_games_title else '') +
                                      ('\n' + games_removed if games_removed != removed_games_title else ''),
