@@ -17,7 +17,7 @@ class WatchValue(ndb.Model):
 
 def setWatchValue(chat_id, NewValue):
     es = WatchValue.get_or_insert(str(chat_id) + ':' + watchedCommandName)
-    es.currentValue = NewValue
+    es.currentValue = NewValue.split(' players ')[0]
     es.put()
 
 
@@ -26,7 +26,6 @@ def getWatchValue(chat_id):
     if es:
         return es.currentValue
     return ''
-
 
 def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
     getData, mc_server_found, mc_server_not_found_message = get_mc_data(keyConfig, user)
