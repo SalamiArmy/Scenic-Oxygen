@@ -3,9 +3,9 @@
 from google.appengine.ext import ndb
 
 import main
-from commands import cric
+from commands.mc import get_mc_data
 
-watchedCommandName = 'cric'
+watchedCommandName = 'mc'
 
 
 class WatchValue(ndb.Model):
@@ -16,21 +16,21 @@ class WatchValue(ndb.Model):
 # ================================
 
 def setWatchValue(chat_id, NewValue):
-    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id))
+    es = WatchValue.get_or_insert(str(chat_id) + ':' + watchedCommandName)
     es.currentValue = NewValue
     es.put()
 
 
 def getWatchValue(chat_id):
-    es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id))
+    es = WatchValue.get_by_id(str(chat_id) + ':' + watchedCommandName)
     if es:
         return es.currentValue
     return ''
 
 
 def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
-    getData = cric.get_cric_data(user)
-    if getData:
+    getData, mc_server_found, mc_server_not_found_message = get_mc_data(keyConfig, user)
+    if mc_server_found:
         OldValue = getWatchValue(chat_id)
         if OldValue != getData:
             setWatchValue(chat_id, getData)
@@ -48,18 +48,16 @@ def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
         if not main.AllWatchesContains(watchedCommandName, chat_id):
             main.addToAllWatches(watchedCommandName, chat_id)
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t watch ' +
-                                              'because I did not find any results from /' + watchedCommandName)
+        bot.sendMessage(chat_id=chat_id, text=mc_server_not_found_message)
 
 
-def unwatch(bot, chat_id):
+def unwatch(bot, chat_id, message):
     watches = main.getAllWatches()
     if ',' + str(chat_id) + ':' + watchedCommandName + ',' in watches \
             or ',' + str(chat_id) + ':' + watchedCommandName in watches:
         main.removeFromAllWatches(str(chat_id) + ':' + watchedCommandName)
-        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' has been removed.')
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' has been removed.')
     else:
-        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' not found.')
+        bot.sendMessage(chat_id=chat_id, text='Watch for /' + watchedCommandName + ' ' + message + ' not found.')
     if getWatchValue(chat_id) != '':
         setWatchValue(chat_id, '')

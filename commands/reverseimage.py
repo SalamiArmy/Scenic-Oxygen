@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 
 def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, "").strip()
-
     code = retrieve_google_image_search_results(requestText)
     parsedCode = google_image_results_parser(code)
     if parsedCode[:len("Error: ")] != "Error: ":
