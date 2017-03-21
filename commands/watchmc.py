@@ -31,7 +31,7 @@ def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
     getData, mc_server_found, mc_server_not_found_message = get_mc_data(keyConfig, user)
     if mc_server_found:
         OldValue = getWatchValue(chat_id)
-        if OldValue != getData:
+        if OldValue != getData.split(' players ')[0]:
             setWatchValue(chat_id, getData)
             if OldValue == '':
                 if user != 'Watcher':
