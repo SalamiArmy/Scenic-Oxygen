@@ -1,4 +1,8 @@
 cron:
 - description: hourly all watches job
   url: /allwatches
+  schedule: every 1 hours
+
+- description: mc every 5 mins job
+  url: /watchmc
   schedule: every 5 minutes
