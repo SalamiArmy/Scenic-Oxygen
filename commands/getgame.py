@@ -9,13 +9,13 @@ def run(bot, keyConfig, chat_id, user, message):
     requestText = message.replace(bot.name, '').strip()
 
     code = urllib.urlopen('http://store.steampowered.com/search/?category1=998&term=' + requestText).read()
-    appId = steam_results_parser(code)
+    appId = steam_results_parser(code).encode('utf-8')
     if appId:
         steamGameLink = 'http://store.steampowered.com/app/' + appId
         bypassAgeGate = urllib2.build_opener()
         bypassAgeGate.addheaders.append(('Cookie', 'birthtime=578390401'))
         code = bypassAgeGate.open(steamGameLink).read()
-        gameResults = steam_game_parser(code, steamGameLink)
+        gameResults = steam_game_parser(code, steamGameLink).encode('utf-8')
         bot.sendMessage(chat_id=chat_id, text=gameResults,
                         disable_web_page_preview=True, parse_mode='Markdown')
         return True
