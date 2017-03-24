@@ -14,7 +14,7 @@ def run(bot, keyConfig, chat_id, user, message):
     if appId:
         steamGameLink = 'http://store.steampowered.com/app/' + appId
         bypassAgeGate = urllib2.build_opener()
-        bypassAgeGate.addheaders.append(('Cookie', 'birthtime=0; path=/; max-age=31536000;'))
+        bypassAgeGate.addheaders.append(('Cookie', 'birthtime=0; path=/; max-age=31536000;expires=Fri, 24 Mar 2027 20:00:00 GMT'))
         code = bypassAgeGate.open(steamGameLink).read()
         gameResults = steam_game_parser(code, steamGameLink).encode('utf-8')
         bot.sendMessage(chat_id=chat_id, text=gameResults,
