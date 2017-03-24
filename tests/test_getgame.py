@@ -8,7 +8,7 @@ import commands.getgame as getgame
 
 class TestGetGame(unittest.TestCase):
     def test_getgame(self):
-        requestText = 'negligee'
+        requestText = 'PLAYERUNKNOWN\'S BATTLEGROUNDS'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

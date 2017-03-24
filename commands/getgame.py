@@ -45,6 +45,8 @@ def steam_game_parser(code, link):
     if titleDiv:
         gameTitle = titleDiv.string
         AllGameDetailsFormatted += '*' + gameTitle
+    else:
+        raise 'Cannot parse title from Steam page for this game.'
 
     priceDiv = soup.find('div', attrs={'class':'game_purchase_price price'})
     if priceDiv:
@@ -62,6 +64,8 @@ def steam_game_parser(code, link):
     if descriptionDiv:
         descriptionSnippet = descriptionDiv.string.replace('\r', '').replace('\n', '').replace('\t', '')
         AllGameDetailsFormatted += descriptionSnippet + '\n'
+    else:
+        raise 'Cannot parse description from Steam page for this game.'
 
     if AllGameDetailsFormatted:
         AllGameDetailsFormatted += link + '\n'
@@ -70,6 +74,8 @@ def steam_game_parser(code, link):
     if dateSpan:
         releaseDate = dateSpan.string
         AllGameDetailsFormatted += 'Release Date: ' + releaseDate + '\n'
+    else:
+        raise 'Cannot parse release date from Steam page for this game.'
 
     featureList = ''
     featureLinks = soup.findAll('a', attrs={'class':'name'})
