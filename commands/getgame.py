@@ -2,6 +2,7 @@
 import urllib
 import urllib2
 
+import dateutil
 from bs4 import BeautifulSoup
 
 
@@ -13,7 +14,7 @@ def run(bot, keyConfig, chat_id, user, message):
     if appId:
         steamGameLink = 'http://store.steampowered.com/app/' + appId
         bypassAgeGate = urllib2.build_opener()
-        bypassAgeGate.addheaders.append(('Cookie', 'birthtime=578390401'))
+        bypassAgeGate.addheaders.append(('Cookie', 'birthtime=0; path=/; max-age=31536000;'))
         code = bypassAgeGate.open(steamGameLink).read()
         gameResults = steam_game_parser(code, steamGameLink).encode('utf-8')
         bot.sendMessage(chat_id=chat_id, text=gameResults,
@@ -46,7 +47,7 @@ def steam_game_parser(code, link):
         gameTitle = titleDiv.string
         AllGameDetailsFormatted += '*' + gameTitle
     else:
-        raise 'Cannot parse title from Steam page for this game.'
+        raise Exception('Cannot parse title from Steam page for this game.')
 
     priceDiv = soup.find('div', attrs={'class':'game_purchase_price price'})
     if priceDiv:
@@ -65,7 +66,7 @@ def steam_game_parser(code, link):
         descriptionSnippet = descriptionDiv.string.replace('\r', '').replace('\n', '').replace('\t', '')
         AllGameDetailsFormatted += descriptionSnippet + '\n'
     else:
-        raise 'Cannot parse description from Steam page for this game.'
+        raise Exception('Cannot parse description from Steam page for this game.')
 
     if AllGameDetailsFormatted:
         AllGameDetailsFormatted += link + '\n'
@@ -75,7 +76,7 @@ def steam_game_parser(code, link):
         releaseDate = dateSpan.string
         AllGameDetailsFormatted += 'Release Date: ' + releaseDate + '\n'
     else:
-        raise 'Cannot parse release date from Steam page for this game.'
+        raise Exception('Cannot parse release date from Steam page for this game.')
 
     featureList = ''
     featureLinks = soup.findAll('a', attrs={'class':'name'})
