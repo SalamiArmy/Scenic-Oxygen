@@ -214,7 +214,6 @@ class TriggerAllWatches(webapp2.RequestHandler):
 
 from commands import watchmc
 class TriggerMCWatch(webapp2.RequestHandler):
-
     def get(self):
         AllWatches = watchmc.getAllWatches()
         watches_split = AllWatches.split(',')
