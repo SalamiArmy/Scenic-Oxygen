@@ -220,7 +220,6 @@ class TriggerMCWatch(webapp2.RequestHandler):
         watches_split = AllWatches.split(',')
         if len(watches_split) >= 1:
             for chat_id in watches_split:
-                print('got mc watcher ' + chat_id)
                 watchmc.run(bot, keyConfig, chat_id, 'Watcher')
 
 class ClearAllWatches(webapp2.RequestHandler):
