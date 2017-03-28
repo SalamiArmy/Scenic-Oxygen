@@ -6,3 +6,7 @@ cron:
 - description: mc every 5 mins job
   url: /watchmc
   schedule: every 5 minutes
+
+- description: cric every 6 hours job
+  url: /watchcric
+  schedule: every 6 hours

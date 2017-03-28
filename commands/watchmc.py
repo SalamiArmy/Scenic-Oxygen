@@ -1,8 +1,6 @@
 # coding=utf-8
 
 from google.appengine.ext import ndb
-
-import main
 from commands.mc import get_mc_data
 
 watchedCommandName = 'mc'
@@ -81,7 +79,7 @@ def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
 
 
 def unwatch(bot, chat_id, message):
-    watches = main.getAllWatches()
+    watches = getAllWatches()
     if ',' + str(chat_id) + ':' + watchedCommandName + ',' in watches \
             or ',' + str(chat_id) + ':' + watchedCommandName in watches:
         removeFromAllWatches(str(chat_id))

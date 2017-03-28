@@ -221,6 +221,15 @@ class TriggerMCWatch(webapp2.RequestHandler):
             for chat_id in watches_split:
                 watchmc.run(bot, keyConfig, chat_id, 'Watcher')
 
+from commands import watchcric
+class TriggerMCWatch(webapp2.RequestHandler):
+    def get(self):
+        AllWatches = watchcric.getAllWatches()
+        watches_split = AllWatches.split(',')
+        if len(watches_split) >= 1:
+            for chat_id in watches_split:
+                watchcric.run(bot, keyConfig, chat_id, 'Watcher')
+
 class ClearAllWatches(webapp2.RequestHandler):
     def get(self):
         setAllWatchesValue('')
@@ -233,5 +242,6 @@ app = webapp2.WSGIApplication([
     ('/run_tests', RunTestsHandler),
     ('/allwatches', TriggerAllWatches),
     ('/watchmc', TriggerMCWatch),
+    ('/watchcric', TriggerCricWatch),
     ('/clearallwatches', ClearAllWatches)
 ], debug=True)
