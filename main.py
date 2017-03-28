@@ -222,7 +222,7 @@ class TriggerMCWatch(webapp2.RequestHandler):
                 watchmc.run(bot, keyConfig, chat_id, 'Watcher')
 
 from commands import watchcric
-class TriggerMCWatch(webapp2.RequestHandler):
+class TriggerCricWatch(webapp2.RequestHandler):
     def get(self):
         AllWatches = watchcric.getAllWatches()
         watches_split = AllWatches.split(',')
