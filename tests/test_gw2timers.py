@@ -3,16 +3,14 @@ import unittest
 
 import telegram
 
-import commands.getgame as getgame
+import commands.gw2timers as gw2timers
 
 
 class TestGetGame(unittest.TestCase):
     def test_getgame(self):
-        requestText = 'PLAYERUNKNOWN\'S BATTLEGROUNDS'
-
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        getgame.run(bot, keyConfig, chatId, 'Admin', requestText)
+        gw2timers.run(bot, keyConfig, chatId, 'Admin')
