@@ -1,4 +1,5 @@
 import ConfigParser
+import httplib
 import importlib
 import json
 import logging
@@ -118,8 +119,8 @@ class WebhookHandler(webapp2.RequestHandler):
         try:
             mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ''))
             mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '')
-        except:
-            print("Unexpected error running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+        except httplib.HTTPException:
+            print("Unexpected HTTPException running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
             try:
                 bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
                                 text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
