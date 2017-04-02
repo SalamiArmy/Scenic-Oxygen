@@ -55,7 +55,7 @@ def removeFromAllWatches(watch):
                        .replace(watch + ',', ''))
 
 
-def run(bot, keyConfig, chat_id, user, message='', intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message='', intention_confidence=0.0):
     getData, mc_server_found, mc_server_not_found_message = get_mc_data(keyConfig, user)
     if mc_server_found:
         OldValue = getWatchValue(chat_id)

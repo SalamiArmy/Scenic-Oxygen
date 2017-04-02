@@ -17,4 +17,4 @@ class TestGet(unittest.TestCase):
         #for bot group:
         #chatId = -1001048076684
 
-        getsuggestion.run(bot, keyConfig, chatId, 'Admin', requestText)
+        getsuggestion.run(bot, chatId, 'Admin', keyConfig, requestText)

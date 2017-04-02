@@ -14,7 +14,7 @@ class TestISS(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        iss.run(bot, keyConfig, chatId, 'Admin', requestText)
+        iss.run(bot, chatId, 'Admin', keyConfig, requestText)
 
     def test_isspos(self):
         keyConfig = ConfigParser.ConfigParser()
@@ -22,4 +22,4 @@ class TestISS(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        iss.run(bot, keyConfig, chatId, 'Admin', '')
+        iss.run(bot, chatId, 'Admin', keyConfig, '')

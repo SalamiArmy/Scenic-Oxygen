@@ -6,7 +6,7 @@ import urllib2
 from mcstatus import MinecraftServer
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     mc_data_formatted, mc_server_found, mc_server_not_found_message = get_mc_data(keyConfig, user)
     if mc_server_found:
         bot.sendMessage(chat_id=chat_id, text=mc_data_formatted)

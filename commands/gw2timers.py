@@ -6,7 +6,7 @@ import urllib2
 from bs4 import BeautifulSoup
 
 
-def run(bot, keyConfig, chat_id, user, message=''):
+def run(bot, chat_id, user, keyConfig, message=''):
     steamGameLink = 'http://guildwarstemple.com/apps'
     html_code = urllib.urlopen(steamGameLink).read()
     gameResults = steam_game_parser(html_code).encode('utf-8')

@@ -19,4 +19,4 @@ class TestGetBook(unittest.TestCase):
         #for bot group:
         #chatId = -1001048076684
 
-        getbook.run(bot, keyConfig, chatId, 'Admin', requestText)
+        getbook.run(bot, chatId, 'Admin', keyConfig, requestText)

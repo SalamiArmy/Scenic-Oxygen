@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import re
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, '').strip().upper()
 
     code = urllib.urlopen('http://www.acronymsearch.com/index.php?acronym=' + requestText).read()

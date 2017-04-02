@@ -35,4 +35,4 @@ class TestGet(unittest.TestCase):
         #for bot group:
         chatId = -130436192
 
-        watch.run(bot, keyConfig, chatId, 'SalamiArmy', requestText)
+        watch.run(bot, chatId, 'SalamiArmy', keyConfig, requestText)

@@ -3,7 +3,7 @@ import json
 import urllib
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
 
     tor1Url = 'https://torrentproject.se/?s='

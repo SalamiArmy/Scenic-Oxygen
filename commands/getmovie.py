@@ -5,7 +5,7 @@ import urllib
 import telegram
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
 
     movieUrl = 'http://www.omdbapi.com/?plot=short&r=json&y=&t='

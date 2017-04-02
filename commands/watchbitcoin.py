@@ -29,7 +29,7 @@ def getWatchValue(chat_id):
     return ''
 
 
-def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     priceGB, priceUS, new_price, updateTime = bitcoin.get_bitcoin_prices()
     if new_price:
         OldValue = getWatchValue(chat_id)

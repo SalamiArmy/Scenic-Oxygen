@@ -13,5 +13,5 @@ def run_build(strarr):
     else:
         return "Build successfully started."
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + run_build(message))

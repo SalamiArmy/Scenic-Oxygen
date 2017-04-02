@@ -8,7 +8,7 @@ import telegram
 from commands import retry_on_telegram_error
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     realUrl = 'https://www.googleapis.com/customsearch/v1?&searchType=image&num=10&safe=off&' \
               'cx=' + keyConfig.get('Google', 'GCSE_SE_ID') + '&key=' + \
               keyConfig.get('Google', 'GCSE_APP_ID') + '&q=fig'

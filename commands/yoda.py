@@ -14,7 +14,7 @@ def translate(msg):
         print(r.text)
         return "An unexpected error occurred"
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
