@@ -38,10 +38,10 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     if 'items' in data and len(data['items']) >= 9:
         OldValue = getWatchValue(chat_id, requestText)
         imagelinks = data['items'][0]['link']
-        count = 0
         for link in data['items']:
             imagelinks += '\n' + link['link']
         print('got image links for ' + requestText + ' as ' + imagelinks)
+        count = 0
         for link in data['items']:
             imagelink = link['link']
             count += 1
@@ -49,20 +49,20 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                 if user != 'Watcher':
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Now watching /' + watchedCommandName + ' ' + requestText + '.' +
-                                                               '\nThis is number ' + str(count) + '.'
+                                                               '\nThis is number ' + str(count) + ' of 10.'
                                                                ' number ' + str(count) + '.',
                                                                user)
                 else:
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Watched /' + watchedCommandName + ' ' + requestText +
                                                                ' changed.' +
-                                                               '\nThis is number ' + str(count) + '.', user)
+                                                               '\nThis is number ' + str(count) + ' of 10.', user)
             else:
                 if user != 'Watcher':
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Watch for /' + watchedCommandName + ' ' + requestText +
                                                                ' has not changed.' +
-                                                               '\nThis is number ' + str(count) + '.', user)
+                                                               '\nThis is number ' + str(count) + ' of 10.', user)
         print('Comparing ' + OldValue + ' with ' + imagelinks)
         if OldValue != imagelinks:
             setWatchValue(chat_id, requestText, imagelinks)
@@ -71,7 +71,7 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t watch ' +
-                                              'because I did not find any results for /get ' +
+                                              'because I did not find enough results for /get ' +
                                               string.capwords(requestText.encode('utf-8')))
 
 def md5(byteStream):

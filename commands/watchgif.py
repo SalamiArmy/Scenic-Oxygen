@@ -33,49 +33,49 @@ def getWatchValue(chat_id, request):
 def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
     data = getgif.search_google_for_gifs(keyConfig, requestText)
-    if 'items' in data and len(data['items']) >= 1:
-        offset = -1
-        thereWasAnError = True
-        while thereWasAnError and offset < len(data['items'])-1:
-            offset += 1
-            imagelink = data['items'][offset]['link']
-            thereWasAnError = not getgif.isGifAnimated(imagelink)
-        if not thereWasAnError:
-            print('got image link for ' + requestText + ' as ' + imagelink)
-            print('requesting the value for getgif:' + str(chat_id) + ':' + requestText)
-            OldValue = getWatchValue(chat_id, requestText)
-            print('Got watch value as ' + OldValue)
-            print('Comparing ' + OldValue + ' with ' + imagelink)
-            if OldValue != imagelink:
-                if user != 'Watcher':
-                    bot.sendMessage(chat_id=chat_id, text='Now watching /' +
-                                                          watchedCommandName + ' ' + requestText + '.')
-                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+    if 'items' in data and len(data['items']) >= 9:
+        OldValue = getWatchValue(chat_id, requestText)
+        imagelinks = data['items'][0]['link']
+        for link in data['items']:
+            imagelinks += '\n' + link['link']
+        print('got image links for ' + requestText + ' as ' + imagelinks)
+        count = 0
+        for link in data['items']:
+            imagelink = link['link']
+            count += 1
+            if getgif.isGifAnimated(imagelink):
+                if OldValue != imagelinks:
+                    if user != 'Watcher':
+                        bot.sendMessage(chat_id=chat_id, text='Now watching /' +
+                                                              watchedCommandName + ' ' + requestText + '.' +
+                                                              '\nThis is number ' + str(count) + ' of 10.')
+                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                    else:
+                        bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                              watchedCommandName + ' ' + requestText + ' changed.' +
+                                                              '\nThis is number ' + str(count) + ' of 10.')
+                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                 else:
-                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                          watchedCommandName + ' ' + requestText + ' changed.')
-                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                if not thereWasAnError:
-                    print('Setting watch value to ' + imagelink)
-                    setWatchValue(chat_id, requestText, imagelink)
+                    if user != 'Watcher':
+                        bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
+                                                              watchedCommandName + ' ' + requestText + ' has not changed.' +
+                                                              '\nThis is number ' + str(count) + ' of 10.')
+                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
-                    bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
-                                                          watchedCommandName + ' ' + requestText + ' has not changed.')
-                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-            if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
-                main.addToAllWatches(watchedCommandName, chat_id, requestText)
-        else:
-            if user != 'Watcher':
-                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                      ', I\'m afraid I can\'t watch ' +
-                                                      'because I did not find any results for /getgif ' +
-                                                      string.capwords(requestText.encode('utf-8')))
+                    bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                          ', I\'m afraid gif is not animated.' +
+                                                          '\nThis is number ' + str(count) + ' of 10.\n' + imagelink)
+        if OldValue != imagelinks:
+            print('Setting watch value to ' + imagelinks)
+            setWatchValue(chat_id, requestText, imagelinks)
+        if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
+            main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
         if user != 'Watcher':
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t watch ' +
-                                                  'because I did not find any results for /getgif ' +
+                                                  'because I did not find enough results for /getgif ' +
                                                   string.capwords(requestText.encode('utf-8')))
 
 
