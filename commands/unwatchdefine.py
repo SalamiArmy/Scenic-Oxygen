@@ -1,7 +1,7 @@
 # coding=utf-8
 from commands.watchdefine import unwatch
 
-def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     unwatch(bot, chat_id, message)
 
 

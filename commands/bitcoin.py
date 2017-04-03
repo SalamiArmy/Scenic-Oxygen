@@ -3,7 +3,7 @@ import json
 import urllib
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     priceGB, priceUS, priceZA, updateTime = get_bitcoin_prices()
     bot.sendMessage(chat_id=chat_id,
                     text='The Current Price of 1 Bitcoin:\n\n' + priceUS +

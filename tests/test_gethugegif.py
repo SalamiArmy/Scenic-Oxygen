@@ -14,4 +14,4 @@ class TestGetHugeGif(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        gethugegif.run(bot, keyConfig, chatId, 'Admin', requestText)
+        gethugegif.run(bot, chatId, 'Admin', keyConfig, requestText)

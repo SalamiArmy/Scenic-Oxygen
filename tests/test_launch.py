@@ -15,4 +15,4 @@ class TestLaunch(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        launch.run(bot, keyConfig, chatId, 'Admin', '')
+        launch.run(bot, chatId, 'Admin', keyConfig, '')

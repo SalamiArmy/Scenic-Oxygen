@@ -22,4 +22,4 @@ class TestReverseImage(unittest.TestCase):
         #for personal chat
         #chatId = 33166369
 
-        reverseimage.run(bot, keyConfig, chatId, 'Admin', requestText)
+        reverseimage.run(bot, chatId, 'Admin', keyConfig, requestText)

@@ -3,7 +3,7 @@ import json
 import urllib
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
 
     trackUrl = 'http://api.musixmatch.com/ws/1.1/track.search?apikey='

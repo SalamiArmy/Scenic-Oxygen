@@ -14,4 +14,4 @@ class TestGetVid(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        getvid.run(bot, keyConfig, chatId, 'Admin', requestText)
+        getvid.run(bot, chatId, 'Admin', keyConfig, requestText)

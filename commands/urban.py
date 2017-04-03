@@ -5,7 +5,7 @@ import string
 import urllib
 
 
-def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
 
     dicurl = 'http://api.urbandictionary.com/v0/define?term='

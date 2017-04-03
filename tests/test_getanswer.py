@@ -18,4 +18,4 @@ class TestGetAnswer(unittest.TestCase):
         #for bot group:
         #chatId = -1001048076684
 
-        getanswer.run(bot, keyConfig, chatId, 'Admin', requestText)
+        getanswer.run(bot, chatId, 'Admin', keyConfig, requestText)

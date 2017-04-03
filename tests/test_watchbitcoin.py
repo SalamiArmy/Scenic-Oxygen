@@ -35,7 +35,7 @@ class TestWatchBitcoin(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', '15000')
-        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', '-100')
+        watchbitcoin.run(bot, chatId, 'SalamiArmy', keyConfig, '15000')
+        watchbitcoin.run(bot, chatId, 'SalamiArmy', keyConfig, '-100')
         watchbitcoin.unwatch(bot, chatId, '15000')
-        watchbitcoin.run(bot, keyConfig, chatId, 'SalamiArmy', '10000')
+        watchbitcoin.run(bot, chatId, 'SalamiArmy', keyConfig, '10000')

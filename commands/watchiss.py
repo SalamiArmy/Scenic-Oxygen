@@ -31,7 +31,7 @@ def getWatchValue(chat_id):
     return ''
 
 
-def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
 
     has_iss_results, has_place_results, startDateTime, durationSeconds = iss.get_iss_data(keyConfig, requestText)

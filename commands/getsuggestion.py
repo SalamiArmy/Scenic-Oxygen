@@ -4,7 +4,7 @@ import urllib
 import urllib2
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, '').strip()
 
     url = 'https://api.cognitive.microsoft.com/bing/v5.0/suggestions/'

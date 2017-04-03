@@ -1,10 +1,9 @@
-
 import ConfigParser
 import unittest
 
 import telegram
 
-from commands.getpopgames import run
+import commands.gw2timers as gw2timers
 
 
 class TestGetGame(unittest.TestCase):
@@ -14,4 +13,4 @@ class TestGetGame(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        run(bot, keyConfig, chatId, 'Admin')
+        gw2timers.run(bot, chatId, 'Admin', keyConfig)

@@ -11,7 +11,7 @@ import telegram
 from commands import retry_on_telegram_error
 
 
-def run(bot, keyConfig, chat_id, user, message):
+def run(bot, chat_id, user, keyConfig, message):
     global gif
     requestText = message.replace(bot.name, "").strip()
 

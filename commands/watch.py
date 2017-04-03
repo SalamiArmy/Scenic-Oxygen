@@ -32,7 +32,7 @@ def getWatchValue(chat_id, request):
     return ''
 
 
-def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
     data = get.Google_Image_Search(keyConfig, message)
     if 'items' in data and len(data['items']) >= 9:
