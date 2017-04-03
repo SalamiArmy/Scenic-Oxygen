@@ -100,21 +100,25 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                                                                ' has not changed.' +
                                                                '\nThis is number ' + str(count) + ' of 5.', user)
         if links_added != '':
+            print('got links added as ' + links_added)
             count = 0
             for link in links_added.split('\n'):
                 count += 1
-                bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                      watchedCommandName + ' ' + requestText + ' has new images.' +
-                                                      '\nThis is new image number ' + str(count) + '.')
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, link, user)
+                if link != '':
+                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                          watchedCommandName + ' ' + requestText + ' has new images.' +
+                                                          '\nThis is new image number ' + str(count) + '.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, link, user)
         if newly_added_links != '':
+            print('got newly added links as ' + newly_added_links)
             count = 0
             for link in newly_added_links:
                 count += 1
-                bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                      watchedCommandName + ' ' + requestText + ' has new new images.' +
-                                                      '\nThis is new new image number ' + str(count) + '.')
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, link, user)
+                if link != '':
+                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                          watchedCommandName + ' ' + requestText + ' has new new images.' +
+                                                          '\nThis is new new image number ' + str(count) + '.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, link, user)
         print('Comparing ' + OldValue + ' with ' + imagelinks)
         if OldValue != imagelinks:
             setWatchValue(chat_id, requestText, imagelinks)
