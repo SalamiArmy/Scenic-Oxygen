@@ -53,16 +53,8 @@ def wasPreviouslyAddedLink(chat_id, gif_link):
         return True;
     return False;
 
-def get_add_removed_links(chat_id, new_list, old_list):
-    added_games = ''
-    newly_added_games = ''
-    for item in new_list.split('\n'):
-        if item not in old_list:
-            added_games += '\n' + item
-            if not wasPreviouslyAddedLink(chat_id, item):
-                addPreviouslyAddedLinkValue(chat_id, item)
-                newly_added_games += '\n' + item
-    return added_games, newly_added_games
+def is_new_gif(chat_id, gif_link):
+    return gif_link not in getPreviouslyAddedLinksValue(chat_id)
 
 
 def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
@@ -70,63 +62,34 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     data = getgif.search_google_for_gifs(keyConfig, requestText)
     if 'items' in data and len(data['items']) >= 2:
         OldValue = getWatchValue(chat_id, requestText)
-        imagelinks = data['items'][0]['link']
-        for link in data['items'][:2]:
-            imagelinks += '\n' + link['link']
-        links_added, newly_added_links = get_add_removed_links(chat_id, imagelinks, OldValue)
-        print('got image links for ' + requestText + ' as ' + imagelinks)
-        count = 0
-        for link in data['items'][:2]:
-            imagelink = link['link']
-            count += 1
-            if getgif.isGifAnimated(imagelink):
-                if OldValue != imagelinks:
-                    if user != 'Watcher':
-                        bot.sendMessage(chat_id=chat_id, text='Now watching /' +
-                                                              watchedCommandName + ' ' + requestText + '.' +
-                                                              '\nThis is number ' + str(count) + ' of 2.')
-                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    else:
-                        bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                              watchedCommandName + ' ' + requestText + ' changed' +
-                                                              (' order.' if (links_added == '' and newly_added_links == '') else '.') +
-                                                              '\nThis is number ' + str(count) + ' of 2.')
-                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+        imagelink = data['items'][0]['link']
+        new_gif = is_new_gif(chat_id, imagelink)
+        print('got image links for ' + requestText + ' as ' + imagelink)
+        if getgif.isGifAnimated(imagelink):
+            if OldValue != imagelink:
+                if user != 'Watcher':
+                    bot.sendMessage(chat_id=chat_id, text='Now watching /' +
+                                                          watchedCommandName + ' ' + requestText + '.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                 else:
-                    if user != 'Watcher':
-                        bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
-                                                              watchedCommandName + ' ' + requestText + ' has not changed.' +
-                                                              '\nThis is number ' + str(count) + ' of 2.')
-                        retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                          watchedCommandName + ' ' + requestText + ' changed.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
-                    bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                          ', I\'m afraid gif is not animated.' +
-                                                          '\nThis is number ' + str(count) + ' of 3.\n' + imagelink)
-        if links_added != '':
-            print('got links added as ' + links_added)
-            count = 0
-            for link in links_added.split('\n'):
-                count += 1
-                if link != '':
-                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                          watchedCommandName + ' ' + requestText + ' has new gifs.' +
-                                                          '\nThis is new gif number ' + str(count) + '.')
-                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, link, user)
-        if newly_added_links != '':
-            print('got newly added links as ' + newly_added_links)
-            count = 0
-            for link in newly_added_links.split('\n'):
-                count += 1
-                if link != '':
-                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                          watchedCommandName + ' ' + requestText + ' has new new gifs.' +
-                                                          '\nThis is new new gif number ' + str(count) + '.')
-                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, link, user)
+                    bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
+                                                          watchedCommandName + ' ' + requestText + ' has not changed.')
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+        else:
+            if user != 'Watcher':
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid gif is not animated.\n' + imagelink)
+        if new_gif:
+            bot.sendMessage(chat_id=chat_id, text='This is a new new gif!')
 
-        if OldValue != imagelinks:
-            print('Setting watch value to ' + imagelinks)
-            setWatchValue(chat_id, requestText, imagelinks)
+        if OldValue != imagelink:
+            print('Setting watch value to ' + imagelink)
+            setWatchValue(chat_id, requestText, imagelink)
         if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:
