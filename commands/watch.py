@@ -62,7 +62,7 @@ def get_add_removed_links(chat_id, new_list, old_list):
         if item not in old_list:
             added_games += '\n' + item
             if not wasPreviouslyAddedLink(chat_id, item):
-                addPreviouslyAddedLinkValue(item)
+                addPreviouslyAddedLinkValue(chat_id, item)
                 newly_added_games += '\n' + item
     return added_games, newly_added_games
 
