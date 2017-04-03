@@ -68,7 +68,7 @@ def get_add_removed_links(chat_id, new_list, old_list):
 def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
     data = getgif.search_google_for_gifs(keyConfig, requestText)
-    if 'items' in data and len(data['items']) >= 9:
+    if 'items' in data and len(data['items']) >= 5:
         OldValue = getWatchValue(chat_id, requestText)
         imagelinks = data['items'][0]['link']
         for link in data['items'][:5]:
@@ -84,25 +84,25 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                     if user != 'Watcher':
                         bot.sendMessage(chat_id=chat_id, text='Now watching /' +
                                                               watchedCommandName + ' ' + requestText + '.' +
-                                                              '\nThis is number ' + str(count) + ' of 10.')
+                                                              '\nThis is number ' + str(count) + ' of 5.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                     else:
                         bot.sendMessage(chat_id=chat_id, text='Watched /' +
                                                               watchedCommandName + ' ' + requestText + ' changed' +
                                                               (' order.' if (links_added == '' and newly_added_links == '') else '.') +
-                                                              '\nThis is number ' + str(count) + ' of 10.')
+                                                              '\nThis is number ' + str(count) + ' of 5.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                 else:
                     if user != 'Watcher':
                         bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                               watchedCommandName + ' ' + requestText + ' has not changed.' +
-                                                              '\nThis is number ' + str(count) + ' of 10.')
+                                                              '\nThis is number ' + str(count) + ' of 5.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                           ', I\'m afraid gif is not animated.' +
-                                                          '\nThis is number ' + str(count) + ' of 10.\n' + imagelink)
+                                                          '\nThis is number ' + str(count) + ' of 5.\n' + imagelink)
         if links_added != '':
             count = 0
             for link in links_added.split('\n'):
