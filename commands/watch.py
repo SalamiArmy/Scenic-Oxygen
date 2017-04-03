@@ -35,29 +35,37 @@ def getWatchValue(chat_id, request):
 def run(bot, keyConfig, chat_id, user, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
     data = get.Google_Image_Search(keyConfig, message)
-    if 'items' in data and len(data['items']) >= 1:
-        imagelink = data['items'][0]['link']
-        print('got image link for ' + requestText + ' as ' + imagelink)
-        fd = urllib.urlopen(imagelink)
-        fileHash = md5(fd.read())
-        print('requesting the value for get:' + str(chat_id) + ':' + requestText)
+    if 'items' in data and len(data['items']) >= 9:
         OldValue = getWatchValue(chat_id, requestText)
-        print('Comparing ' + OldValue + ' with ' + fileHash)
-        if OldValue != fileHash:
-            setWatchValue(chat_id, requestText, fileHash)
-            if user != 'Watcher':
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                           'Now watching /' + watchedCommandName + ' ' + requestText + '.',
-                                                           user)
+        imagelinks = data['items'][0]['link']
+        count = 0
+        for link in data['items']:
+            imagelinks += '\n' + link['link']
+        print('got image links for ' + requestText + ' as ' + imagelinks)
+        for link in data['items']:
+            imagelink = link['link']
+            count += 1
+            if OldValue != imagelinks:
+                if user != 'Watcher':
+                    retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
+                                                               'Now watching /' + watchedCommandName + ' ' + requestText + '.' +
+                                                               '\nThis is number ' + str(count) + '.'
+                                                               ' number ' + str(count) + '.',
+                                                               user)
+                else:
+                    retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
+                                                               'Watched /' + watchedCommandName + ' ' + requestText +
+                                                               ' changed.' +
+                                                               '\nThis is number ' + str(count) + '.', user)
             else:
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                           'Watched /' + watchedCommandName + ' ' + requestText +
-                                                           ' changed.', user)
-        else:
-            if user != 'Watcher':
-                retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
-                                                           'Watch for /' + watchedCommandName + ' ' + requestText +
-                                                           ' has not changed.', user)
+                if user != 'Watcher':
+                    retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
+                                                               'Watch for /' + watchedCommandName + ' ' + requestText +
+                                                               ' has not changed.' +
+                                                               '\nThis is number ' + str(count) + '.', user)
+        print('Comparing ' + OldValue + ' with ' + imagelinks)
+        if OldValue != imagelinks:
+            setWatchValue(chat_id, requestText, imagelinks)
         if not main.AllWatchesContains(watchedCommandName, chat_id, requestText):
             main.addToAllWatches(watchedCommandName, chat_id, requestText)
     else:

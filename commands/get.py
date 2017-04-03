@@ -44,8 +44,8 @@ def Google_Image_Search(keyConfig, requestText):
     googurl = 'https://www.googleapis.com/customsearch/v1'
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
-            'searchType': "image",
-            'safe': "off",
+            'searchType': 'image',
+            'safe': 'off',
             'q': requestText}
     realUrl = googurl + '?' + urllib.urlencode(args)
     data = json.load(urllib.urlopen(realUrl))

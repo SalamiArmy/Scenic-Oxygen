@@ -30,9 +30,6 @@ class TestGet(unittest.TestCase):
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        #chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
-
-        #for bot group:
-        chatId = -130436192
+        chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         watch.run(bot, keyConfig, chatId, 'SalamiArmy', requestText)
