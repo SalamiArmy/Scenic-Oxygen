@@ -65,20 +65,31 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
         imagelink = data['items'][0]['link']
         new_gif = is_new_gif(chat_id, imagelink)
         print('got image links for ' + requestText + ' as ' + imagelink)
-        if OldValue != imagelink:
-            if user != 'Watcher':
-                bot.sendMessage(chat_id=chat_id, text='Now watching /' +
-                                                      watchedCommandName + ' ' + requestText + '.')
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+        if getgif.isGifAnimated(imagelink):
+            if OldValue != imagelink:
+                if user != 'Watcher':
+                    bot.sendMessage(chat_id=chat_id, text='Now watching /' +
+                                                          watchedCommandName + ' ' + requestText + '.')
+                    #retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                    bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
+                    bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
+                else:
+                    bot.sendMessage(chat_id=chat_id, text='Watched /' +
+                                                          watchedCommandName + ' ' + requestText + ' changed.')
+                    #retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                    bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
+                    bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
             else:
-                bot.sendMessage(chat_id=chat_id, text='Watched /' +
-                                                      watchedCommandName + ' ' + requestText + ' changed.')
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                if user != 'Watcher':
+                    bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
+                                                          watchedCommandName + ' ' + requestText + ' has not changed.')
+                    #retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                    bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
+                    bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
         else:
             if user != 'Watcher':
-                bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
-                                                      watchedCommandName + ' ' + requestText + ' has not changed.')
-                retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid gif is not animated.\n' + imagelink)
         if new_gif:
             bot.sendMessage(chat_id=chat_id, text='This is a new new gif!')
 
