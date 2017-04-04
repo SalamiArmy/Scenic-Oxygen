@@ -70,22 +70,16 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id, text='Now watching /' +
                                                           watchedCommandName + ' ' + requestText + '.')
-                    #retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
-                    bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                 else:
                     bot.sendMessage(chat_id=chat_id, text='Watched /' +
                                                           watchedCommandName + ' ' + requestText + ' changed.')
-                    #retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
-                    bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
                 if user != 'Watcher':
                     bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                           watchedCommandName + ' ' + requestText + ' has not changed.')
-                    #retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                    bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
-                    bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
+                    retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         else:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
