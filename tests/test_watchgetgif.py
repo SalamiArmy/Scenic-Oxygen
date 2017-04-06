@@ -3,7 +3,8 @@ import unittest
 
 import telegram
 
-from commands.watchgif import run
+import commands.watchgif as watchgif
+#from commands.watchgif import run
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
@@ -29,7 +30,10 @@ class TestGet(unittest.TestCase):
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
-        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
+        #bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
+        #chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
-        run(bot, chatId, 'SalamiArmy', keyConfig, requestText)
+        watchgif.setWatchValue(0, '', 'myval')
+        watchgif.addPreviouslyAddedLinkValue(0, '', 'mysecondval')
+        watchgif.getWatchValue(0, '')
+        #run(bot, chatId, 'SalamiArmy', keyConfig, requestText)
