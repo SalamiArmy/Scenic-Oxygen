@@ -19,13 +19,11 @@ def run(bot, chat_id, user, keyConfig, message):
     offset = 0
     thereWasAnError = True
     if 'items' in data and len(data['items']) >= 1:
-        items_length_limit = 5
+        items_length_limit = 3
         item_count = items_length_limit if len(data['items'])>=items_length_limit else len(data['items'])
-        randint = random.randint(0, item_count)
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < item_count:
-            randint_offset = randint + offset
-            imagelink = data['items'][randint_offset if randint_offset < item_count else randint_offset - item_count]['link']
+            imagelink = data['items'][offset]['link']
             offset += 1
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
