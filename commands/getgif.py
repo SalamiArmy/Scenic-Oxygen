@@ -19,7 +19,7 @@ def run(bot, chat_id, user, keyConfig, message):
     offset = 0
     thereWasAnError = True
     if 'items' in data and len(data['items']) >= 1:
-        items_length_limit = 3
+        items_length_limit = 5
         item_count = items_length_limit if len(data['items'])>=items_length_limit else len(data['items'])
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         while thereWasAnError and offset < item_count:
