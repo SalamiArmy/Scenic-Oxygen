@@ -43,7 +43,7 @@ def run(bot, chat_id, user, keyConfig, message):
 
 
 def isGifAnimated(imagelink):
-    global gif
+    global gif, image_file
     print("Openning url " + imagelink)
     try:
         fd = urllib.urlopen(imagelink)
