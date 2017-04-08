@@ -19,11 +19,12 @@ def run(bot, chat_id, user, keyConfig, message):
     offset = 0
     thereWasAnError = True
     if 'items' in data and len(data['items']) >= 1:
-        randint = random.randint(0, len(data['items']))
+        item_count = len(data['items'])-2 if len(data['items'])>=2 else len(data['items'])
+        randint = random.randint(0, item_count)
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        while thereWasAnError and offset < len(data['items']):
+        while thereWasAnError and offset < item_count:
             randint_offset = randint + offset
-            imagelink = data['items'][randint_offset if randint_offset < len(data['items']) else randint_offset - len(data['items'])]['link']
+            imagelink = data['items'][randint_offset if randint_offset < item_count else randint_offset - item_count]['link']
             offset += 1
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
@@ -43,7 +44,7 @@ def run(bot, chat_id, user, keyConfig, message):
 
 
 def isGifAnimated(imagelink):
-    global gif, image_file
+    global gif, image_file, fd
     print("Openning url " + imagelink)
     try:
         fd = urllib.urlopen(imagelink)
@@ -54,6 +55,7 @@ def isGifAnimated(imagelink):
     except IOError:
         gif.fp.close()
         image_file.close()
+        fd.close()
         print("...not a gif")
         return False
     else:

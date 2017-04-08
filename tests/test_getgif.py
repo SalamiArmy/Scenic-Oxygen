@@ -10,7 +10,7 @@ import commands.getgif as getgif
 
 class TestGetGif(unittest.TestCase):
     def test_getgif(self):
-        requestText = 'two dragons.'
+        requestText = 'field org'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
