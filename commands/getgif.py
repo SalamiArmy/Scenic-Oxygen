@@ -53,6 +53,7 @@ def isGifAnimated(imagelink):
         gif = Image.open(image_file)
     except IOError:
         gif.fp.close()
+        image_file.close()
         print("...not a gif")
         return False
     else:
