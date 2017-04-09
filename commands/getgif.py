@@ -12,7 +12,7 @@ import telegram
 
 from commands import retry_on_telegram_error
 
-watchedCommandName = 'getgif'
+CommandName = 'getgif'
 
 class WatchValue(ndb.Model):
     # key name: getgif:str(chat_id)
@@ -22,12 +22,12 @@ class WatchValue(ndb.Model):
 # ================================
 
 def setPreviouslySeenGifsValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id) + ':' + request)
+    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id) + ':' + request)
     es.allPreviousSeenGifs = NewValue
     es.put()
 
 def addPreviouslySeenGifsValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id) + ':' + request)
+    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id) + ':' + request)
     if es.allPreviousSeenGifs == '':
         es.allPreviousSeenGifs = NewValue
     else:
@@ -35,7 +35,7 @@ def addPreviouslySeenGifsValue(chat_id, request, NewValue):
     es.put()
 
 def getPreviouslySeenGifsValue(chat_id):
-    es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id))
+    es = WatchValue.get_by_id(CommandName + ':' + str(chat_id))
     if es:
         return es.allPreviousSeenGifs.encode('utf-8')
     return ''
