@@ -6,7 +6,7 @@ from commands.mc import get_mc_data
 watchedCommandName = 'mc'
 
 
-class WatchValue(ndb.Model):
+class MCWatchValue(ndb.Model):
     # key name: str(chat_id)
     currentValue = ndb.StringProperty(indexed=False, default='')
     all_chat_ids = ndb.StringProperty(indexed=False, default='')
@@ -15,36 +15,36 @@ class WatchValue(ndb.Model):
 # ================================
 
 def setWatchValue(chat_id, NewValue):
-    es = WatchValue.get_or_insert(str(chat_id) + ':' + watchedCommandName)
+    es = MCWatchValue.get_or_insert(str(chat_id) + ':' + watchedCommandName)
     es.currentValue = NewValue.split(' players ')[0]
     es.put()
 
 
 def getWatchValue(chat_id):
-    es = WatchValue.get_by_id(str(chat_id) + ':' + watchedCommandName)
+    es = MCWatchValue.get_by_id(str(chat_id) + ':' + watchedCommandName)
     if es:
         return es.currentValue
     return ''
 
 def addToAllWatches(chat_id):
-    es = WatchValue.get_or_insert(watchedCommandName + ':' + 'AllWatchers')
+    es = MCWatchValue.get_or_insert(watchedCommandName + ':' + 'AllWatchers')
     es.all_chat_ids += ',' + str(chat_id)
     es.put()
 
 def AllWatchesContains(chat_id):
-    es = WatchValue.get_by_id(watchedCommandName + ':' + 'AllWatchers')
+    es = MCWatchValue.get_by_id(watchedCommandName + ':' + 'AllWatchers')
     if es:
         return (',' + str(chat_id)) in str(es.all_chat_ids) or \
                (str(chat_id) + ',') in str(es.all_chat_ids)
     return False
 
 def setAllWatchesValue(NewValue):
-    es = WatchValue.get_or_insert(watchedCommandName + ':' + 'AllWatchers')
+    es = MCWatchValue.get_or_insert(watchedCommandName + ':' + 'AllWatchers')
     es.all_chat_ids = NewValue
     es.put()
 
 def getAllWatches():
-    es = WatchValue.get_by_id(watchedCommandName + ':' + 'AllWatchers')
+    es = MCWatchValue.get_by_id(watchedCommandName + ':' + 'AllWatchers')
     if es:
         return es.all_chat_ids
     return ''

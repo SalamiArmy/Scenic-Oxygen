@@ -14,7 +14,7 @@ from commands import retry_on_telegram_error
 
 CommandName = 'getgif'
 
-class WatchValue(ndb.Model):
+class GifWatchValue(ndb.Model):
     # key name: getgif:str(chat_id)
     allPreviousSeenGifs = ndb.StringProperty(indexed=False, default='')
 
@@ -22,12 +22,12 @@ class WatchValue(ndb.Model):
 # ================================
 
 def setPreviouslySeenGifsValue(chat_id, NewValue):
-    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
     es.allPreviousSeenGifs = NewValue
     es.put()
 
 def addPreviouslySeenGifsValue(chat_id, NewValue):
-    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
     if es.allPreviousSeenGifs == '':
         es.allPreviousSeenGifs = NewValue
     else:
@@ -35,7 +35,7 @@ def addPreviouslySeenGifsValue(chat_id, NewValue):
     es.put()
 
 def getPreviouslySeenGifsValue(chat_id):
-    es = WatchValue.get_by_id(CommandName + ':' + str(chat_id))
+    es = GifWatchValue.get_by_id(CommandName + ':' + str(chat_id))
     if es:
         return es.allPreviousSeenGifs.encode('utf-8')
     return ''
@@ -110,11 +110,12 @@ def isGifAnimated(imagelink):
         else:
             print("...gif is animated, confirmed! Checking file size...")
             getsizeof = sys.getsizeof(image_file)
+            size_limit = 10000000
             if (len(str(getsizeof)) > 7):
-                print("...gif is larger than limit of 10000000 bytes, file size appears to be " + str(getsizeof) + ' bytes')
+                print('...gif is larger than limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
                 return False
             else:
-                print("...gif under size limit of 10000000 bytes, file size appears to be " + str(getsizeof) + ' bytes')
+                print('...gif under size limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
     return True
 
 
