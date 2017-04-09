@@ -1,7 +1,7 @@
 import sys
 from time import sleep
 
-from google.appengine.dist27 import threading
+import threading
 
 
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
