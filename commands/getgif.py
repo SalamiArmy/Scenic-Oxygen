@@ -1,9 +1,9 @@
 # coding=utf-8
 import json
-import random
 import string
 import urllib
 import io
+from google.appengine.ext import ndb
 
 import sys
 from PIL import Image
@@ -11,7 +11,43 @@ from PIL import Image
 import telegram
 
 from commands import retry_on_telegram_error
-from commands import watchgif
+
+watchedCommandName = 'getgif'
+
+class WatchValue(ndb.Model):
+    # key name: getgif:str(chat_id)
+    allPreviousSeenGifs = ndb.StringProperty(indexed=False, default='')
+
+
+# ================================
+
+def setPreviouslySeenGifsValue(chat_id, request, NewValue):
+    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id) + ':' + request)
+    es.allPreviousSeenGifs = NewValue
+    es.put()
+
+def addPreviouslySeenGifsValue(chat_id, request, NewValue):
+    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id) + ':' + request)
+    if es.allPreviousSeenGifs == '':
+        es.allPreviousSeenGifs = NewValue
+    else:
+        es.allPreviousSeenGifs += ',' + NewValue
+    es.put()
+
+def getPreviouslySeenGifsValue(chat_id):
+    es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id))
+    if es:
+        return es.allPreviousSeenGifs.encode('utf-8')
+    return ''
+
+def wasPreviouslyAddedLink(chat_id, gif_link):
+    allPreviousLinks = getPreviouslySeenGifsValue(chat_id)
+    if '\n' + gif_link + '\n' in allPreviousLinks or \
+        allPreviousLinks.startswith(gif_link + '\n') or  \
+        allPreviousLinks.endswith('\n' + gif_link) or  \
+        allPreviousLinks == gif_link:
+        return True;
+    return False;
 
 
 def run(bot, chat_id, user, keyConfig, message):
@@ -31,8 +67,8 @@ def run(bot, chat_id, user, keyConfig, message):
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
             thereWasAnError = not isGifAnimated(imagelink)
-            if not watchgif.wasPreviouslyAddedLink(chat_id, imagelink):
-                watchgif.addPreviouslySeenGifsValue(chat_id, imagelink)
+            if not wasPreviouslyAddedLink(chat_id, imagelink):
+                addPreviouslySeenGifsValue(chat_id, imagelink)
             else:
                 thereWasAnError = True
             if not thereWasAnError:
