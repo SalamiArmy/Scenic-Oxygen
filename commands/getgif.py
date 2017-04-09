@@ -23,15 +23,15 @@ class GifWatchValue(ndb.Model):
 
 def setPreviouslySeenGifsValue(chat_id, NewValue):
     es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
-    es.allPreviousSeenGifs = NewValue
+    es.allPreviousSeenGifs = NewValue.encode('utf-8')
     es.put()
 
 def addPreviouslySeenGifsValue(chat_id, NewValue):
     es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
     if es.allPreviousSeenGifs == '':
-        es.allPreviousSeenGifs = NewValue
+        es.allPreviousSeenGifs = NewValue.encode('utf-8')
     else:
-        es.allPreviousSeenGifs += ',' + NewValue
+        es.allPreviousSeenGifs += ',' + NewValue.encode('utf-8')
     es.put()
 
 def getPreviouslySeenGifsValue(chat_id):
@@ -42,9 +42,9 @@ def getPreviouslySeenGifsValue(chat_id):
 
 def wasPreviouslyAddedLink(chat_id, gif_link):
     allPreviousLinks = getPreviouslySeenGifsValue(chat_id)
-    if '\n' + gif_link + '\n' in allPreviousLinks or \
-        allPreviousLinks.startswith(gif_link + '\n') or  \
-        allPreviousLinks.endswith('\n' + gif_link) or  \
+    if ',' + gif_link + ',' in allPreviousLinks or \
+        allPreviousLinks.startswith(gif_link + ',') or  \
+        allPreviousLinks.endswith(',' + gif_link) or  \
         allPreviousLinks == gif_link:
         return True;
     return False;
@@ -70,7 +70,7 @@ def run(bot, chat_id, user, keyConfig, message):
             if not thereWasAnError and not wasPreviouslyAddedLink(chat_id, imagelink):
                 thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                 addPreviouslySeenGifsValue(chat_id, imagelink)
-        if thereWasAnError or not offset < 9:
+        if thereWasAnError or not offset < items_length_limit:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
                                                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
