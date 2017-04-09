@@ -21,13 +21,13 @@ class WatchValue(ndb.Model):
 
 # ================================
 
-def setPreviouslySeenGifsValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id) + ':' + request)
+def setPreviouslySeenGifsValue(chat_id, NewValue):
+    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id))
     es.allPreviousSeenGifs = NewValue
     es.put()
 
-def addPreviouslySeenGifsValue(chat_id, request, NewValue):
-    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id) + ':' + request)
+def addPreviouslySeenGifsValue(chat_id, NewValue):
+    es = WatchValue.get_or_insert(CommandName + ':' + str(chat_id))
     if es.allPreviousSeenGifs == '':
         es.allPreviousSeenGifs = NewValue
     else:
