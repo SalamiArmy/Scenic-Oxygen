@@ -46,37 +46,39 @@ def wasPreviouslyAddedLink(chat_id, gif_link):
         allPreviousLinks.startswith(gif_link + ',') or  \
         allPreviousLinks.endswith(',' + gif_link) or  \
         allPreviousLinks == gif_link:
-        return True;
-    return False;
+        return True
+    return False
 
 
 def run(bot, chat_id, user, keyConfig, message):
     global gif
     requestText = message.replace(bot.name, "").strip()
 
-    data = search_google_for_gifs(keyConfig, requestText)
-    offset = 0
-    thereWasAnError = True
-    if 'items' in data and len(data['items']) >= 1:
-        items_length_limit = 9
-        item_count = items_length_limit if len(data['items'])>=items_length_limit else len(data['items'])
-        bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        while thereWasAnError and offset < item_count:
-            imagelink = data['items'][offset]['link']
-            offset += 1
-            if '?' in imagelink:
-                imagelink = imagelink[:imagelink.index('?')]
-            if not wasPreviouslyAddedLink(chat_id, imagelink) and isGifAnimated(imagelink):
-                thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
-                addPreviouslySeenGifsValue(chat_id, imagelink)
+    data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
+    total_offset = 0
+    if 'items' in data and total_results > 0:
+        items_length_limit = 20
+        while total_offset < (total_results if total_results < items_length_limit else items_length_limit):
+            offset_this_page = 0
+            thereWasAnError = True
+            while thereWasAnError and offset_this_page < results_this_page:
+                imagelink = data['items'][offset_this_page]['link']
+                offset_this_page += 1
+                total_offset += 1
+                if '?' in imagelink:
+                    imagelink = imagelink[:imagelink.index('?')]
+                if not wasPreviouslyAddedLink(chat_id, imagelink) and isGifAnimated(imagelink):
+                    thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+                    addPreviouslySeenGifsValue(chat_id, imagelink)
+                else:
+                    thereWasAnError = True
+            data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
+            if thereWasAnError or not offset_this_page < items_length_limit:
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      ', I\'m afraid I can\'t find a gif for ' +
+                                                      string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
             else:
-                thereWasAnError = True
-        if thereWasAnError or not offset < items_length_limit:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I can\'t find a gif for ' +
-                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
-        else:
-            return True
+                return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
@@ -120,15 +122,21 @@ def isGifAnimated(imagelink):
     return True
 
 
-def search_google_for_gifs(keyConfig, requestText):
+def search_google_for_gifs(keyConfig, requestText, startIndex=1):
     googurl = 'https://www.googleapis.com/customsearch/v1'
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': "image",
             'safe': "off",
             'q': requestText,
-            'fileType': 'gif'}
+            'fileType': 'gif',
+            'start': startIndex}
     realUrl = googurl + '?' + urllib.urlencode(args)
     data = json.load(urllib.urlopen(realUrl))
-    return data
-
+    total_results = 0
+    results_this_page = 0
+    if 'searchInformation' in data and 'totalResults' in data['searchInformation']:
+        total_results = data['searchInformation']['totalResults']
+    if 'queries' in data and 'request' in data['queries'] and len(data['queries']['request']) > 0 and 'count' in data['queries']['request'][0]:
+        results_this_page = data['queries']['request'][0]['count']
+    return data, total_results, results_this_page
