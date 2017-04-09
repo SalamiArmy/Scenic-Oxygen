@@ -73,10 +73,10 @@ def isGifAnimated(imagelink):
             print("...gif is animated, confirmed! Checking file size...")
             getsizeof = sys.getsizeof(image_file)
             if (getsizeof > 10000):
-                print("...gif is larger than limit of 10000mb, file size appears to be " + str(getsizeof) + 'mb')
+                print("...gif is larger than limit of 10000000 bytes, file size appears to be " + str(getsizeof) + ' bytes')
                 return False
             else:
-                print("...gif under size limit of 10000mb, file size appears to be " + str(getsizeof) + 'mb')
+                print("...gif under size limit of 10000000 bytes, file size appears to be " + str(getsizeof) + ' bytes')
     return True
 
 
