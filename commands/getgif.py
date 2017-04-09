@@ -11,6 +11,7 @@ from PIL import Image
 import telegram
 
 from commands import retry_on_telegram_error
+from commands import watchgif
 
 
 def run(bot, chat_id, user, keyConfig, message):
@@ -30,6 +31,10 @@ def run(bot, chat_id, user, keyConfig, message):
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
             thereWasAnError = not isGifAnimated(imagelink)
+            if not watchgif.wasPreviouslyAddedLink(chat_id, imagelink):
+                watchgif.addPreviouslySeenGifsValue(chat_id, imagelink)
+            else:
+                thereWasAnError = True
             if not thereWasAnError:
                 thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 9:
