@@ -55,7 +55,7 @@ def run(bot, chat_id, user, keyConfig, message):
     data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
     total_offset = 0
     if 'items' in data and total_results > 0:
-        items_length_limit = 20
+        items_length_limit = 10
         thereWasAnError = True
         while total_offset < (total_results if total_results < items_length_limit else items_length_limit):
             offset_this_page = 0
