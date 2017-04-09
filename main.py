@@ -145,7 +145,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
                     mod = importlib.import_module('commands.watch' + split[1].replace('get', ''))
                     chat_id = split[0]
                     request_text = (split[2] if len(split) == 3 else '')
-                    mod.run(bot, keyConfig, chat_id, 'Watcher', request_text)
+                    mod.run(bot, chat_id, 'Watcher', keyConfig, request_text)
                 else:
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
@@ -157,7 +157,7 @@ class TriggerMCWatch(webapp2.RequestHandler):
         watches_split = AllWatches.split(',')
         if len(watches_split) >= 1:
             for chat_id in watches_split:
-                watchmc.run(bot, keyConfig, chat_id, 'Watcher')
+                watchmc.run(bot, chat_id, 'Watcher', keyConfig)
 
 from commands import watchcric
 class TriggerCricWatch(webapp2.RequestHandler):

@@ -18,11 +18,10 @@ def run(bot, chat_id, user, keyConfig, message):
 def get_mc_data(keyConfig, user):
     mc_data_formatted = ''
     mcServer = keyConfig.get('Minecraft', 'SVR_ADDR')
-    mcPort = int(keyConfig.get('Minecraft', 'SVR_PORT'))
-    mc_server_not_found_message = 'I\'m sorry ' + (
-        user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any information about the Minecraft server at ' + mcServer + ':' + str(
-        mcPort)
+    mcPort = keyConfig.get('Minecraft', 'SVR_PORT')
     dynmapPort = keyConfig.get('Minecraft', 'DYNMAP_PORT')
+    mc_server_not_found_message = 'I\'m sorry ' + (
+        user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any information about the Minecraft server at ' + mcServer + ':' + mcPort
     mcApiUrl = 'http://minecraft-server.li/server/api.php'
     args = {'ip': mcServer,
             'port': mcPort}

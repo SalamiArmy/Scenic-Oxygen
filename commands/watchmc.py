@@ -70,8 +70,7 @@ def run(bot, chat_id, user, keyConfig, message='', intention_confidence=0.0):
         else:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id,
-                                text='Watch for /' + watchedCommandName + ' has not changed:\n' +
-                                     getData)
+                                text='Watch for /' + watchedCommandName + ' has not changed:\n' + getData)
         if not AllWatchesContains(chat_id):
             addToAllWatches(chat_id)
     else:
