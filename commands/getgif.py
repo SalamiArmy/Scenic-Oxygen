@@ -4,6 +4,8 @@ import random
 import string
 import urllib
 import io
+
+import sys
 from PIL import Image
 
 import telegram
@@ -63,10 +65,18 @@ def isGifAnimated(imagelink):
             gif.seek(1)
         except EOFError:
             gif.fp.close()
+            image_file.close()
+            fd.close()
             print("...not animated")
             return False
         else:
-            print("...gif is animated, confirmed!")
+            print("...gif is animated, confirmed! Checking file size...")
+            getsizeof = sys.getsizeof(image_file)
+            if (getsizeof > 10000):
+                print("...gif is larger than limit of 10000mb, file size appears to be " + str(getsizeof) + 'mb')
+                return False
+            else:
+                print("...gif under size limit of 10000mb, file size appears to be " + str(getsizeof) + 'mb')
     return True
 
 
