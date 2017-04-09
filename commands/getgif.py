@@ -66,10 +66,11 @@ def run(bot, chat_id, user, keyConfig, message):
             offset += 1
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
-            thereWasAnError = not isGifAnimated(imagelink)
-            if not thereWasAnError and not wasPreviouslyAddedLink(chat_id, imagelink):
+            if not wasPreviouslyAddedLink(chat_id, imagelink) and isGifAnimated(imagelink):
                 thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                 addPreviouslySeenGifsValue(chat_id, imagelink)
+            else:
+                thereWasAnError = True
         if thereWasAnError or not offset < items_length_limit:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
