@@ -68,8 +68,8 @@ def run(bot, chat_id, user, keyConfig, message):
                 imagelink = imagelink[:imagelink.index('?')]
             thereWasAnError = not isGifAnimated(imagelink)
             if not thereWasAnError and not wasPreviouslyAddedLink(chat_id, imagelink):
-                addPreviouslySeenGifsValue(chat_id, imagelink)
                 thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+                addPreviouslySeenGifsValue(chat_id, imagelink)
         if thereWasAnError or not offset < 9:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
@@ -110,7 +110,7 @@ def isGifAnimated(imagelink):
         else:
             print("...gif is animated, confirmed! Checking file size...")
             getsizeof = sys.getsizeof(image_file)
-            if (getsizeof > 10000000):
+            if (len(str(getsizeof)) > 7):
                 print("...gif is larger than limit of 10000000 bytes, file size appears to be " + str(getsizeof) + ' bytes')
                 return False
             else:
