@@ -58,9 +58,9 @@ def run(bot, chat_id, user, keyConfig, message):
     total_offset = 0
     if 'items' in data and total_results > 0:
         items_length_limit = 20
+        thereWasAnError = True
         while total_offset < (total_results if total_results < items_length_limit else items_length_limit):
             offset_this_page = 0
-            thereWasAnError = True
             while thereWasAnError and offset_this_page < results_this_page:
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
@@ -73,12 +73,12 @@ def run(bot, chat_id, user, keyConfig, message):
                 else:
                     thereWasAnError = True
             data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
-            if thereWasAnError or not offset_this_page < items_length_limit:
-                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                      ', I\'m afraid I can\'t find a gif for ' +
-                                                      string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
-            else:
-                return True
+        if thereWasAnError or not total_offset < items_length_limit:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find a gif for ' +
+                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+        else:
+            return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
