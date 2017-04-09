@@ -1,6 +1,8 @@
 import sys
 from time import sleep
 
+from google.appengine.dist27 import threading
+
 
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     numberOfRetries = 6
@@ -8,7 +10,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     while sendException and numberOfRetries > 0:
         try:
             print("Trying to send " + imagelink)
-            bot.sendDocument(chat_id=chat_id, filename=requestText.encode('utf-8'), document=imagelink.encode('utf-8'))
+            threading.Thread(target=bot.sendDocument, args=(chat_id, imagelink.encode('utf-8'), requestText.encode('utf-8'))).start()
             bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
             sendException = False
         except:

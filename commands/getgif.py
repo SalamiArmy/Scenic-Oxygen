@@ -3,6 +3,7 @@ import json
 import string
 import urllib
 import io
+
 from google.appengine.ext import ndb
 
 import sys
@@ -35,18 +36,18 @@ def addPreviouslySeenGifsValue(chat_id, NewValue):
     es.put()
 
 def getPreviouslySeenGifsValue(chat_id):
-    #es = GifWatchValue.get_by_id(CommandName + ':' + str(chat_id))
-    #if es:
-    #    return es.allPreviousSeenGifs.encode('utf-8')
+    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    if es:
+        return es.allPreviousSeenGifs.encode('utf-8')
     return ''
 
 def wasPreviouslyAddedLink(chat_id, gif_link):
-    #allPreviousLinks = getPreviouslySeenGifsValue(chat_id)
-    #if ',' + gif_link + ',' in allPreviousLinks or \
-    #    allPreviousLinks.startswith(gif_link + ',') or  \
-    #    allPreviousLinks.endswith(',' + gif_link) or  \
-    #    allPreviousLinks == gif_link:
-    #    return True
+    allPreviousLinks = getPreviouslySeenGifsValue(chat_id)
+    if ',' + gif_link + ',' in allPreviousLinks or \
+            allPreviousLinks.startswith(gif_link + ',') or  \
+            allPreviousLinks.endswith(',' + gif_link) or  \
+            allPreviousLinks == gif_link:
+        return True
     return False
 
 
