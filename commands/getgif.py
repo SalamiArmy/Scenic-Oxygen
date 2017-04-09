@@ -51,9 +51,7 @@ def wasPreviouslyAddedLink(chat_id, gif_link):
 
 
 def run(bot, chat_id, user, keyConfig, message):
-    global gif
     requestText = message.replace(bot.name, "").strip()
-
     data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
     total_offset = 0
     if 'items' in data and total_results > 0:
