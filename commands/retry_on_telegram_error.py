@@ -11,7 +11,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
         try:
             print("Trying to send " + imagelink)
             threading.Thread(target=bot.sendDocument, args=(chat_id, imagelink.encode('utf-8'), requestText.encode('utf-8'))).start()
-            #bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
+            bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
             sendException = False
         except:
             sendException = True
