@@ -72,7 +72,8 @@ def run(bot, chat_id, user, keyConfig, message):
                     addPreviouslySeenGifsValue(chat_id, imagelink)
                 else:
                     thereWasAnError = True
-            data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
+            if thereWasAnError or not offset_this_page < results_this_page:
+                data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
         if thereWasAnError or not total_offset < items_length_limit:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
@@ -86,18 +87,21 @@ def run(bot, chat_id, user, keyConfig, message):
 
 
 def isGifAnimated(imagelink):
-    global gif, image_file, fd
     print("Openning url " + imagelink)
     try:
+        global gif, image_file, fd
         fd = urllib.urlopen(imagelink)
         print("Reading gif...")
         image_file = io.BytesIO(fd.read())
         print("Parsing gif...")
         gif = Image.open(image_file)
     except IOError:
-        gif.fp.close()
-        image_file.close()
-        fd.close()
+        if gif:
+            gif.fp.close()
+        if image_file:
+            image_file.close()
+        if fd:
+            fd.close()
         print("...not a gif")
         return False
     else:
@@ -105,9 +109,12 @@ def isGifAnimated(imagelink):
             print("Checking gif for animation...")
             gif.seek(1)
         except EOFError:
-            gif.fp.close()
-            image_file.close()
-            fd.close()
+            if gif:
+                gif.fp.close()
+            if image_file:
+                image_file.close()
+            if fd:
+                fd.close()
             print("...not animated")
             return False
         else:
