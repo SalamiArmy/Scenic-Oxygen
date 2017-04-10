@@ -13,8 +13,6 @@ from commands import retry_on_telegram_error
 
 CommandName = 'getgif'
 
-global gif, image_file, fd
-
 class GifWatchValue(ndb.Model):
     # key name: getgif:str(chat_id)
     allPreviousSeenGifs = ndb.StringProperty(indexed=False, default='')
@@ -87,6 +85,7 @@ def run(bot, chat_id, user, keyConfig, message):
 
 
 def isGifAnimated(imagelink):
+    global gif, image_file, fd
     print("Openning url " + imagelink)
     try:
         fd = urllib.urlopen(imagelink)
@@ -95,12 +94,18 @@ def isGifAnimated(imagelink):
         print("Parsing gif...")
         gif = Image.open(image_file)
     except IOError:
-        if gif:
-            gif.fp.close()
-        if image_file:
-            image_file.close()
-        if fd:
-            fd.close()
+        import exceptions
+        try:
+            if gif:
+                gif.fp.close()
+            if image_file:
+                image_file.close()
+            if fd:
+                fd.close()
+        except UnboundLocalError:
+            print("gif local not defined")
+        except NameError:
+            print("gif global not defined")
         print("...not a gif")
         return False
     else:
@@ -108,12 +113,17 @@ def isGifAnimated(imagelink):
             print("Checking gif for animation...")
             gif.seek(1)
         except EOFError:
-            if gif:
-                gif.fp.close()
-            if image_file:
-                image_file.close()
-            if fd:
-                fd.close()
+            try:
+                if gif:
+                    gif.fp.close()
+                if image_file:
+                    image_file.close()
+                if fd:
+                    fd.close()
+            except UnboundLocalError:
+                print("gif local not defined")
+            except NameError:
+                print("gif global not defined")
             print("...not animated")
             return False
         else:
