@@ -9,9 +9,11 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
+            IsUrlTooLongForCaption = len(imagelink) > 100
             print("Trying to send " + imagelink)
-            bot.sendDocument(chat_id, imagelink.encode('utf-8'), requestText.encode('utf-8'), imagelink)
-            bot.sendMessage(chat_id=chat_id, text=requestText.encode('utf-8') + ": " + imagelink, disable_web_page_preview=True)
+            bot.sendDocument(chat_id, imagelink.encode('utf-8'), requestText.encode('utf-8'), (imagelink if not IsUrlTooLongForCaption else '').encode('utf-8'))
+            if (IsUrlTooLongForCaption):
+                print imagelink
             sendException = False
         except:
             sendException = True
