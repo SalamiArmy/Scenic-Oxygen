@@ -58,7 +58,7 @@ def run(bot, chat_id, user, keyConfig, message):
     if 'items' in data and total_results > 0:
         items_length_limit = 12
         thereWasAnError = True
-        while total_offset < (total_results if total_results < items_length_limit else items_length_limit):
+        while thereWasAnError and total_offset < (total_results if total_results < items_length_limit else items_length_limit):
             offset_this_page = 0
             while thereWasAnError and offset_this_page < results_this_page:
                 imagelink = data['items'][offset_this_page]['link']
