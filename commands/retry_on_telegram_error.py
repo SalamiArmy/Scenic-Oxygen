@@ -5,7 +5,7 @@ import threading
 
 
 def IsTooLongForCaption(imagelink):
-    return len(imagelink) > 100
+    return len(imagelink) > 200
 
 
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
