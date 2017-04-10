@@ -9,11 +9,11 @@ from google.appengine.ext import ndb
 import sys
 from PIL import Image
 
-import telegram
-
 from commands import retry_on_telegram_error
 
 CommandName = 'getgif'
+
+global gif, image_file, fd
 
 class GifWatchValue(ndb.Model):
     # key name: getgif:str(chat_id)
@@ -89,7 +89,6 @@ def run(bot, chat_id, user, keyConfig, message):
 def isGifAnimated(imagelink):
     print("Openning url " + imagelink)
     try:
-        global gif, image_file, fd
         fd = urllib.urlopen(imagelink)
         print("Reading gif...")
         image_file = io.BytesIO(fd.read())
