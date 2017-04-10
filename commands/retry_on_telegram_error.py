@@ -4,12 +4,16 @@ from time import sleep
 import threading
 
 
+def IsTooLongForCaption(imagelink):
+    return len(imagelink) > 100
+
+
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     numberOfRetries = 6
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
-            IsUrlTooLongForCaption = len(imagelink) > 100
+            IsUrlTooLongForCaption = IsTooLongForCaption(imagelink)
             print("Trying to send " + imagelink)
             bot.sendDocument(chat_id, imagelink.encode('utf-8'), requestText.encode('utf-8'), (imagelink if not IsUrlTooLongForCaption else '').encode('utf-8'))
             if (IsUrlTooLongForCaption):
@@ -22,6 +26,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
             sleep(10)
     return numberOfRetries > 0
 
+
 def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_confidence=0.0):
     if imagelink[:4] == '.gif':
         return False
@@ -29,7 +34,7 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, captionText, user, intention_con
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
-            IsUrlTooLongForCaption = len(imagelink) > 100
+            IsUrlTooLongForCaption = IsTooLongForCaption(imagelink)
             print("Trying to send " + imagelink)
             bot.sendPhoto(chat_id=chat_id,
                           photo=imagelink.encode('utf-8'),
