@@ -94,7 +94,6 @@ def isGifAnimated(imagelink):
         print("Parsing gif...")
         gif = Image.open(image_file)
     except IOError:
-        import exceptions
         try:
             if gif:
                 gif.fp.close()
@@ -103,9 +102,9 @@ def isGifAnimated(imagelink):
             if fd:
                 fd.close()
         except UnboundLocalError:
-            print("gif local not defined")
+            print("gif, image_file or fd local not defined")
         except NameError:
-            print("gif global not defined")
+            print("gif, image_file or fd global not defined")
         print("...not a gif")
         return False
     else:
@@ -121,9 +120,9 @@ def isGifAnimated(imagelink):
                 if fd:
                     fd.close()
             except UnboundLocalError:
-                print("gif local not defined")
+                print("gif, image_file or fd local not defined")
             except NameError:
-                print("gif global not defined")
+                print("gif, image_file or fd global not defined")
             print("...not animated")
             return False
         else:
