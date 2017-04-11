@@ -52,6 +52,7 @@ def wasPreviouslySeenGif(chat_id, gif_link):
 def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
     data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
+    total_results = total_results if total_results < 1000 else 1000
     if 'items' in data and total_results > 0:
         total_offset = 0
         thereWasAnError = True
