@@ -13,7 +13,7 @@ from commands import retry_on_telegram_error
 
 CommandName = 'getgif'
 
-class GifWatchValue(ndb.Model):
+class SeenGifs(ndb.Model):
     # key name: getgif:str(chat_id)
     allPreviousSeenGifs = ndb.StringProperty(indexed=False, default='')
 
@@ -21,12 +21,12 @@ class GifWatchValue(ndb.Model):
 # ================================
 
 def setPreviouslySeenGifsValue(chat_id, NewValue):
-    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = SeenGifs.get_or_insert(CommandName + ':' + str(chat_id))
     es.allPreviousSeenGifs = NewValue.encode('utf-8')
     es.put()
 
 def addPreviouslySeenGifsValue(chat_id, NewValue):
-    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = SeenGifs.get_or_insert(CommandName + ':' + str(chat_id))
     if es.allPreviousSeenGifs == '':
         es.allPreviousSeenGifs = NewValue.encode('utf-8')
     else:
@@ -34,12 +34,12 @@ def addPreviouslySeenGifsValue(chat_id, NewValue):
     es.put()
 
 def getPreviouslySeenGifsValue(chat_id):
-    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = SeenGifs.get_or_insert(CommandName + ':' + str(chat_id))
     if es:
         return es.allPreviousSeenGifs.encode('utf-8')
     return ''
 
-def wasPreviouslyAddedLink(chat_id, gif_link):
+def wasPreviouslySeenGif(chat_id, gif_link):
     allPreviousLinks = getPreviouslySeenGifsValue(chat_id)
     if ',' + gif_link + ',' in allPreviousLinks or \
             allPreviousLinks.startswith(gif_link + ',') or  \
@@ -52,9 +52,8 @@ def wasPreviouslyAddedLink(chat_id, gif_link):
 def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
     data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
-    total_results = total_results if total_results < 1000 else 1000
-    total_offset = 0
     if 'items' in data and total_results > 0:
+        total_offset = 0
         thereWasAnError = True
         while thereWasAnError and total_offset < total_results:
             offset_this_page = 0
@@ -64,13 +63,11 @@ def run(bot, chat_id, user, keyConfig, message):
                 total_offset += 1
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
-                if not wasPreviouslyAddedLink(chat_id, imagelink):
+                if not wasPreviouslySeenGif(chat_id, imagelink):
                     if isGifAnimated(imagelink):
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                     addPreviouslySeenGifsValue(chat_id, imagelink)
-                else:
-                    thereWasAnError = True
-            if thereWasAnError or not offset_this_page < results_this_page:
+            if not thereWasAnError:
                 data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
         if thereWasAnError or not total_offset < total_results:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +

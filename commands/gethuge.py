@@ -31,7 +31,7 @@ def run(bot, chat_id, user, keyConfig, message):
             imagelink = data['items'][randint_offset if randint_offset < 10 else randint_offset - 10]['link']
             offset += 1
             if not imagelink.startswith('x-raw-image:///') and imagelink != '':
-                thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
+                thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
         if thereWasAnError or not offset < 10:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any huge images for ' +

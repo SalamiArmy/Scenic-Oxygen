@@ -52,8 +52,8 @@ def wasPreviouslyAddedLink(chat_id, gif_link):
         allPreviousLinks.startswith(gif_link + '\n') or  \
         allPreviousLinks.endswith('\n' + gif_link) or  \
         allPreviousLinks == gif_link:
-        return True;
-    return False;
+        return True
+    return False
 
 def get_add_removed_links(chat_id, new_list, old_list):
     added_games = ''
@@ -69,7 +69,7 @@ def get_add_removed_links(chat_id, new_list, old_list):
 
 def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     requestText = message.replace(bot.name, "").strip()
-    data = get.Google_Image_Search(keyConfig, message)
+    data = get.search_google_for_images(keyConfig, message)
     if 'items' in data and len(data['items']) >= 5:
         OldValue = getWatchValue(chat_id, requestText)
         imagelinks = data['items'][0]['link']
@@ -86,19 +86,18 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Now watching /' + watchedCommandName + ' ' + requestText + '.' +
                                                                '\nThis is number ' + str(count) + ' of 5.'
-                                                               ' number ' + str(count) + '.',
-                                                               user)
+                                                               ' number ' + str(count) + '.')
                 else:
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Watched /' + watchedCommandName + ' ' + requestText + ' changed' +
                                                                (' order.' if (links_added == '' and newly_added_links == '') else '.') +
-                                                               '\nThis is number ' + str(count) + ' of 5.', user)
+                                                               '\nThis is number ' + str(count) + ' of 5.')
             else:
                 if user != 'Watcher':
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Watch for /' + watchedCommandName + ' ' + requestText +
                                                                ' has not changed.' +
-                                                               '\nThis is number ' + str(count) + ' of 5.', user)
+                                                               '\nThis is number ' + str(count) + ' of 5.')
         if links_added != '':
             print('got links added as ' + links_added)
             count = 0
