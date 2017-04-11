@@ -86,19 +86,18 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Now watching /' + watchedCommandName + ' ' + requestText + '.' +
                                                                '\nThis is number ' + str(count) + ' of 5.'
-                                                               ' number ' + str(count) + '.',
-                                                               user)
+                                                               ' number ' + str(count) + '.')
                 else:
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Watched /' + watchedCommandName + ' ' + requestText + ' changed' +
                                                                (' order.' if (links_added == '' and newly_added_links == '') else '.') +
-                                                               '\nThis is number ' + str(count) + ' of 5.', user)
+                                                               '\nThis is number ' + str(count) + ' of 5.')
             else:
                 if user != 'Watcher':
                     retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink,
                                                                'Watch for /' + watchedCommandName + ' ' + requestText +
                                                                ' has not changed.' +
-                                                               '\nThis is number ' + str(count) + ' of 5.', user)
+                                                               '\nThis is number ' + str(count) + ' of 5.')
         if links_added != '':
             print('got links added as ' + links_added)
             count = 0

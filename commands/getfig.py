@@ -1,6 +1,5 @@
 # coding=utf-8
 import json
-import random
 import urllib
 
 import telegram
@@ -26,7 +25,7 @@ def run(bot, chat_id, user, keyConfig, message):
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
                 if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not get.wasPreviouslySeenImage(chat_id, imagelink):
-                    thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user)
+                    thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
                 get.addPreviouslySeenImagesValue(chat_id, imagelink)
             if not thereWasAnError:
                 data, total_results, results_this_page = search_google_for_figs(keyConfig, requestText, total_offset+1)

@@ -64,7 +64,7 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
                 if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
-                    thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, user, intention_confidence)
+                    thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText, intention_confidence)
                 addPreviouslySeenImagesValue(chat_id, imagelink)
             if not thereWasAnError:
                 data, total_results, results_this_page = search_google_for_images(keyConfig, requestText, total_offset+1)
