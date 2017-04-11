@@ -10,7 +10,6 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
     data, total_results, results_this_page = getgif.search_google_for_gifs(keyConfig, requestText)
     if 'items' in data and results_this_page >= 0:
         offset_this_page = 0
-        print('SentNowWatchingMessage is now set to false')
         SentNowWatchingMessage = False
         while offset_this_page < results_this_page:
             imagelink = data['items'][offset_this_page]['link']
@@ -24,7 +23,6 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                         if not SentNowWatchingMessage:
                             bot.sendMessage(chat_id=chat_id, text='Now watching /' +
                                                                   getgif.CommandName + ' ' + requestText + '.')
-                            print('SentNowWatchingMessage is now set to true')
                             SentNowWatchingMessage = True
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
                     else:
@@ -32,7 +30,6 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                                                               getgif.CommandName + ' ' + requestText + ' changed.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
         if user != 'Watcher' and not SentNowWatchingMessage:
-            print('SentNowWatchingMessage is false')
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t watch ' +
                                                   'because I did not find any results for /getgif ' +
