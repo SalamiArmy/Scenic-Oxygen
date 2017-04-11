@@ -52,8 +52,8 @@ def wasPreviouslySeenGif(chat_id, gif_link):
 def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
     data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
-    total_offset = 0
     if 'items' in data and total_results > 0:
+        total_offset = 0
         thereWasAnError = True
         while thereWasAnError and total_offset < total_results:
             offset_this_page = 0
@@ -67,9 +67,7 @@ def run(bot, chat_id, user, keyConfig, message):
                     if isGifAnimated(imagelink):
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                     addPreviouslySeenGifsValue(chat_id, imagelink)
-                else:
-                    thereWasAnError = True
-            if thereWasAnError or not offset_this_page < results_this_page:
+            if not thereWasAnError:
                 data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
         if thereWasAnError or not total_offset < total_results:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
