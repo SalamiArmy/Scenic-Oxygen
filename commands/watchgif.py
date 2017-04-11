@@ -16,6 +16,7 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
             if not getgif.wasPreviouslySeenGif(chat_id, imagelink):
+                getgif.addPreviouslySeenGifsValue(chat_id, imagelink)
                 if getgif.isGifAnimated(imagelink):
                     if user != 'Watcher':
                         bot.sendMessage(chat_id=chat_id, text='Now watching /' +
@@ -26,7 +27,6 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                                                               getgif.CommandName + ' ' + requestText + ' changed.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
             else:
-                getgif.addPreviouslySeenGifsValue(chat_id, imagelink)
                 if user != 'Watcher' and getgif.isGifAnimated(imagelink):
                     bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                           getgif.CommandName + ' ' + requestText + ' has not changed.')
