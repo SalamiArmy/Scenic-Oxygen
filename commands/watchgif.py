@@ -31,7 +31,7 @@ def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
                         bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
                                                               getgif.CommandName + ' ' + requestText + ' has not changed.')
                         retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, user)
-                continue
+                break
         if not main.AllWatchesContains(getgif.CommandName, chat_id, requestText):
             main.addToAllWatches(getgif.CommandName, chat_id, requestText)
     else:
