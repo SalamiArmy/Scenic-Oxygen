@@ -13,7 +13,7 @@ from commands import retry_on_telegram_error
 
 CommandName = 'getgif'
 
-class GifWatchValue(ndb.Model):
+class SeenGifs(ndb.Model):
     # key name: getgif:str(chat_id)
     allPreviousSeenGifs = ndb.StringProperty(indexed=False, default='')
 
@@ -21,12 +21,12 @@ class GifWatchValue(ndb.Model):
 # ================================
 
 def setPreviouslySeenGifsValue(chat_id, NewValue):
-    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = SeenGifs.get_or_insert(CommandName + ':' + str(chat_id))
     es.allPreviousSeenGifs = NewValue.encode('utf-8')
     es.put()
 
 def addPreviouslySeenGifsValue(chat_id, NewValue):
-    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = SeenGifs.get_or_insert(CommandName + ':' + str(chat_id))
     if es.allPreviousSeenGifs == '':
         es.allPreviousSeenGifs = NewValue.encode('utf-8')
     else:
@@ -34,12 +34,12 @@ def addPreviouslySeenGifsValue(chat_id, NewValue):
     es.put()
 
 def getPreviouslySeenGifsValue(chat_id):
-    es = GifWatchValue.get_or_insert(CommandName + ':' + str(chat_id))
+    es = SeenGifs.get_or_insert(CommandName + ':' + str(chat_id))
     if es:
         return es.allPreviousSeenGifs.encode('utf-8')
     return ''
 
-def wasPreviouslyAddedLink(chat_id, gif_link):
+def wasPreviouslySeenGif(chat_id, gif_link):
     allPreviousLinks = getPreviouslySeenGifsValue(chat_id)
     if ',' + gif_link + ',' in allPreviousLinks or \
             allPreviousLinks.startswith(gif_link + ',') or  \
@@ -63,7 +63,7 @@ def run(bot, chat_id, user, keyConfig, message):
                 total_offset += 1
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
-                if not wasPreviouslyAddedLink(chat_id, imagelink):
+                if not wasPreviouslySeenGif(chat_id, imagelink):
                     if isGifAnimated(imagelink):
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                     addPreviouslySeenGifsValue(chat_id, imagelink)

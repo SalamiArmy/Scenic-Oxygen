@@ -52,8 +52,8 @@ def wasPreviouslyAddedLink(chat_id, gif_link):
         allPreviousLinks.startswith(gif_link + '\n') or  \
         allPreviousLinks.endswith('\n' + gif_link) or  \
         allPreviousLinks == gif_link:
-        return True;
-    return False;
+        return True
+    return False
 
 def get_add_removed_links(chat_id, new_list, old_list):
     added_games = ''
