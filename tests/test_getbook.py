@@ -1,7 +1,5 @@
 import ConfigParser
-import sys
 import unittest
-import telegram
 
 import telegram
 
