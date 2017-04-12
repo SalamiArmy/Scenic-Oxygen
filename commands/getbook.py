@@ -64,9 +64,9 @@ def run(bot, chat_id, user, keyConfig, message):
             rating = ratings[offset]
             total_rating = total_ratings[offset]
             bot.sendMessage(chat_id=chat_id, text=(user + ': *' if not user == '' else '*') + bookTitle + '*\n' +
-                                                  '_Rated ' + rating.encode('utf-8') + ' out of 5 by ' +
-                                                  total_rating + ' GoodReads users._\n' + bookData + '\n' +
-                                                  url,
+                                                  ('_Rated ' + rating.encode('utf-8') + ' out of 5 by ' +
+                                                  total_rating + ' GoodReads users._\n' if rating.encode('utf-8') == '0' else '')
+                                                  + bookData + '\n' + url,
                             parse_mode='Markdown')
             addPreviouslySeenBooksValue(chat_id, bookTitle)
             break
