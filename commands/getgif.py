@@ -1,5 +1,4 @@
 # coding=utf-8
-import json
 import string
 import urllib
 import io
@@ -10,6 +9,7 @@ import sys
 from PIL import Image
 
 from commands import retry_on_telegram_error
+from commands import get
 
 CommandName = 'getgif'
 
@@ -58,36 +58,7 @@ def run(bot, chat_id, user, keyConfig, message):
             'q': requestText,
             'fileType': 'gif',
             'start': 1}
-    data, total_results, results_this_page = search_google_for_gifs(args)
-    total_results = total_results if total_results < 1000 else 1000
-    if 'items' in data and total_results > 0:
-        total_offset = 0
-        thereWasAnError = True
-        while thereWasAnError and total_offset < total_results:
-            offset_this_page = 0
-            while thereWasAnError and offset_this_page < results_this_page:
-                imagelink = data['items'][offset_this_page]['link']
-                offset_this_page += 1
-                total_offset += 1
-                if '?' in imagelink:
-                    imagelink = imagelink[:imagelink.index('?')]
-                if not wasPreviouslySeenGif(chat_id, imagelink):
-                    if isGifAnimated(imagelink):
-                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
-                    addPreviouslySeenGifsValue(chat_id, imagelink)
-            if thereWasAnError:
-                args['start'] = total_offset+1
-                data, total_results, results_this_page = search_google_for_gifs(args)
-        if thereWasAnError or not total_offset < total_results:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I can\'t find a gif for ' +
-                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
-        else:
-            return True
-    else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find a gif for ' +
-                                              string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+    Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
 
 
 def isGifAnimated(imagelink):
@@ -142,15 +113,34 @@ def isGifAnimated(imagelink):
                 print('...gif under size limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
     return True
 
-
-def search_google_for_gifs(args):
-    googurl = 'https://www.googleapis.com/customsearch/v1'
-    realUrl = googurl + '?' + urllib.urlencode(args)
-    data = json.load(urllib.urlopen(realUrl))
-    total_results = 0
-    results_this_page = 0
-    if 'searchInformation' in data and 'totalResults' in data['searchInformation']:
-        total_results = data['searchInformation']['totalResults']
-    if 'queries' in data and 'request' in data['queries'] and len(data['queries']['request']) > 0 and 'count' in data['queries']['request'][0]:
-        results_this_page = data['queries']['request'][0]['count']
-    return data, total_results, results_this_page
+def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
+    data, total_results, results_this_page = get.Google_Custom_Search(args)
+    total_results = total_results if total_results < 1000 else 1000
+    if 'items' in data and total_results > 0:
+        total_offset = 0
+        thereWasAnError = True
+        while thereWasAnError and total_offset < total_results:
+            offset_this_page = 0
+            while thereWasAnError and offset_this_page < results_this_page:
+                imagelink = data['items'][offset_this_page]['link']
+                offset_this_page += 1
+                total_offset += 1
+                if '?' in imagelink:
+                    imagelink = imagelink[:imagelink.index('?')]
+                if not wasPreviouslySeenGif(chat_id, imagelink):
+                    if isGifAnimated(imagelink):
+                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
+                    addPreviouslySeenGifsValue(chat_id, imagelink)
+            if thereWasAnError:
+                args['start'] = total_offset+1
+                data, total_results, results_this_page = get.Google_Custom_Search(args)
+        if thereWasAnError or not total_offset < total_results:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find a gif for ' +
+                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+        else:
+            return True
+    else:
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find a gif for ' +
+                                              string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
