@@ -1,5 +1,5 @@
 # coding=utf-8
-from commands import getgif
+from commands import get
 
 
 def run(bot, chat_id, user, keyConfig, message):
@@ -9,7 +9,7 @@ def run(bot, chat_id, user, keyConfig, message):
             'searchType': "image",
             'safe': "off",
             'q': requestText,
-            'fileType': 'gif',
-            'start': 1,
-            'imgSize': 'huge'}
-    getgif.Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
+            "imgSize": "xxlarge"}
+    get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
+
+

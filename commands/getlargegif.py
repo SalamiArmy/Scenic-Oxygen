@@ -11,5 +11,5 @@ def run(bot, chat_id, user, keyConfig, message):
             'q': requestText,
             'fileType': 'gif',
             'start': 1,
-            'imgSize': 'huge'}
+            'imgSize': 'large'}
     getgif.Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
