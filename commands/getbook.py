@@ -60,6 +60,7 @@ def run(bot, chat_id, user, keyConfig, message):
                                                   url,
                             parse_mode='Markdown')
             addPreviouslySeenBooksValue(chat_id, bookTitle)
+            break
     if offset == len(books):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find any books' +
