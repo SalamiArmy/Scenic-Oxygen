@@ -9,7 +9,7 @@ def IsTooLongForCaption(text):
 
 
 def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
-    numberOfRetries = 6
+    numberOfRetries = 5
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
@@ -35,7 +35,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
 def SendPhotoWithRetry(bot, chat_id, imagelink, requestText, intention_confidence=0.0):
     if imagelink[:4] == '.gif':
         return False
-    numberOfRetries = 6
+    numberOfRetries = 5
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
