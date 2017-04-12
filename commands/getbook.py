@@ -34,6 +34,7 @@ def getPreviouslySeenBooksValue(chat_id):
     return ''
 
 def wasPreviouslySeenBook(chat_id, book_title):
+    book_title = book_title.replace(',', '')
     allPreviousLinks = getPreviouslySeenBooksValue(chat_id)
     if ',' + book_title + ',' in allPreviousLinks or \
             allPreviousLinks.startswith(book_title + ',') or  \
