@@ -44,6 +44,7 @@ def run(bot, chat_id, user, keyConfig, message):
 
     from goodreads import client
     gc = client.GoodreadsClient(keyConfig.get('GoodReads', 'KEY'), keyConfig.get('GoodReads', 'SECRET'))
+    print('performing goodreads book search now')
     books = gc.search_books(requestText)
 
     offset = 0
@@ -51,10 +52,12 @@ def run(bot, chat_id, user, keyConfig, message):
         book = books[offset]
         offset += 1
         bookTitle = book.title
+        print('checking if previously seen goodreads book')
         if not wasPreviouslySeenBook(chat_id, bookTitle):
-            bookData = book.description
+            bookData = FormatDesc(book.description)
             url = book.link
             rating = book.average_rating
+            print('sending book')
             bot.sendMessage(chat_id=chat_id, text=(user + ': *' if not user == '' else '*') + bookTitle + '*\n' +
                                                   '_Rated ' + rating.encode('utf-8') + ' out of 5_\n' + bookData +
                                                   url,
