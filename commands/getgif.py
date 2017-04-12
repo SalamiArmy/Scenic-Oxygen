@@ -51,7 +51,14 @@ def wasPreviouslySeenGif(chat_id, gif_link):
 
 def run(bot, chat_id, user, keyConfig, message):
     requestText = message.replace(bot.name, "").strip()
-    data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText)
+    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'searchType': "image",
+            'safe': "off",
+            'q': requestText,
+            'fileType': 'gif',
+            'start': 1}
+    data, total_results, results_this_page = search_google_for_gifs(args)
     total_results = total_results if total_results < 1000 else 1000
     if 'items' in data and total_results > 0:
         total_offset = 0
@@ -68,8 +75,9 @@ def run(bot, chat_id, user, keyConfig, message):
                     if isGifAnimated(imagelink):
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                     addPreviouslySeenGifsValue(chat_id, imagelink)
-            if not thereWasAnError:
-                data, total_results, results_this_page = search_google_for_gifs(keyConfig, requestText, total_offset+1)
+            if thereWasAnError:
+                args.start = total_offset+1
+                data, total_results, results_this_page = search_google_for_gifs(args)
         if thereWasAnError or not total_offset < total_results:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
@@ -135,15 +143,8 @@ def isGifAnimated(imagelink):
     return True
 
 
-def search_google_for_gifs(keyConfig, requestText, startIndex=1):
+def search_google_for_gifs(args):
     googurl = 'https://www.googleapis.com/customsearch/v1'
-    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
-            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
-            'searchType': "image",
-            'safe': "off",
-            'q': requestText,
-            'fileType': 'gif',
-            'start': startIndex}
     realUrl = googurl + '?' + urllib.urlencode(args)
     data = json.load(urllib.urlopen(realUrl))
     total_results = 0
