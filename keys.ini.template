@@ -41,3 +41,7 @@ API_secret: {Your SightEngine Api Secret Key}
 
 [Bing]
 AutoSuggestApiKey: {Your Bing AutoSuggest Api Key}
+
+[GoodReads]
+key: {Your GoodReads API key}
+secret: {Your GoodReads API secret}

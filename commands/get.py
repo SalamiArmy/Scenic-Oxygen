@@ -1,12 +1,9 @@
 # coding=utf-8
 import json
-import random
 import string
 import urllib
 
 from google.appengine.ext import ndb
-
-import telegram
 
 from commands import retry_on_telegram_error
 
