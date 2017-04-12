@@ -76,7 +76,7 @@ def run(bot, chat_id, user, keyConfig, message):
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                     addPreviouslySeenGifsValue(chat_id, imagelink)
             if thereWasAnError:
-                args.start = total_offset+1
+                args.set('start', total_offset+1)
                 data, total_results, results_this_page = search_google_for_gifs(args)
         if thereWasAnError or not total_offset < total_results:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
