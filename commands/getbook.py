@@ -90,11 +90,18 @@ def FormatDesc(Desc):
 def book_results_parser(rawMarkup, keyConfig):
     soup = BeautifulSoup(rawMarkup)
     bookDescriptions = []
-    for id in soup.findAll('id'):
-        realUrl = 'https://www.goodreads.com/book/show.xml?key=' + keyConfig.get('GoodReads', 'KEY') + '&id=' + id.string
+    bookIDs = []
+    bookTitles = []
+    bookAverageRatings = []
+    bookRatingsCounts = []
+    for book in soup.findAll('best_book'):
+        bookId = book.findAll('id')[0].string
+        realUrl = 'https://www.goodreads.com/book/show.xml?key=' + keyConfig.get('GoodReads', 'KEY') + '&id=' + bookId
         raw_xml_object = urllib.urlopen(realUrl).read()
         data = BeautifulSoup(raw_xml_object)
-        try_find_description = data.findAll('description')
-        if len(try_find_description)>0:
-            bookDescriptions += try_find_description[0]
-    return soup.findAll('title'), soup.findAll('average_rating'), soup.findAll('ratings_count'), soup.findAll('id'), bookDescriptions
+        bookIDs.append(data.findAll('id')[0].string)
+        bookDescriptions.append(data.findAll('description')[0].string if data.findAll('description')[0].string != None else '')
+        bookTitles.append(data.findAll('title')[0].string)
+        bookAverageRatings.append(data.findAll('average_rating')[0].string)
+        bookRatingsCounts.append(data.findAll('ratings_count')[0].string)
+    return bookTitles, bookAverageRatings, bookRatingsCounts, bookIDs, bookDescriptions
