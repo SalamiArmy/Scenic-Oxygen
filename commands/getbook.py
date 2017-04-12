@@ -77,7 +77,13 @@ def run(bot, chat_id, user, keyConfig, message):
                                               ' for ' + requestText.encode('utf-8') + '.')
 
 def FormatDesc(Desc):
-    return Desc.replace('<br />', '\n').replace('<i>', '_').replace('</i>', '_').replace('<em>', '*').replace('</em>', '*')
+    return Desc.replace('<br />', '\n')\
+        .replace('<i>', '_')\
+        .replace('</i>', '_')\
+        .replace('<em>', '*')\
+        .replace('</em>', '*')\
+        .replace('<p>', '\n')\
+        .replace('</p>', '\n')
 
 
 
