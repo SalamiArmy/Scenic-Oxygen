@@ -56,13 +56,12 @@ def run(bot, chat_id, user, keyConfig, message):
 
     offset = 0
     while offset < len(bookTitles):
-        offset += 1
-        bookTitle = bookTitles[offset].string
+        bookTitle = bookTitles[offset]
         if not wasPreviouslySeenBook(chat_id, bookTitle):
             bookData = FormatDesc(bookDescriptions[offset])
-            url = 'https://www.goodreads.com/book/show/' + bookIDs[offset].string + '-' + requestText.replace(' ', '-')
-            rating = ratings[offset].string
-            total_rating = total_ratings[offset].string
+            url = 'https://www.goodreads.com/book/show/' + bookIDs[offset] + '-' + requestText.replace(' ', '-')
+            rating = ratings[offset]
+            total_rating = total_ratings[offset]
             bot.sendMessage(chat_id=chat_id, text=(user + ': *' if not user == '' else '*') + bookTitle + '*\n' +
                                                   '_Rated ' + rating.encode('utf-8') + ' out of 5 by ' +
                                                   total_rating + ' GoodReads users._\n' + bookData + '\n' +
@@ -70,6 +69,7 @@ def run(bot, chat_id, user, keyConfig, message):
                             parse_mode='Markdown')
             addPreviouslySeenBooksValue(chat_id, bookTitle)
             break
+        offset += 1
     if offset == len(bookTitles):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find any books' +
