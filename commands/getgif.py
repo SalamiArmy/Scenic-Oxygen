@@ -122,9 +122,9 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
     if 'items' in data and total_results > 0:
         total_offset = 0
         thereWasAnError = True
-        while thereWasAnError and total_offset < total_results:
+        while thereWasAnError and int(total_offset) < int(total_results):
             offset_this_page = 0
-            while thereWasAnError and offset_this_page < results_this_page:
+            while thereWasAnError and int(offset_this_page) < int(results_this_page):
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
                 total_offset += 1
@@ -154,9 +154,9 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
     if 'items' in data and total_results > 0:
         total_offset = 0
         total_sent = 0
-        while total_sent < totalResults:
+        while int(total_sent) < int(totalResults):
             offset_this_page = 0
-            while total_sent < totalResults and offset_this_page < results_this_page:
+            while int(total_sent) < int(totalResults) and int(offset_this_page) < int(results_this_page):
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
                 total_offset += 1
@@ -167,7 +167,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                         if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                             total_sent += 1
                     addPreviouslySeenGifsValue(chat_id, imagelink)
-            if (total_sent < totalResults):
+            if (int(total_sent) < int(totalResults)):
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if total_sent <= totalResults:
