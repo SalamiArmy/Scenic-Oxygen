@@ -120,7 +120,7 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
                 if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
                     if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText):
                         total_sent += 1
-                        print('just sent an image, total is ' + str(total_sent))
+                        print('just sent an image, total is ' + str(total_sent) + ' number is ' + str(number))
                 addPreviouslySeenImagesValue(chat_id, imagelink)
             if total_sent < number:
                 args['start'] = total_offset+1
