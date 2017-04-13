@@ -33,4 +33,4 @@ class TestGet(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        get.run(bot, chatId, 'Admin', keyConfig, requestText)
+        get.run(bot, chatId, 'Admin', keyConfig, requestText, 3)

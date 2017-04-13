@@ -164,7 +164,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                     imagelink = imagelink[:imagelink.index('?')]
                 if not wasPreviouslySeenGif(chat_id, imagelink):
                     if isGifAnimated(imagelink):
-                        if not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
+                        if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                             total_sent += 1
                     addPreviouslySeenGifsValue(chat_id, imagelink)
             if (total_sent < totalResults):
