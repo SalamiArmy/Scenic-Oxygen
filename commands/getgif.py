@@ -153,7 +153,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                     if isGifAnimated(imagelink):
                         if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                             total_sent += 1
-                            print('sent gif number ' + total_sent)
+                            print('sent gif number ' + str(total_sent))
                     addPreviouslySeenGifsValue(chat_id, imagelink)
             if int(total_sent) < int(totalResults):
                 args['start'] = total_offset+1
