@@ -66,12 +66,9 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
 
 def isGifAnimated(imagelink):
     global gif, image_file, fd
-    print("Openning url " + imagelink)
     try:
         fd = urllib.urlopen(imagelink)
-        print("Reading gif...")
         image_file = io.BytesIO(fd.read())
-        print("Parsing gif...")
         gif = Image.open(image_file)
     except IOError:
         try:
@@ -85,11 +82,9 @@ def isGifAnimated(imagelink):
             print("gif, image_file or fd local not defined")
         except NameError:
             print("gif, image_file or fd global not defined")
-        print("...not a gif")
         return False
     else:
         try:
-            print("Checking gif for animation...")
             gif.seek(1)
         except EOFError:
             try:
@@ -103,18 +98,10 @@ def isGifAnimated(imagelink):
                 print("gif, image_file or fd local not defined")
             except NameError:
                 print("gif, image_file or fd global not defined")
-            print("...not animated")
             return False
         else:
-            print("...gif is animated, confirmed! Checking file size...")
-            getsizeof = sys.getsizeof(image_file)
-            size_limit = 10000000
-            if (len(str(getsizeof)) > 7):
-                print('...gif is larger than limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
-                return False
-            else:
-                print('...gif under size limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
-    return True
+            return int(sys.getsizeof(image_file)) < 10000000
+
 
 def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
@@ -166,6 +153,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                     if isGifAnimated(imagelink):
                         if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                             total_sent += 1
+                            print('sent gif number ' + total_sent)
                     addPreviouslySeenGifsValue(chat_id, imagelink)
             if int(total_sent) < int(totalResults):
                 args['start'] = total_offset+1
