@@ -3,7 +3,7 @@ import json
 import urllib
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
 
     translateUrl = 'https://www.googleapis.com/language/translate/v2?key=' + \

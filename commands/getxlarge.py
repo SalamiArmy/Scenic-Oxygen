@@ -2,7 +2,7 @@
 from commands import get
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
@@ -10,6 +10,9 @@ def run(bot, chat_id, user, keyConfig, message):
             'safe': "off",
             'q': requestText,
             "imgSize": "xlarge"}
-    get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        get.Send_Images(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
 
 

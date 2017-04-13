@@ -49,7 +49,7 @@ def wasPreviouslySeenGif(chat_id, gif_link):
     return False
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
@@ -58,17 +58,17 @@ def run(bot, chat_id, user, keyConfig, message):
             'q': requestText,
             'fileType': 'gif',
             'start': 1}
-    Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
 
 
 def isGifAnimated(imagelink):
     global gif, image_file, fd
-    print("Openning url " + imagelink)
     try:
         fd = urllib.urlopen(imagelink)
-        print("Reading gif...")
         image_file = io.BytesIO(fd.read())
-        print("Parsing gif...")
         gif = Image.open(image_file)
     except IOError:
         try:
@@ -82,11 +82,9 @@ def isGifAnimated(imagelink):
             print("gif, image_file or fd local not defined")
         except NameError:
             print("gif, image_file or fd global not defined")
-        print("...not a gif")
         return False
     else:
         try:
-            print("Checking gif for animation...")
             gif.seek(1)
         except EOFError:
             try:
@@ -100,18 +98,10 @@ def isGifAnimated(imagelink):
                 print("gif, image_file or fd local not defined")
             except NameError:
                 print("gif, image_file or fd global not defined")
-            print("...not animated")
             return False
         else:
-            print("...gif is animated, confirmed! Checking file size...")
-            getsizeof = sys.getsizeof(image_file)
-            size_limit = 10000000
-            if (len(str(getsizeof)) > 7):
-                print('...gif is larger than limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
-                return False
-            else:
-                print('...gif under size limit of ' + str(size_limit) + ' bytes, file size appears to be ' + str(getsizeof) + ' bytes')
-    return True
+            return int(sys.getsizeof(image_file)) < 10000000
+
 
 def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
@@ -119,9 +109,9 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
     if 'items' in data and total_results > 0:
         total_offset = 0
         thereWasAnError = True
-        while thereWasAnError and total_offset < total_results:
+        while thereWasAnError and int(total_offset) < int(total_results):
             offset_this_page = 0
-            while thereWasAnError and offset_this_page < results_this_page:
+            while thereWasAnError and int(offset_this_page) < int(results_this_page):
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
                 total_offset += 1
@@ -144,3 +134,38 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
+def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
+    data, total_results, results_this_page = get.Google_Custom_Search(args)
+    total_results = total_results if total_results < 1000 else 1000
+    if 'items' in data and total_results > 0:
+        total_offset = 0
+        total_sent = 0
+        while int(total_sent) < int(totalResults):
+            offset_this_page = 0
+            while int(total_sent) < int(totalResults) and int(offset_this_page) < int(results_this_page):
+                imagelink = data['items'][offset_this_page]['link']
+                offset_this_page += 1
+                total_offset += 1
+                if '?' in imagelink:
+                    imagelink = imagelink[:imagelink.index('?')]
+                if not wasPreviouslySeenGif(chat_id, imagelink):
+                    if isGifAnimated(imagelink):
+                        if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
+                            total_sent += 1
+                            print('sent gif number ' + str(total_sent))
+                    addPreviouslySeenGifsValue(chat_id, imagelink)
+            if int(total_sent) < int(totalResults):
+                args['start'] = total_offset+1
+                data, total_results, results_this_page = get.Google_Custom_Search(args)
+        if int(total_sent) < int(totalResults):
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any more gifs for ' +
+                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+        else:
+            return True
+    else:
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find a gif for ' +
+                                              string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+

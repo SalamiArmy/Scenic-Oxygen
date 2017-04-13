@@ -2,7 +2,7 @@
 from commands import getgif
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
@@ -12,4 +12,7 @@ def run(bot, chat_id, user, keyConfig, message):
             'fileType': 'gif',
             'start': 1,
             'imgSize': 'large'}
-    getgif.Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        getgif.Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        getgif.Send_First_Animated_Gif(bot, chat_id, user, requestText, args)

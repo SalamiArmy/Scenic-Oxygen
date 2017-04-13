@@ -44,7 +44,7 @@ def wasPreviouslySeenImage(chat_id, gif_link):
         return True
     return False
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
@@ -52,7 +52,10 @@ def run(bot, chat_id, user, keyConfig, message):
             'safe': 'off',
             'q': requestText,
             'start': 1}
-    Send_First_Valid_Image(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        Send_Images(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        Send_First_Valid_Image(bot, chat_id, user, requestText, args)
 
 
 def Google_Custom_Search(args):
@@ -72,10 +75,9 @@ def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
     if 'items' in data and total_results > 0:
         total_offset = 0
         thereWasAnError = True
-        while thereWasAnError and total_offset < total_results:
+        while thereWasAnError and int(total_offset) < int(total_results):
             offset_this_page = 0
-            thereWasAnError = True
-            while thereWasAnError and offset_this_page < results_this_page:
+            while thereWasAnError and int(offset_this_page) < int(results_this_page):
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
                 total_offset += 1
@@ -90,6 +92,42 @@ def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
         if (thereWasAnError or not total_offset < total_results):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any images for ' +
+                                                  string.capwords(requestText.encode('utf-8')))
+        else:
+            return True
+    else:
+        if 'error' in data:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  data['error']['message'])
+        else:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any images for ' +
+                                                  string.capwords(requestText.encode('utf-8')))
+
+def Send_Images(bot, chat_id, user, requestText, args, number):
+    data, total_results, results_this_page = Google_Custom_Search(args)
+    if 'items' in data and total_results > 0:
+        total_offset = 0
+        total_sent = 0
+        while (int(total_sent) < int(number)) and (int(total_offset) < int(total_results)):
+            offset_this_page = 0
+            while (int(total_sent) < int(number)) and (int(offset_this_page) < int(results_this_page)):
+                imagelink = data['items'][offset_this_page]['link']
+                offset_this_page += 1
+                total_offset += 1
+                if '?' in imagelink:
+                    imagelink = imagelink[:imagelink.index('?')]
+                if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
+                    if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText):
+                        total_sent += 1
+                        print('sent image number ' + str(total_sent))
+                addPreviouslySeenImagesValue(chat_id, imagelink)
+            if total_sent < number:
+                args['start'] = total_offset+1
+                data, total_results, results_this_page = Google_Custom_Search(args)
+        if int(total_sent) < int(number):
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find any more images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
         else:
             return True

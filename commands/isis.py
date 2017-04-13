@@ -4,7 +4,7 @@ import random
 import feedparser
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     realUrl = 'http://isis.liveuamap.com/rss'
     data = feedparser.parse(realUrl)
     if len(data.entries) >= 1:

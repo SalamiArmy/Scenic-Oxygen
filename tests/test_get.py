@@ -6,7 +6,6 @@ import commands.get as get
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
-
 class TestGet(unittest.TestCase):
     def setUp(self):
         # First, create an instance of the Testbed class.
@@ -23,10 +22,8 @@ class TestGet(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-
-class TestGet(unittest.TestCase):
     def test_get(self):
-        requestText = 'steam dev days'
+        requestText = 'catalina wine mixer'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -36,4 +33,4 @@ class TestGet(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        get.run(bot, chatId, 'SalamiArmy', keyConfig, requestText)
+        get.run(bot, chatId, 'Admin', keyConfig, requestText, 2)

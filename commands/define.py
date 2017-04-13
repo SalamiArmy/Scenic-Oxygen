@@ -5,11 +5,11 @@ import urllib
 import xmltodict
 
 
-def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-    bot.sendMessage(chat_id=chat_id, text=get_define_data(keyConfig, user, requestText, intention_confidence))
+    bot.sendMessage(chat_id=chat_id, text=get_define_data(keyConfig, user, requestText))
 
-def get_define_data(keyConfig, user, requestText, intention_confidence):
+def get_define_data(keyConfig, user, requestText):
     dicUrl = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml/'
     realUrl = dicUrl + requestText.encode('utf-8').replace('?', '').replace('&', '') + '?key=' + keyConfig.get('Merriam-Webster', 'API_KEY')
     getXml = urllib.urlopen(realUrl).read()
@@ -24,23 +24,19 @@ def get_define_data(keyConfig, user, requestText, intention_confidence):
                 entry = getEntry[random.randint(0, len(getEntry) - 1)]
             else:
                 entry = getEntry
-            formatted_entry = format_entry(entry, user, requestText, intention_confidence)
+            formatted_entry = format_entry(entry, user, requestText)
             if formatted_entry:
-                return formatted_entry + ('\nMight I add that I am ' +
-                                          str(intention_confidence) + '% confident you wanted to know this.'
-                                          if intention_confidence > 0.0 else '')
+                return formatted_entry
         else:
-            if intention_confidence == 0.0:
-                return 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                       ', I\'m afraid I can\'t find any definitions for the word ' +\
-                       requestText + '. Did you mean ' + ' '.join(getAllEntries['suggestion']) + '?'
-    else:
-        if intention_confidence == 0.0:
             return 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                   ', I\'m afraid I can\'t find any definitions for the word ' + requestText + '.'
+                   ', I\'m afraid I can\'t find any definitions for the word ' +\
+                   requestText + '. Did you mean ' + ' '.join(getAllEntries['suggestion']) + '?'
+    else:
+        return 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+               ', I\'m afraid I can\'t find any definitions for the word ' + requestText + '.'
 
 
-def format_entry(entry, user, requestText, intention_confidence):
+def format_entry(entry, user, requestText):
     if 'fl' in entry:
         partOfSpeech = entry['fl']
         if len(partOfSpeech) >= 1:
@@ -55,7 +51,6 @@ def format_entry(entry, user, requestText, intention_confidence):
                 if '#text' in getDefinition:
                     definitionText = getDefinition['#text']
                 else:
-
                     definitionText = getDefinition
                 definitionText = definitionText.replace(':', '').strip()
                 count += 1
@@ -67,10 +62,7 @@ def format_entry(entry, user, requestText, intention_confidence):
     elif 'cx' in entry:
         return (user + ': ' if not user == '' else '') + requestText.title() + ":\n" + entry['cx']['cl'] + ' ' + entry['ew']
     else:
-        if intention_confidence == 0.0:
-            return 'I\'m sorry ' + (user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any definitions for the word ' + requestText + '.'
-        else:
-            return ''
+        return ''
 
 
         ############################# Ashley: http://dictionaryapi.net/ is down! ###############################

@@ -3,38 +3,33 @@ import json
 import urllib
 
 
-def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-
 
     wikiUrl = \
         'https://simple.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search='
     realUrl = wikiUrl + requestText.encode('utf-8')
     data = json.load(urllib.urlopen(realUrl))
-    if len(data[2]) and data[2][0] != '' >= 1:
+    total_sent = 0
+    while int(total_sent) < len(data[2]) and int(total_sent) < int(totalResults):
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                              data[2][0] + '\nLink: ' + data[3][0] +
-                                              ('\nMight I add that I am ' +
-                                               str(intention_confidence) + '% confident you wanted to know this.'
-                                               if intention_confidence > 0.0 else '')
+                                              data[2][total_sent] + '\nLink: ' +
+                                              data[3][total_sent].replace('https://simple.wikipedia.org',
+                                                                          'https://en.wikipedia.org')
                         , disable_web_page_preview=True)
-        return True
-    else:
+        total_sent += 1
+    if int(total_sent) < int(totalResults):
         wikiUrl = \
-            'https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search='
+            'https://en.wikipedia.org/w/api.php?action=opensearch&namespace=0&format=json&search='
         realUrl = wikiUrl + requestText.encode('utf-8')
         data = json.load(urllib.urlopen(realUrl))
-        if len(data[2]) >= 1 and data[2][0] != '':
+        while int(total_sent) < len(data[2]) and int(total_sent) < int(totalResults):
             bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                                  data[2][0] + '\nLink: ' + data[3][0] +
-                                                  ('\nMight I add that I am ' +
-                                                   str(intention_confidence) + '% confident you wanted to know this.'
-                                                   if intention_confidence > 0.0 else ''),
+                                                  data[2][total_sent] + '\nLink: ' + data[3][total_sent],
                             disable_web_page_preview=True)
-            return True
-        else:
-            if intention_confidence == 0.0:
-                bot.sendMessage(chat_id=chat_id,
-                                text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                     ', I\'m afraid I can\'t find any wiki articles for ' +
-                                     requestText.encode('utf-8') + '.')
+            total_sent += 1
+        if int(total_sent) < int(totalResults):
+            bot.sendMessage(chat_id=chat_id,
+                            text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                 ', I\'m afraid I can\'t find any wiki articles for ' +
+                                 requestText.encode('utf-8') + '.')

@@ -16,7 +16,6 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
             caption_text = requestText + ': ' + imagelink if not IsTooLongForCaption(requestText + ':' + imagelink) \
                 else imagelink
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
-            print("Trying to send " + imagelink)
             bot.sendDocument(chat_id=chat_id,
                              document=imagelink.encode('utf-8'),
                              filename=requestText.encode('utf-8'),
@@ -42,7 +41,6 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, requestText, intention_confidenc
             caption_text = requestText + ': ' + imagelink if not IsTooLongForCaption(requestText + ':' + imagelink) \
                 else imagelink
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
-            print("Trying to send " + imagelink)
             bot.sendPhoto(chat_id=chat_id,
                           photo=imagelink.encode('utf-8'),
                           caption=(caption_text if not IsUrlTooLongForCaption else '').encode('utf-8') +

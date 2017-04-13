@@ -55,7 +55,7 @@ def removeFromAllWatches(watch):
                        .replace(watch + ',', ''))
 
 
-def run(bot, chat_id, user, keyConfig, message='', intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message='', totalResults=1):
     getData = cric.get_cric_data(user)
     if getData:
         OldValue = getWatchValue(chat_id)
