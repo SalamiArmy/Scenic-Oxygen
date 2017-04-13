@@ -51,7 +51,6 @@ def format_entry(entry, user, requestText):
                 if '#text' in getDefinition:
                     definitionText = getDefinition['#text']
                 else:
-
                     definitionText = getDefinition
                 definitionText = definitionText.replace(':', '').strip()
                 count += 1
