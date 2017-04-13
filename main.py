@@ -122,6 +122,7 @@ class WebhookHandler(webapp2.RequestHandler):
             import re
             if re.findall('^[a-z]+\d+', commandName):
                 totalResults = re.findall('\d+', commandName)
+                print('got ' + totalResults + ' total')
             mod = importlib.import_module('commands.' + commandName)
             mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
         except:
