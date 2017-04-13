@@ -13,7 +13,8 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     data = json.load(urllib.urlopen(realUrl))
     if len(data[2]) and data[2][0] != '' >= 1:
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                              data[2][0] + '\nLink: ' + data[3][0]
+                                              data[2][0] + '\nLink: ' +
+                                              data[3][0].replace('https://simple.wikipedia.org', 'https://en.wikipedia.org')
                         , disable_web_page_preview=True)
         return True
     else:
