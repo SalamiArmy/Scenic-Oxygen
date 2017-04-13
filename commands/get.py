@@ -109,9 +109,9 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
     if 'items' in data and total_results > 0:
         total_offset = 0
         total_sent = 0
-        while total_sent < number and total_offset < total_results:
+        while (int(total_sent) < int(number)) and total_offset < total_results:
             offset_this_page = 0
-            while total_sent < number and offset_this_page < results_this_page:
+            while (int(total_sent) < int(number)) and offset_this_page < results_this_page:
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
                 total_offset += 1
@@ -120,9 +120,9 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
                 if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
                     if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText):
                         total_sent += 1
-                        print('just sent an image, total is ' + str(total_sent) + ' number is ' + str(number) + ' total_sent<number?' + str(total_sent < number))
+                        print('just sent an image, total is ' + str(total_sent) + ' number is ' + str(number) + ' total_sent<number?' + str(int(total_sent) < int(number)))
                 addPreviouslySeenImagesValue(chat_id, imagelink)
-            if total_sent < number:
+            if (total_sent < number):
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = Google_Custom_Search(args)
         if (total_sent < number or not total_offset < total_results):
