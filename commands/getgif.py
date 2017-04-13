@@ -156,7 +156,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
         total_sent = 0
         while total_sent < totalResults:
             offset_this_page = 0
-            while offset_this_page < results_this_page:
+            while total_sent < totalResults and offset_this_page < results_this_page:
                 imagelink = data['items'][offset_this_page]['link']
                 offset_this_page += 1
                 total_offset += 1
