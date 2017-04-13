@@ -120,9 +120,11 @@ class WebhookHandler(webapp2.RequestHandler):
             commandName = split[0].lower().replace(bot.name.lower(), '')
             totalResults = 1
             import re
-            if re.findall('^[a-z]+\d+$', commandName) > 0:
+            if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
                 totalResults = re.findall('\d+$', commandName)[0]
                 print('got ' + totalResults + ' total')
+                commandName = re.findall('^[a-z]+', commandName)[0]
+                print('got ' + commandName + ' command')
             mod = importlib.import_module('commands.' + commandName)
             mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
         except:
