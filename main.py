@@ -117,8 +117,13 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(' ', 1)
         try:
-            mod = importlib.import_module('commands.' + split[0].lower().replace(bot.name.lower(), ''))
-            mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '')
+            commandName = split[0].lower().replace(bot.name.lower(), '')
+            totalResults = 1
+            import re
+            if re.findall('^[a-z]+\d+', commandName):
+                totalResults = re.findall('\d+', commandName)
+            mod = importlib.import_module('commands.' + commandName)
+            mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
         except:
             print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
             try:

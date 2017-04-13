@@ -4,7 +4,7 @@ import random
 import soundcloud
 
 
-def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
 
     tracks = get_tracks(keyConfig, requestText)

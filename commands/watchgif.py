@@ -5,7 +5,7 @@ import main
 from commands import getgif
 from commands import retry_on_telegram_error
 
-def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     data, total_results, results_this_page = getgif.search_google_for_gifs(keyConfig, requestText)
     if 'items' in data and results_this_page >= 0:

@@ -39,7 +39,7 @@ def run(thorin, incoming):
         return get_weather_zip(city_or_zip)
     return get_weather_name(city_or_zip)
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     if is_zip_code(message):
         bot.sendMessage(chat_id=chat_id, text=(user + ": ") if user != '' else '' + get_weather_zip(message))
     else:

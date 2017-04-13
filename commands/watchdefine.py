@@ -27,7 +27,7 @@ def getWatchValue(chat_id, request):
     return ''
 
 
-def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     getData = define.get_define_data(keyConfig, user, message, intention_confidence)
     if ('<blockquote>' not in getData):
         OldValue = getWatchValue(chat_id, message)

@@ -67,7 +67,7 @@ def get_add_removed_links(chat_id, new_list, old_list):
     return added_games, newly_added_games
 
 
-def run(bot, chat_id, user, keyConfig, message, intention_confidence=0.0):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     data = get.search_google_for_images(keyConfig, message)
     if 'items' in data and len(data['items']) >= 5:

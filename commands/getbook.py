@@ -44,7 +44,7 @@ def wasPreviouslySeenBook(chat_id, book_title):
     return False
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args = {'key': keyConfig.get('GoodReads', 'KEY'),
             'search[field]': 'all',

@@ -5,7 +5,7 @@ import urllib2
 from bs4 import BeautifulSoup
 
 
-def run(bot, chat_id, user, keyConfig, message):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     code = retrieve_google_image_search_results(requestText)
     parsedCode = google_image_results_parser(code)
