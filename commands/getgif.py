@@ -58,7 +58,10 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'q': requestText,
             'fileType': 'gif',
             'start': 1}
-    Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
 
 
 def isGifAnimated(imagelink):
@@ -144,3 +147,36 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
+def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
+    data, total_results, results_this_page = get.Google_Custom_Search(args)
+    total_results = total_results if total_results < 1000 else 1000
+    if 'items' in data and total_results > 0:
+        total_offset = 0
+        total_sent = 0
+        while total_sent < totalResults:
+            offset_this_page = 0
+            while offset_this_page < results_this_page:
+                imagelink = data['items'][offset_this_page]['link']
+                offset_this_page += 1
+                total_offset += 1
+                if '?' in imagelink:
+                    imagelink = imagelink[:imagelink.index('?')]
+                if not wasPreviouslySeenGif(chat_id, imagelink):
+                    if isGifAnimated(imagelink):
+                        if not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
+                            total_sent += 1
+                    addPreviouslySeenGifsValue(chat_id, imagelink)
+            args['start'] = total_offset+1
+            data, total_results, results_this_page = get.Google_Custom_Search(args)
+        if total_sent <= 0:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I can\'t find a gif for ' +
+                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+        else:
+            return True
+    else:
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find a gif for ' +
+                                              string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
