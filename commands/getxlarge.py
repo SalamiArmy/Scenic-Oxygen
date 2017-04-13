@@ -10,6 +10,9 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'safe': "off",
             'q': requestText,
             "imgSize": "xlarge"}
-    get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        get.Send_Images(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
 
 

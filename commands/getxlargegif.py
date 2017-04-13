@@ -12,4 +12,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'fileType': 'gif',
             'start': 1,
             'imgSize': 'xlarge'}
-    getgif.Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
+    if totalResults > 1:
+        getgif.Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        getgif.Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
