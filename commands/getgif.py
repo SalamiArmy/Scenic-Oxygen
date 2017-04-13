@@ -167,11 +167,12 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                         if not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                             total_sent += 1
                     addPreviouslySeenGifsValue(chat_id, imagelink)
-            args['start'] = total_offset+1
-            data, total_results, results_this_page = get.Google_Custom_Search(args)
-        if total_sent <= 0:
+            if (total_sent < totalResults):
+                args['start'] = total_offset+1
+                data, total_results, results_this_page = get.Google_Custom_Search(args)
+        if total_sent <= totalResults:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I can\'t find a gif for ' +
+                                                  ', I\'m afraid I can\'t find any more gifs for ' +
                                                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
         else:
             return True
