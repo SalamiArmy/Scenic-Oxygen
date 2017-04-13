@@ -2,6 +2,45 @@
 import json
 import urllib
 
+from google.appengine.ext import ndb
+
+CommandName = 'getxxx'
+
+class SeenXXX(ndb.Model):
+    # key name: get:str(chat_id)
+    allPreviousSeenXXX = ndb.StringProperty(indexed=False, default='')
+
+
+# ================================
+
+def setPreviouslySeenXXXValue(chat_id, NewValue):
+    es = SeenXXX.get_or_insert(CommandName + ':' + str(chat_id))
+    es.allPreviousSeenXXX = NewValue.encode('utf-8')
+    es.put()
+
+def addPreviouslySeenXXXValue(chat_id, NewValue):
+    es = SeenXXX.get_or_insert(CommandName + ':' + str(chat_id))
+    if es.allPreviousSeenXXX == '':
+        es.allPreviousSeenXXX = NewValue.encode('utf-8')
+    else:
+        es.allPreviousSeenXXX += ',' + NewValue.encode('utf-8')
+    es.put()
+
+def getPreviouslySeenXXXValue(chat_id):
+    es = SeenXXX.get_or_insert(CommandName + ':' + str(chat_id))
+    if es:
+        return es.allPreviousSeenXXX.encode('utf-8')
+    return ''
+
+def wasPreviouslySeenXXX(chat_id, xxx_link):
+    allPreviousLinks = getPreviouslySeenXXXValue(chat_id)
+    if ',' + xxx_link + ',' in allPreviousLinks or \
+            allPreviousLinks.startswith(xxx_link + ',') or  \
+            allPreviousLinks.endswith(',' + xxx_link) or  \
+            allPreviousLinks == xxx_link:
+        return True
+    return False
+
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
@@ -32,8 +71,10 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                and 'search?search=' not in xlink \
                and 'xhamster.com/forums/' not in xlink \
                :
-                bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
-                return True
+                if not wasPreviouslySeenXXX(chat_id, xlink):
+                    bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
+                    addPreviouslySeenXXXValue(chat_id, xlink)
+                    return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', you\'re just too filthy.')
