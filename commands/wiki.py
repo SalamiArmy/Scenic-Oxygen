@@ -13,9 +13,9 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     total_sent = 0
     while int(total_sent) < len(data[2]) and int(total_sent) < int(totalResults):
         bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                              data[2][0] + '\nLink: ' +
-                                              data[3][0].replace('https://simple.wikipedia.org',
-                                                                 'https://en.wikipedia.org')
+                                              data[2][total_sent] + '\nLink: ' +
+                                              data[3][total_sent].replace('https://simple.wikipedia.org',
+                                                                          'https://en.wikipedia.org')
                         , disable_web_page_preview=True)
         total_sent += 1
     if int(total_sent) < int(totalResults):
@@ -25,7 +25,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         data = json.load(urllib.urlopen(realUrl))
         while int(total_sent) < len(data[2]) and int(total_sent) < int(totalResults):
             bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') +
-                                                  data[2][0] + '\nLink: ' + data[3][0],
+                                                  data[2][total_sent] + '\nLink: ' + data[3][total_sent],
                             disable_web_page_preview=True)
             total_sent += 1
         if int(total_sent) < int(totalResults):
