@@ -170,7 +170,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
             if (int(total_sent) < int(totalResults)):
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
-        if total_sent <= totalResults:
+        if int(total_sent) <= int(totalResults):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any more gifs for ' +
                                                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))

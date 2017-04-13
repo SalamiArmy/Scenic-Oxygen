@@ -125,7 +125,7 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
             if (total_sent < number):
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = Google_Custom_Search(args)
-        if (total_sent < number or not total_offset < total_results):
+        if (int(total_sent) < int(number) or not int(total_offset) < int(total_results)):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any more images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
