@@ -117,12 +117,11 @@ class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
 
-        if 'message' in self.request and 'chat_id' in self.request:
-            message = self.request.get('message')
-            chat_id = self.request.get('chat_id')
+        message = self.request.get('message')
+        chat_id = self.request.get('chat_id')
 
-            if message.startswith('/'):
-                self.TryExecuteExplicitCommand(chat_id, 'Web', message)
+        if message.startswith('/'):
+            self.TryExecuteExplicitCommand(chat_id, 'Web', message)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(' ', 1)
