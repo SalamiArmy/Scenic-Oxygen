@@ -84,7 +84,9 @@ def FormatDesc(Desc):
         .replace('<em>', '*')\
         .replace('</em>', '*')\
         .replace('<p>', '\n')\
-        .replace('</p>', '\n')
+        .replace('</p>', '\n')\
+        .replace('<b>', '*')\
+        .replace('</b>', '*')
 
 
 
