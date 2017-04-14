@@ -104,7 +104,7 @@ def Send_XXXs(bot, chat_id, user, requestText, args, number):
                 total_offset += 1
                 if is_valid_xxx(xlink):
                     if not wasPreviouslySeenXXX(chat_id, xlink):
-                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(sent_count) + ':' + xlink)
+                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(sent_count+1) + ':' + xlink)
                         addPreviouslySeenXXXValue(chat_id, xlink)
                         sent_count += 1
                 if int(sent_count) >= int(number) or int(total_offset) >= int(total_results):
