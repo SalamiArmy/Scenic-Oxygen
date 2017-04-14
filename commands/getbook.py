@@ -56,7 +56,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     bookTitles, ratings, total_ratings, bookIDs, bookDescriptions = book_results_parser(raw_xml_data, keyConfig)
 
     offset = 0
-    while offset < len(bookTitles):
+    while int(offset) < int(totalResults) and offset < len(bookTitles):
         bookTitle = bookTitles[offset]
         if not wasPreviouslySeenBook(chat_id, bookTitle):
             bookData = FormatDesc(bookDescriptions[offset])
@@ -69,7 +69,6 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                                                   + bookData + '\n' + url,
                             parse_mode='Markdown')
             addPreviouslySeenBooksValue(chat_id, bookTitle)
-            break
         offset += 1
     if offset == len(bookTitles):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
