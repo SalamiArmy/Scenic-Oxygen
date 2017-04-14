@@ -151,7 +151,8 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                     imagelink = imagelink[:imagelink.index('?')]
                 if not wasPreviouslySeenGif(chat_id, imagelink):
                     if isGifAnimated(imagelink):
-                        if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText + ' ' + str(total_sent+1)):
+                        if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText + ' ' + str(total_sent+1)
+                                                              + ' of ' + str(totalResults)):
                             total_sent += 1
                             print('sent gif number ' + str(total_sent))
                     addPreviouslySeenGifsValue(chat_id, imagelink)
@@ -161,7 +162,8 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
         if int(total_sent) < int(totalResults):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any more gifs for ' +
-                                                  string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+                                                  string.capwords(requestText.encode('utf-8')) + '.' +
+                            ' I could only find ' + str(total_sent) + ' out of ' + str(totalResults))
         else:
             return True
     else:

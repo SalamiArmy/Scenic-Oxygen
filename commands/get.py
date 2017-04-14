@@ -118,7 +118,8 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
                 if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
-                    if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText + ' ' + str(total_sent+1)):
+                    if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText + ' ' + str(total_sent+1) + str(total_sent+1)
+                                                              + ' of ' + str(number)):
                         total_sent += 1
                         print('sent image number ' + str(total_sent))
                 addPreviouslySeenImagesValue(chat_id, imagelink)
@@ -128,7 +129,8 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
         if int(total_sent) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any more images for ' +
-                                                  string.capwords(requestText.encode('utf-8')))
+                                                  string.capwords(requestText.encode('utf-8') + '.' +
+                            ' I could only find ' + str(total_sent) + ' out of ' + str(number)))
         else:
             return True
     else:

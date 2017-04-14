@@ -104,7 +104,8 @@ def Send_XXXs(bot, chat_id, user, requestText, args, number):
                 total_offset += 1
                 if is_valid_xxx(xlink):
                     if not wasPreviouslySeenXXX(chat_id, xlink):
-                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(sent_count+1) + ':' + xlink)
+                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(sent_count+1)
+                                                              + ' of ' + str(number) + ':' + xlink)
                         addPreviouslySeenXXXValue(chat_id, xlink)
                         sent_count += 1
                 if int(sent_count) >= int(number) or int(total_offset) >= int(total_results):
@@ -114,7 +115,8 @@ def Send_XXXs(bot, chat_id, user, requestText, args, number):
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if int(sent_count) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I cannot find enough filth for ' + requestText + '.')
+                                                  ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
+                            ' I could only find ' + str(sent_count) + ' out of ' + str(number))
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', you\'re just too filthy.')
