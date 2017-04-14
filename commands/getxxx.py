@@ -4,6 +4,8 @@ import urllib
 
 from google.appengine.ext import ndb
 
+from commands import get
+
 CommandName = 'getxxx'
 
 class SeenXXX(ndb.Model):
@@ -44,43 +46,82 @@ def wasPreviouslySeenXXX(chat_id, xxx_link):
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
+    args = {'cx': keyConfig.get('Google', 'GCSE_XSE_ID'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'safe': 'off',
+            'q': requestText,
+            'start': 1}
+    if totalResults > 1:
+        Send_XXXs(bot, chat_id, user, requestText, args, totalResults)
+    else:
+        Send_First_Valid_XXX(bot, chat_id, user, requestText, args)
 
-    googurl = 'https://www.googleapis.com/customsearch/v1?&num=10&safe=off&cx=' + keyConfig.get \
-        ('Google', 'GCSE_XSE_ID') + '&key=' + keyConfig.get('Google', 'GCSE_APP_ID') + '&q='
-    realUrl = googurl + requestText.encode('utf-8')
-    data = json.load(urllib.urlopen(realUrl))
+def Send_First_Valid_XXX(bot, chat_id, user, requestText, args):
+    data, total_results, results_this_page = search_for_xxx(args)
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         for item in data['items']:
             xlink = item['link']
-            if \
-               'xvideos.com/tags/' not in xlink \
-               and 'xvideos.com/favorite/' not in xlink \
-               and 'xvideos.com/?k=' not in xlink \
-               and 'xvideos.com/tags' not in xlink \
-               and 'pornhub.com/users/' not in xlink \
-               and 'pornhub.com/video/search?search=' not in xlink \
-               and 'pornhub.com/insights/' not in xlink \
-               and 'pornhub.com/devices/' not in xlink \
-               and 'pornhub.com/gay/' not in xlink \
-               and 'pornhub.com/pornstar/' not in xlink \
-               and 'xvideos.com/profiles/' not in xlink \
-               and 'xnxx.com/?' not in xlink \
-               and 'xnxx.com/tags/' not in xlink \
-               and 'xhamster.com/stories_search' not in xlink \
-               and 'redtube.com/pornstar/' not in xlink \
-               and 'search?search=' not in xlink \
-               and 'xhamster.com/forums/' not in xlink \
-               :
+            if is_valid_xxx(xlink):
                 if not wasPreviouslySeenXXX(chat_id, xlink):
                     bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
                     addPreviouslySeenXXXValue(chat_id, xlink)
                     sent_count += 1
-            if int(sent_count) >= int(totalResults):
-                break
-        if int(sent_count) < int(totalResults):
+                    break
+    else:
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', you\'re just too filthy.')
+
+
+def is_valid_xxx(xlink):
+    return 'xvideos.com/tags/' not in xlink \
+           and 'xvideos.com/favorite/' not in xlink \
+           and 'xvideos.com/?k=' not in xlink \
+           and 'xvideos.com/tags' not in xlink \
+           and 'pornhub.com/users/' not in xlink \
+           and 'pornhub.com/video/search?search=' not in xlink \
+           and 'pornhub.com/insights/' not in xlink \
+           and 'pornhub.com/devices/' not in xlink \
+           and 'pornhub.com/gay/' not in xlink \
+           and 'pornhub.com/pornstar/' not in xlink \
+           and 'xvideos.com/profiles/' not in xlink \
+           and 'xnxx.com/?' not in xlink \
+           and 'xnxx.com/tags/' not in xlink \
+           and 'xhamster.com/stories_search' not in xlink \
+           and 'redtube.com/pornstar/' not in xlink \
+           and 'search?search=' not in xlink \
+           and 'xhamster.com/forums/' not in xlink
+
+
+def Send_XXXs(bot, chat_id, user, requestText, args, number):
+    data, total_results, results_this_page = get.Google_Custom_Search(args)
+    if data['searchInformation']['totalResults'] >= '1':
+        sent_count = 0
+        total_offset = 0
+        while int(sent_count) < int(number) and int(total_offset) < int(total_results):
+            for item in data['items']:
+                xlink = item['link']
+                total_offset += 1
+                if is_valid_xxx(xlink):
+                    if not wasPreviouslySeenXXX(chat_id, xlink):
+                        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
+                        addPreviouslySeenXXXValue(chat_id, xlink)
+                        sent_count += 1
+                if int(sent_count) >= int(number) or int(total_offset) >= int(total_results):
+                    break
+            if int(sent_count) < int(number) and int(total_offset) < int(total_results):
+                args['start'] = total_offset+1
+                data, total_results, results_this_page = get.Google_Custom_Search(args)
+        if int(sent_count) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I cannot find enough filth for ' + requestText + '.')
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', you\'re just too filthy.')
+
+def search_for_xxx(keyConfig, requestText):
+    googurl = 'https://www.googleapis.com/customsearch/v1?&num=10&safe=off&cx=' + keyConfig.get \
+        ('Google', 'GCSE_XSE_ID') + '&key=' + keyConfig.get('Google', 'GCSE_APP_ID') + '&q='
+    realUrl = googurl + requestText.encode('utf-8')
+    data = json.load(urllib.urlopen(realUrl))
+    return data
