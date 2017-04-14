@@ -102,6 +102,8 @@ class WebhookHandler(webapp2.RequestHandler):
                 if 'first_name' in fr and 'last_name' in fr \
                 else fr['first_name'] if 'first_name' in fr \
                 else 'Dave'
+            if 'edited_message' in body:
+                user += '(editted)'
             chat = message['chat']
             chat_id = chat['id']
 
