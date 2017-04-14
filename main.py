@@ -35,14 +35,14 @@ class AllWatchesValue(ndb.Model):
 
 def addToAllWatches(command, chat_id, request=''):
     es = AllWatchesValue.get_or_insert('AllWatches')
-    es.currentValue += ',' + str(chat_id) + ':' + command + (':' + request if request != '' else '')
+    es.currentValue += ',' + str(chat_id) + ':' + command + (':' + request.replace(',', '%2C') if request != '' else '')
     es.put()
 
 def AllWatchesContains(command, chat_id, request=''):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (',' + str(chat_id) + ':' + command + (':' + request if request != '' else '')) in str(es.currentValue) or \
-               (str(chat_id) + ':' + command + (':' + request if request != '' else '') + ',') in str(es.currentValue)
+        return (',' + str(chat_id) + ':' + command + (':' + request.replace(',', '%2C') if request != '' else '')) in str(es.currentValue) or \
+               (str(chat_id) + ':' + command + (':' + request.replace(',', '%2C') if request != '' else '') + ',') in str(es.currentValue)
     return False
 
 def setAllWatchesValue(NewValue):
@@ -57,9 +57,7 @@ def getAllWatches():
     return ''
 
 def removeFromAllWatches(watch):
-    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', ',')
-                       .replace(',' + watch, '')
-                       .replace(watch + ',', ''))
+    setAllWatchesValue(getAllWatches().replace(',' + watch.replace(',', '%2C'), '').replace(watch.replace(',', '%2C'), ''))
 
 # ================================
 
@@ -156,11 +154,14 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 print('got watch ' + watch)
                 split = watch.split(':')
                 if len(split) >= 2:
-                    print('executing command: ' + split[1].replace('get', ''))
-                    mod = importlib.import_module('commands.watch' + split[1].replace('get', ''))
+                    removeGet = split[1].replace('get', '')
+                    print('executing command: ' + removeGet)
+                    mod = importlib.import_module('commands.watch' + removeGet)
                     chat_id = split[0]
                     request_text = (split[2] if len(split) == 3 else '')
-                    mod.run(bot, chat_id, 'Watcher', keyConfig, request_text)
+                    removeCommaEncoding = request_text.replace('%2C', ',')
+                    print('with request text: ' + removeCommaEncoding)
+                    mod.run(bot, chat_id, 'Watcher', keyConfig, removeCommaEncoding)
                 else:
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
