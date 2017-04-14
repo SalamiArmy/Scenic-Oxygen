@@ -50,6 +50,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     realUrl = googurl + requestText.encode('utf-8')
     data = json.load(urllib.urlopen(realUrl))
     if data['searchInformation']['totalResults'] >= '1':
+        sent_count = 0
         for item in data['items']:
             xlink = item['link']
             if \
@@ -74,7 +75,12 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                 if not wasPreviouslySeenXXX(chat_id, xlink):
                     bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
                     addPreviouslySeenXXXValue(chat_id, xlink)
-                    return True
+                    sent_count += 1
+            if int(sent_count) >= int(totalResults):
+                break
+        if int(sent_count) < int(totalResults):
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                  ', I\'m afraid I cannot find enough filth for ' + requestText + '.')
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', you\'re just too filthy.')
