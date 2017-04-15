@@ -140,7 +140,7 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
                 total_offset += 1
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
-                if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
+                if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink) and ImageIsSmallEnough(imagelink):
                     if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText + ' ' + str(total_sent+1)
                                                               + ' of ' + str(number)):
                         total_sent += 1
