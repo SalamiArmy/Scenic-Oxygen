@@ -31,7 +31,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     return numberOfRetries > 0
 
 
-def SendPhotoWithRetry(bot, chat_id, imagelink, requestText, intention_confidence=0.0):
+def SendPhotoWithRetry(bot, chat_id, imagelink, requestText):
     if imagelink[:4] == '.gif':
         return False
     numberOfRetries = 5
@@ -43,8 +43,7 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, requestText, intention_confidenc
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
             bot.sendPhoto(chat_id=chat_id,
                           photo=imagelink.encode('utf-8'),
-                          caption=(caption_text if not IsUrlTooLongForCaption else '').encode('utf-8') +
-                                  ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to see this.' if intention_confidence > 0.0 else ''))
+                          caption=(caption_text if not IsUrlTooLongForCaption else '').encode('utf-8'))
             if (IsUrlTooLongForCaption):
                 print imagelink
             sendException = False

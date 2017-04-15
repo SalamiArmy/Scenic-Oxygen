@@ -11,14 +11,12 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     if len(tracks) >= 1:
         randint = random.randint(0, len(tracks) - 1)
         track_url = tracks[randint].permalink_url
-        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + track_url +
-                                              ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to hear this.' if intention_confidence > 0.0 else ''))
+        bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + track_url)
         return True
     else:
-        if intention_confidence == 0.0:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I can\'t find the sound of ' +
-                                                  requestText.encode('utf-8') + '.')
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I can\'t find the sound of ' +
+                                              requestText.encode('utf-8') + '.')
 
 
 def get_tracks(keyConfig, requestText):

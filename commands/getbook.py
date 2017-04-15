@@ -73,7 +73,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         offset += 1
     if offset == len(bookTitles):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find any books' +
+                                              ', I\'m afraid I can\'t find any  books' +
                                               (' that you haven\'t already seen' if len(bookTitles) > 0 and offset > 0 else '') +
                                               ' for ' + requestText.encode('utf-8') + '.')
 

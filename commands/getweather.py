@@ -27,12 +27,10 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                               forecast[0]['high'] + ' and a low of ' + forecast[0]['low'] +
                               ' are expected during the day with conditions being ' +
                               forecast[0]['text'] + '.\nSunrise: ' + astronomy['sunrise'] +
-                              '\nSunset: ' + astronomy['sunset']) +
-                             ('\nMight I add that I am ' + str(intention_confidence) + '% confident you wanted to know this about the weather.' if intention_confidence > 0.0 else ''),
+                              '\nSunset: ' + astronomy['sunset']),
                         parse_mode=telegram.ParseMode.MARKDOWN)
         return True
     else:
-        if intention_confidence == 0.0:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I don\'t know the place ' +
-                                                  requestText.encode('utf-8') + '.')
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid I don\'t know the place ' +
+                                              requestText.encode('utf-8') + '.')
