@@ -3,6 +3,9 @@ import json
 import string
 import urllib
 
+import sys
+
+import io
 from google.appengine.ext import ndb
 
 from commands import retry_on_telegram_error
@@ -58,6 +61,26 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         Send_First_Valid_Image(bot, chat_id, user, requestText, args)
 
 
+def ImageIsSmallEnough(imagelink):
+    global image_file, fd
+    try:
+        fd = urllib.urlopen(imagelink)
+        image_file = io.BytesIO(fd.read())
+    except IOError:
+        try:
+            if image_file:
+                image_file.close()
+            if fd:
+                fd.close()
+        except UnboundLocalError:
+            print("image_file or fd local not defined")
+        except NameError:
+            print("image_file or fd global not defined")
+        return False
+    else:
+        return int(sys.getsizeof(image_file)) < 10000000
+
+
 def Google_Custom_Search(args):
     googurl = 'https://www.googleapis.com/customsearch/v1'
     realUrl = googurl + '?' + urllib.urlencode(args)
@@ -83,7 +106,7 @@ def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
                 total_offset += 1
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
-                if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink):
+                if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink) and ImageIsSmallEnough(imagelink):
                     thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
                 addPreviouslySeenImagesValue(chat_id, imagelink)
             if thereWasAnError:
