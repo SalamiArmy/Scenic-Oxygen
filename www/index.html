@@ -7,10 +7,12 @@
     <h1>Hello, world!</h1>
     <p>
 		<form action="/webhook">
-		  First name:<br>
-		  <input type="text" name="command" value="getxxx">
+		  Command:<br>
+		  <select name="commands">
+			  <option value="getxxx">getxxx</option>
+			</select>
 		  <br>
-		  Last name:<br>
+		  Request:<br>
 		  <input type="text" name="message" value="">
 		  <br><br>
 		  <input type="submit" value="Submit">

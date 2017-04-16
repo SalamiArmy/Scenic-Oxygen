@@ -1,0 +1,27 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:   
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /set_webhook
+  login: admin
+  script: main.app
+
+- url: /.+
+  script: main.app
+  
+- url: /
+  static_files: www/index.html
+  upload: www/index.html
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+- name: ssl
+  version: latest
+- name: PIL
+  version: latest
