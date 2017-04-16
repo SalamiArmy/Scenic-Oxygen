@@ -119,9 +119,14 @@ class WebhookHandler(webapp2.RequestHandler):
 
         message = self.request.get('message')
         chat_id = self.request.get('chat_id')
-
-        if message.startswith('/'):
-            self.TryExecuteExplicitCommand(chat_id, 'Web', message)
+        user = self.request.get('user')
+        send_number = self.request.get('send_number')
+        total_expected = self.request.get('total_expected')
+        from commands import get
+        if send_number > 1:
+            get.Send_Images(bot, chat_id, user, requestText, args, total_expected, send_number)
+        else:
+            get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(' ', 1)

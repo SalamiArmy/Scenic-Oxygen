@@ -127,11 +127,10 @@ def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
                                                   ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
 
-def Send_Images(bot, chat_id, user, requestText, args, number):
+def Send_Images(bot, chat_id, user, requestText, args, number, total_sent = 0):
     data, total_results, results_this_page = Google_Custom_Search(args)
     if 'items' in data and total_results > 0:
         total_offset = 0
-        total_sent = 0
         while int(total_sent) < int(number) and int(total_offset) < int(total_results):
             offset_this_page = 0
             while (int(total_sent) < int(number)) and (int(offset_this_page) < int(results_this_page)):

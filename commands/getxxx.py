@@ -57,7 +57,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         Send_First_Valid_XXX(bot, chat_id, user, requestText, args)
 
 def Send_First_Valid_XXX(bot, chat_id, user, requestText, args):
-    data, total_results, results_this_page = search_for_xxx(args)
+    data, total_results, results_this_page = get.Google_Custom_Search(args)
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         for item in data['items']:
@@ -116,14 +116,7 @@ def Send_XXXs(bot, chat_id, user, requestText, args, number):
         if int(sent_count) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
-                            ' I could only find ' + str(sent_count) + ' out of ' + str(number))
+                                                  ' I could only find ' + str(sent_count) + ' out of ' + str(number))
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', you\'re just too filthy.')
-
-def search_for_xxx(keyConfig, requestText):
-    googurl = 'https://www.googleapis.com/customsearch/v1?&num=10&safe=off&cx=' + keyConfig.get \
-        ('Google', 'GCSE_XSE_ID') + '&key=' + keyConfig.get('Google', 'GCSE_APP_ID') + '&q='
-    realUrl = googurl + requestText.encode('utf-8')
-    data = json.load(urllib.urlopen(realUrl))
-    return data
