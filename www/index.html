@@ -6,7 +6,15 @@
   <body>
     <h1>Hello, world!</h1>
     <p>
-      This is a trivial static HTML file for testing from Google App Engine HTML service.
+		<form action="/webhook">
+		  First name:<br>
+		  <input type="text" name="command" value="getxxx">
+		  <br>
+		  Last name:<br>
+		  <input type="text" name="message" value="">
+		  <br><br>
+		  <input type="submit" value="Submit">
+		</form> 
     </p>
   </body>
 </html>

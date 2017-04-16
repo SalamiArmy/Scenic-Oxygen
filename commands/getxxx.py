@@ -46,18 +46,24 @@ def wasPreviouslySeenXXX(chat_id, xxx_link):
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
+    args, data, results_this_page, total_results = search_gcse_for_xxx(keyConfig, requestText)
+    if totalResults > 1:
+        Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
+    else:
+        Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, results_this_page)
+
+
+def search_gcse_for_xxx(keyConfig, requestText):
     args = {'cx': keyConfig.get('Google', 'GCSE_XSE_ID'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'safe': 'off',
             'q': requestText,
             'start': 1}
-    if totalResults > 1:
-        Send_XXXs(bot, chat_id, user, requestText, args, totalResults)
-    else:
-        Send_First_Valid_XXX(bot, chat_id, user, requestText, args)
-
-def Send_First_Valid_XXX(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
+    return args, data, results_this_page, total_results
+
+
+def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, results_this_page):
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         for item in data['items']:
@@ -93,8 +99,7 @@ def is_valid_xxx(xlink):
            and 'xhamster.com/forums/' not in xlink
 
 
-def Send_XXXs(bot, chat_id, user, requestText, args, number):
-    data, total_results, results_this_page = get.Google_Custom_Search(args)
+def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         total_offset = 0

@@ -69,7 +69,13 @@ def get_add_removed_links(chat_id, new_list, old_list):
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-    data = get.search_google_for_images(keyConfig, message)
+    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'searchType': 'image',
+            'safe': 'off',
+            'q': requestText,
+            'start': 1}
+    data = get.Google_Custom_Search(args)
     if 'items' in data and len(data['items']) >= 5:
         OldValue = getWatchValue(chat_id, requestText)
         imagelinks = data['items'][0]['link']

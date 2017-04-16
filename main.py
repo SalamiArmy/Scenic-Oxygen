@@ -116,17 +116,14 @@ class WebhookHandler(webapp2.RequestHandler):
 
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-
+        command = self.request.get('command')
         message = self.request.get('message')
-        chat_id = self.request.get('chat_id')
-        user = self.request.get('user')
-        send_number = self.request.get('send_number')
-        total_expected = self.request.get('total_expected')
-        from commands import get
-        if send_number > 1:
-            get.Send_Images(bot, chat_id, user, requestText, args, total_expected, send_number)
+        if command == 'getxxx':
+            from commands import getxxx
+            args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, message)
+            return data
         else:
-            get.Send_First_Valid_Image(bot, chat_id, user, requestText, args)
+            return 'unknown command'
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         split = text[1:].lower().split(' ', 1)
@@ -162,12 +159,10 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 split = watch.split(':')
                 if len(split) >= 2:
                     removeGet = split[1].replace('get', '')
-                    print('executing command: ' + removeGet)
                     mod = importlib.import_module('commands.watch' + removeGet)
                     chat_id = split[0]
                     request_text = (split[2] if len(split) == 3 else '')
                     removeCommaEncoding = request_text.replace('%2C', ',')
-                    print('with request text: ' + removeCommaEncoding)
                     mod.run(bot, chat_id, 'Watcher', keyConfig, removeCommaEncoding)
                 else:
                     print('removing from all watches: ' + watch)
