@@ -7,7 +7,7 @@ import commands.getweather as getweather
 
 class TestGetWeather(unittest.TestCase):
     def test_getweather(self):
-        requestText = 'cape town'
+        requestText = 'coffee bay'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
