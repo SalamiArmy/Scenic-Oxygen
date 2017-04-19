@@ -64,7 +64,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         Send_First_Animated_Gif(bot, chat_id, user, requestText, args)
 
 
-def isGifAnimated(imagelink):
+def is_valid_gif(imagelink):
     global gif, image_file, fd
     try:
         fd = urllib.urlopen(imagelink)
@@ -108,7 +108,7 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
                 if not wasPreviouslySeenGif(chat_id, imagelink):
-                    if isGifAnimated(imagelink):
+                    if is_valid_gif(imagelink):
                         thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
                     addPreviouslySeenGifsValue(chat_id, imagelink)
             if thereWasAnError:
@@ -152,7 +152,7 @@ def search_results_walker(args, bot, chat_id, data, requestText, results_this_pa
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
         if not wasPreviouslySeenGif(chat_id, imagelink):
-            if isGifAnimated(imagelink):
+            if is_valid_gif(imagelink):
                 if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
                                                                  requestText + ' ' + str(total_sent + 1)
                                                                          + ' of ' + str(totalResults)):

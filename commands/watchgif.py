@@ -15,7 +15,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             offset_this_page += 1
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
-            if getgif.isGifAnimated(imagelink):
+            if getgif.is_valid_gif(imagelink):
                 if not getgif.wasPreviouslySeenGif(chat_id, imagelink):
                     getgif.addPreviouslySeenGifsValue(chat_id, imagelink)
                     if user != 'Watcher':
