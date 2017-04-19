@@ -12,6 +12,7 @@ from commands import retry_on_telegram_error
 
 CommandName = 'get'
 
+
 class SeenImages(ndb.Model):
     # key name: get:str(chat_id)
     allPreviousSeenImages = ndb.StringProperty(indexed=False, default='')
@@ -24,6 +25,7 @@ def setPreviouslySeenImagesValue(chat_id, NewValue):
     es.allPreviousSeenImages = NewValue.encode('utf-8')
     es.put()
 
+
 def addPreviouslySeenImagesValue(chat_id, NewValue):
     es = SeenImages.get_or_insert(CommandName + ':' + str(chat_id))
     if es.allPreviousSeenImages == '':
@@ -32,11 +34,13 @@ def addPreviouslySeenImagesValue(chat_id, NewValue):
         es.allPreviousSeenImages += ',' + NewValue.encode('utf-8')
     es.put()
 
+
 def getPreviouslySeenImagesValue(chat_id):
     es = SeenImages.get_or_insert(CommandName + ':' + str(chat_id))
     if es:
         return es.allPreviousSeenImages.encode('utf-8')
     return ''
+
 
 def wasPreviouslySeenImage(chat_id, gif_link):
     allPreviousLinks = getPreviouslySeenImagesValue(chat_id)
@@ -46,6 +50,7 @@ def wasPreviouslySeenImage(chat_id, gif_link):
             allPreviousLinks == gif_link:
         return True
     return False
+
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
@@ -61,26 +66,6 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         Send_First_Valid_Image(bot, chat_id, user, requestText, args)
 
 
-def ImageIsSmallEnough(imagelink):
-    global image_file, fd
-    try:
-        fd = urllib.urlopen(imagelink)
-        image_file = io.BytesIO(fd.read())
-    except IOError:
-        try:
-            if image_file:
-                image_file.close()
-            if fd:
-                fd.close()
-        except UnboundLocalError:
-            print("image_file or fd local not defined")
-        except NameError:
-            print("image_file or fd global not defined")
-        return False
-    else:
-        return int(sys.getsizeof(image_file)) < 10000000
-
-
 def Google_Custom_Search(args):
     googurl = 'https://www.googleapis.com/customsearch/v1'
     realUrl = googurl + '?' + urllib.urlencode(args)
@@ -92,6 +77,7 @@ def Google_Custom_Search(args):
     if 'queries' in data and 'request' in data['queries'] and len(data['queries']['request']) > 0 and 'count' in data['queries']['request'][0]:
         results_this_page = data['queries']['request'][0]['count']
     return data, total_results, results_this_page
+
 
 def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = Google_Custom_Search(args)
@@ -106,7 +92,7 @@ def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
                 total_offset += 1
                 if '?' in imagelink:
                     imagelink = imagelink[:imagelink.index('?')]
-                if not imagelink.startswith('x-raw-image:///') and imagelink != '' and not wasPreviouslySeenImage(chat_id, imagelink) and ImageIsSmallEnough(imagelink):
+                if is_valid_image(imagelink) and not wasPreviouslySeenImage(chat_id, imagelink):
                     thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
                 addPreviouslySeenImagesValue(chat_id, imagelink)
             if thereWasAnError:
@@ -126,6 +112,35 @@ def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
+
+
+def is_valid_image(imagelink):
+    return imagelink != '' and \
+           not imagelink.startswith('x-raw-image:///') and \
+           ImageIsSmallEnough(imagelink)
+
+
+def ImageIsSmallEnough(imagelink):
+    global image_file, fd
+    try:
+        fd = urllib.urlopen(imagelink)
+        image_file = io.BytesIO(fd.read())
+    except IOError:
+        pass
+    else:
+        return int(sys.getsizeof(image_file)) < 10000000
+    finally:
+        try:
+            if image_file:
+                image_file.close()
+            if fd:
+                fd.close()
+        except UnboundLocalError:
+            print("image_file or fd local not defined")
+        except NameError:
+            print("image_file or fd global not defined")
+        return False
+
 
 def Send_Images(bot, chat_id, user, requestText, args, number, total_sent = 0):
     data, total_results, results_this_page = Google_Custom_Search(args)

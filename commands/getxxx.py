@@ -1,6 +1,4 @@
 # coding=utf-8
-import json
-import urllib
 
 from google.appengine.ext import ndb
 
@@ -80,23 +78,23 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
 
 
 def is_valid_xxx(xlink):
-    return 'xvideos.com/tags/' not in xlink \
-           and 'xvideos.com/favorite/' not in xlink \
-           and 'xvideos.com/?k=' not in xlink \
-           and 'xvideos.com/tags' not in xlink \
-           and 'pornhub.com/users/' not in xlink \
-           and 'pornhub.com/video/search?search=' not in xlink \
-           and 'pornhub.com/insights/' not in xlink \
-           and 'pornhub.com/devices/' not in xlink \
-           and 'pornhub.com/gay/' not in xlink \
-           and 'pornhub.com/pornstar/' not in xlink \
-           and 'xvideos.com/profiles/' not in xlink \
-           and 'xnxx.com/?' not in xlink \
-           and 'xnxx.com/tags/' not in xlink \
-           and 'xhamster.com/stories_search' not in xlink \
-           and 'redtube.com/pornstar/' not in xlink \
-           and 'search?search=' not in xlink \
-           and 'xhamster.com/forums/' not in xlink
+    return 'xvideos.com/tags/' not in xlink and \
+           'xvideos.com/favorite/' not in xlink and \
+           'xvideos.com/?k=' not in xlink and \
+           'xvideos.com/tags' not in xlink and \
+           'pornhub.com/users/' not in xlink and \
+           'pornhub.com/video/search?search=' not in xlink and \
+           'pornhub.com/insights/' not in xlink and \
+           'pornhub.com/devices/' not in xlink and \
+           'pornhub.com/gay/' not in xlink and \
+           'pornhub.com/pornstar/' not in xlink and \
+           'xvideos.com/profiles/' not in xlink and \
+           'xnxx.com/?' not in xlink and \
+           'xnxx.com/tags/' not in xlink and \
+           'xhamster.com/stories_search' not in xlink and \
+           'redtube.com/pornstar/' not in xlink and \
+           'search?search=' not in xlink and \
+           'xhamster.com/forums/' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):

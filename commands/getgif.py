@@ -71,6 +71,15 @@ def isGifAnimated(imagelink):
         image_file = io.BytesIO(fd.read())
         gif = Image.open(image_file)
     except IOError:
+        pass
+    else:
+        try:
+            gif.seek(1)
+        except EOFError:
+            pass
+        else:
+            return int(sys.getsizeof(image_file)) < 10000000
+    finally:
         try:
             if gif:
                 gif.fp.close()
@@ -83,24 +92,6 @@ def isGifAnimated(imagelink):
         except NameError:
             print("gif, image_file or fd global not defined")
         return False
-    else:
-        try:
-            gif.seek(1)
-        except EOFError:
-            try:
-                if gif:
-                    gif.fp.close()
-                if image_file:
-                    image_file.close()
-                if fd:
-                    fd.close()
-            except UnboundLocalError:
-                print("gif, image_file or fd local not defined")
-            except NameError:
-                print("gif, image_file or fd global not defined")
-            return False
-        else:
-            return int(sys.getsizeof(image_file)) < 10000000
 
 
 def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
