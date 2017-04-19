@@ -135,9 +135,8 @@ def search_results_walker(args, bot, chat_id, data, requestText, results_this_pa
             imagelink = imagelink[:imagelink.index('?')]
         if not wasPreviouslySeenGif(chat_id, imagelink):
             if is_valid_gif(imagelink):
-                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
-                                                                 requestText + ' ' + str(total_sent + 1)
-                                                                         + ' of ' + str(number)):
+                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText +
+                        (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
                     total_sent += 1
                     print('sent gif number ' + str(total_sent))
             addPreviouslySeenGifsValue(chat_id, imagelink)
