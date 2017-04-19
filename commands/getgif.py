@@ -71,7 +71,7 @@ def isGifAnimated(imagelink):
         image_file = io.BytesIO(fd.read())
         gif = Image.open(image_file)
     except IOError:
-        pass
+        return False
     else:
         try:
             gif.seek(1)
@@ -91,7 +91,6 @@ def isGifAnimated(imagelink):
             print("gif, image_file or fd local not defined")
         except NameError:
             print("gif, image_file or fd global not defined")
-        return False
 
 
 def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
@@ -130,26 +129,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     total_results = total_results if total_results < 1000 else 1000
     if 'items' in data and total_results > 0:
-        total_offset = 0
-        total_sent = 0
-        while int(total_sent) < int(totalResults):
-            offset_this_page = 0
-            while int(total_sent) < int(totalResults) and int(offset_this_page) < int(results_this_page):
-                imagelink = data['items'][offset_this_page]['link']
-                offset_this_page += 1
-                total_offset += 1
-                if '?' in imagelink:
-                    imagelink = imagelink[:imagelink.index('?')]
-                if not wasPreviouslySeenGif(chat_id, imagelink):
-                    if isGifAnimated(imagelink):
-                        if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText + ' ' + str(total_sent+1)
-                                                              + ' of ' + str(totalResults)):
-                            total_sent += 1
-                            print('sent gif number ' + str(total_sent))
-                    addPreviouslySeenGifsValue(chat_id, imagelink)
-            if int(total_sent) < int(totalResults):
-                args['start'] = total_offset+1
-                data, total_results, results_this_page = get.Google_Custom_Search(args)
+        total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, 0, 0)
         if int(total_sent) < int(totalResults):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any more gifs for ' +
@@ -161,4 +141,29 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid I can\'t find a gif for ' +
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+
+
+def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, total_offset, total_sent):
+    offset_this_page = 0
+    while int(total_sent) < int(totalResults) and int(offset_this_page) < int(results_this_page):
+        imagelink = data['items'][offset_this_page]['link']
+        offset_this_page += 1
+        total_offset += 1
+        if '?' in imagelink:
+            imagelink = imagelink[:imagelink.index('?')]
+        if not wasPreviouslySeenGif(chat_id, imagelink):
+            if isGifAnimated(imagelink):
+                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
+                                                                 requestText + ' ' + str(total_sent + 1)
+                                                                         + ' of ' + str(totalResults)):
+                    total_sent += 1
+                    print('sent gif number ' + str(total_sent))
+            addPreviouslySeenGifsValue(chat_id, imagelink)
+    if int(total_sent) < int(totalResults):
+        args['start'] = total_offset + 1
+        data, total_results, results_this_page = get.Google_Custom_Search(args)
+        search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, total_offset,
+                              total_sent)
+    else:
+        return total_sent
 
