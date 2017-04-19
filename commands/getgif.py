@@ -97,7 +97,7 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and total_results > 0:
         total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, 1, 0, 0)
-        if total_sent >= 1:
+        if total_sent < 1:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
                                                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
