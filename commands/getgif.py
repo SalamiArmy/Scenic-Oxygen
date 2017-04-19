@@ -95,26 +95,9 @@ def is_valid_gif(imagelink):
 
 def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
-    total_results = total_results if total_results < 1000 else 1000
     if 'items' in data and total_results > 0:
-        total_offset = 0
-        thereWasAnError = True
-        while thereWasAnError and int(total_offset) < int(total_results):
-            offset_this_page = 0
-            while thereWasAnError and int(offset_this_page) < int(results_this_page):
-                imagelink = data['items'][offset_this_page]['link']
-                offset_this_page += 1
-                total_offset += 1
-                if '?' in imagelink:
-                    imagelink = imagelink[:imagelink.index('?')]
-                if not wasPreviouslySeenGif(chat_id, imagelink):
-                    if is_valid_gif(imagelink):
-                        thereWasAnError = not retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText)
-                    addPreviouslySeenGifsValue(chat_id, imagelink)
-            if thereWasAnError:
-                args['start'] = total_offset+1
-                data, total_results, results_this_page = get.Google_Custom_Search(args)
-        if thereWasAnError or not total_offset < total_results:
+        total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, 1, 0, 0)
+        if total_sent >= 1:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find a gif for ' +
                                                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
@@ -127,7 +110,6 @@ def Send_First_Animated_Gif(bot, chat_id, user, requestText, args):
 
 def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
-    total_results = total_results if total_results < 1000 else 1000
     if 'items' in data and total_results > 0:
         total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, 0, 0)
         if int(total_sent) < int(totalResults):
@@ -143,9 +125,9 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
 
 
-def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, total_offset, total_sent):
+def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number, total_offset, total_sent):
     offset_this_page = 0
-    while int(total_sent) < int(totalResults) and int(offset_this_page) < int(results_this_page):
+    while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
         imagelink = data['items'][offset_this_page]['link']
         offset_this_page += 1
         total_offset += 1
@@ -155,14 +137,14 @@ def search_results_walker(args, bot, chat_id, data, requestText, results_this_pa
             if is_valid_gif(imagelink):
                 if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink,
                                                                  requestText + ' ' + str(total_sent + 1)
-                                                                         + ' of ' + str(totalResults)):
+                                                                         + ' of ' + str(number)):
                     total_sent += 1
                     print('sent gif number ' + str(total_sent))
             addPreviouslySeenGifsValue(chat_id, imagelink)
-    if int(total_sent) < int(totalResults):
+    if int(total_sent) < int(number):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = get.Google_Custom_Search(args)
-        search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, total_offset,
+        search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number, total_offset,
                               total_sent)
     else:
         return total_sent

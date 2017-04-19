@@ -82,23 +82,9 @@ def Google_Custom_Search(args):
 def Send_First_Valid_Image(bot, chat_id, user, requestText, args):
     data, total_results, results_this_page = Google_Custom_Search(args)
     if 'items' in data and total_results > 0:
-        total_offset = 0
-        thereWasAnError = True
-        while thereWasAnError and int(total_offset) < int(total_results):
-            offset_this_page = 0
-            while thereWasAnError and int(offset_this_page) < int(results_this_page):
-                imagelink = data['items'][offset_this_page]['link']
-                offset_this_page += 1
-                total_offset += 1
-                if '?' in imagelink:
-                    imagelink = imagelink[:imagelink.index('?')]
-                if is_valid_image(imagelink) and not wasPreviouslySeenImage(chat_id, imagelink):
-                    thereWasAnError = not retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
-                addPreviouslySeenImagesValue(chat_id, imagelink)
-            if thereWasAnError:
-                args['start'] = total_offset+1
-                data, total_results, results_this_page = Google_Custom_Search(args)
-        if (thereWasAnError or not total_offset < total_results):
+        total_offset, total_results, total_sent = search_result_walker(args, bot, chat_id, data, 1, requestText,
+                                                                       results_this_page, 0, total_results, 0)
+        if total_offset >= total_results:
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
@@ -180,7 +166,7 @@ def search_result_walker(args, bot, chat_id, data, number, requestText, results_
                     total_sent += 1
                     print('sent image number ' + str(total_sent))
             addPreviouslySeenImagesValue(chat_id, imagelink)
-    if total_sent < number and int(total_offset) < int(total_results):
+    if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
         search_result_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_offset, total_results, total_sent)
