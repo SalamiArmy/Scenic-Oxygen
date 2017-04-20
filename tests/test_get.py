@@ -23,7 +23,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_get(self):
-        requestText = 'catalina wine mixer'
+        requestText = 'catalina wine dicker'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -33,4 +33,4 @@ class TestGet(unittest.TestCase):
         #for bot group:
         #chatId = -130436192
 
-        get.run(bot, chatId, 'Admin', keyConfig, requestText, 2)
+        get.run(bot, chatId, 'Admin', keyConfig, requestText, 5)
