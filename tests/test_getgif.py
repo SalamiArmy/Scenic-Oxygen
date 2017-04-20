@@ -33,4 +33,4 @@ class TestGet(unittest.TestCase):
         chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
 
         getgif.setPreviouslySeenGifsValue(chatId, '')
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 5)
+        getgif.run(bot, chatId, 'Admin', keyConfig, requestText)
