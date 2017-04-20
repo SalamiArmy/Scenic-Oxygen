@@ -126,7 +126,6 @@ def search_results_walker(args, bot, chat_id, data, requestText, results_this_pa
                         (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
                     total_sent += 1
                     print('sent gif number ' + str(total_sent))
-        else:
             addPreviouslySeenGifsValue(chat_id, imagelink)
     if int(total_sent) < int(number):
         args['start'] = total_offset + 1
