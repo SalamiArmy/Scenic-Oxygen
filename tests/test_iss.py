@@ -12,7 +12,7 @@ class TestISS(unittest.TestCase):
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
+        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
         iss.run(bot, chatId, 'Admin', keyConfig, requestText)
 
@@ -20,6 +20,6 @@ class TestISS(unittest.TestCase):
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
+        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
         iss.run(bot, chatId, 'Admin', keyConfig, '')

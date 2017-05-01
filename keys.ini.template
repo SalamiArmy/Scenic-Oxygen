@@ -2,7 +2,8 @@
 TELE_BOT_ID: {Your Telegram Bot ID here}
 
 [BotAdministration]
-ADMIN_GROUP_CHAT_ID: {ID of Telegram Group to Send and Receive Admin Messages}
+TESTING_GROUP_CHAT_ID: {ID of Telegram Group to Test Sending and Receiving Messages}
+TESTING_PRIVATE_CHAT_ID: {ID of Telegram Private Chate to Test Sending and Receiving Messages}
 Timezone: {Timezone of bot host eg: +02}
 
 [Google]

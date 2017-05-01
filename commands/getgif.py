@@ -89,7 +89,7 @@ def is_valid_gif(imagelink):
         except NameError:
             print("gif, image_file or fd global not defined")
 
-def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
+def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults=1):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and total_results > 0:
         total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults)
@@ -111,7 +111,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults):
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
 
 
-def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number, total_offset=0,
+def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number=1, total_offset=0,
                           total_sent=0):
     offset_this_page = 0
     while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):

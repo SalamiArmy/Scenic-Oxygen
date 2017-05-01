@@ -139,7 +139,7 @@ class WebhookHandler(webapp2.RequestHandler):
         except:
             print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
             try:
-                bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID'),
+                bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID'),
                                 text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
                                      '\'s request ' + (('\'' + split[1] + '\'') if len(split) > 1 else '') +
                                      '. Command ' + split[0] + ' threw:\n' +

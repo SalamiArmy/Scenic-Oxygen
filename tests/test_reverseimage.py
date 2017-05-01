@@ -14,7 +14,7 @@ class TestReverseImage(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
 
         #for admin group
-        chatId = keyConfig.get('BotAdministration', 'ADMIN_GROUP_CHAT_ID')
+        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
         #for bot group:
         #chatId = -130436192
