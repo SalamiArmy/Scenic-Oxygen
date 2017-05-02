@@ -91,8 +91,9 @@ def is_valid_gif(imagelink):
 
 def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults=1):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
-    if 'items' in data and total_results > 0:
-        total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults)
+    if 'items' in data and int(total_results) > 0:
+        total_sent = 0
+        total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults, total_sent)
         if int(total_sent) < int(totalResults):
             if int(totalResults) > 1:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
@@ -111,8 +112,8 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults=1):
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
 
 
-def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number=1, total_offset=0,
-                          total_sent=0):
+def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number=1,
+                          total_sent=0, total_offset=0):
     offset_this_page = 0
     while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
         imagelink = data['items'][offset_this_page]['link']
@@ -130,8 +131,8 @@ def search_results_walker(args, bot, chat_id, data, requestText, results_this_pa
     if int(total_sent) < int(number):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = get.Google_Custom_Search(args)
-        search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number, total_offset,
-                              total_sent)
+        search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number,
+                              total_sent, total_offset)
     else:
         return total_sent
 

@@ -18,7 +18,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
             bot.sendDocument(chat_id=chat_id,
                              document=imagelink.encode('utf-8'),
-                             filename=requestText.encode('utf-8'),
+                             filename=requestText.replace('.','').encode('utf-8'),
                              caption=(caption_text if not IsUrlTooLongForCaption else '').encode('utf-8'))
             if (IsUrlTooLongForCaption):
                 print imagelink
