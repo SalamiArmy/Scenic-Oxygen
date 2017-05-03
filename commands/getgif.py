@@ -92,7 +92,7 @@ def is_valid_gif(imagelink):
 def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults=1):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and int(total_results) > 0:
-        total_sent = search_results_walker(args, bot, chat_id, data, requestText, results_this_page, totalResults)
+        total_sent = search_results_walker(args, bot, chat_id, data, totalResults, requestText, results_this_page, total_results)
         if int(total_sent) < int(totalResults):
             if int(totalResults) > 1:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
@@ -111,7 +111,7 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults=1):
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
 
 
-def search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number=1,
+def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results,
                           total_sent=0, total_offset=0):
     offset_this_page = 0
     while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
@@ -127,10 +127,10 @@ def search_results_walker(args, bot, chat_id, data, requestText, results_this_pa
                     total_sent += 1
                     print('sent gif number ' + str(total_sent))
             addPreviouslySeenGifsValue(chat_id, imagelink)
-    if int(total_sent) < int(number):
+    if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = get.Google_Custom_Search(args)
-        return search_results_walker(args, bot, chat_id, data, requestText, results_this_page, number,
+        return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results,
                                      total_sent, total_offset)
     return int(total_sent)
 

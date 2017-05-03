@@ -149,7 +149,7 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                     total_sent += 1
                     print('sent image number ' + str(total_sent))
             addPreviouslySeenImagesValue(chat_id, imagelink)
-    if int(total_sent) < int(number) and int(total_offset) < int(total_results):
+    if int(total_sent) < int(number) and int(total_offset) < int(total_rzesults):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_offset,
