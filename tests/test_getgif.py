@@ -25,7 +25,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getgif(self):
-        requestText = 'soft cuplink decouple'
+        requestText = 'thank you jesus'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -33,4 +33,4 @@ class TestGet(unittest.TestCase):
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
         getgif.setPreviouslySeenGifsValue(chatId, '')
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 10)
+        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
