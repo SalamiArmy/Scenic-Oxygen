@@ -67,7 +67,7 @@ def is_valid_gif(imagelink):
         fd = urllib.urlopen(imagelink)
         image_file = io.BytesIO(fd.read())
         gif = Image.open(image_file)
-    except IOError:
+    except:
         return False
     else:
         try:
