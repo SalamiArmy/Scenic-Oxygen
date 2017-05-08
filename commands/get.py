@@ -143,12 +143,12 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
         if not wasPreviouslySeenImage(chat_id, imagelink):
+            addPreviouslySeenImagesValue(chat_id, imagelink)
             if is_valid_image(imagelink):
                 if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
                         (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
                     total_sent += 1
                     print('sent image number ' + str(total_sent))
-            addPreviouslySeenImagesValue(chat_id, imagelink)
     if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
