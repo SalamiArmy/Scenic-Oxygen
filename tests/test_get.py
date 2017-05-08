@@ -1,3 +1,4 @@
+# coding=utf-8
 import ConfigParser
 import unittest
 import telegram
@@ -23,7 +24,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_get(self):
-        requestText = 'catalina wine dicker'
+        requestText = 'גם זה יעבור'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
