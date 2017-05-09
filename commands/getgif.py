@@ -51,7 +51,7 @@ def wasPreviouslySeenGif(chat_id, gif_link):
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
+    args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': "image",
             'safe': "off",

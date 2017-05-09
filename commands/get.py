@@ -54,7 +54,7 @@ def wasPreviouslySeenImage(chat_id, gif_link):
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-    args = {'cx': keyConfig.get('Google', 'GCSE_SE_ID'),
+    args = {'cx': keyConfig.get('Google', 'GCSE_IMAGE_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': 'image',
             'safe': 'off',
@@ -107,9 +107,8 @@ def ImageIsSmallEnough(imagelink):
 def Send_Images(bot, chat_id, user, requestText, args, number):
     data, total_results, results_this_page = Google_Custom_Search(args)
     if 'items' in data and total_results > 0:
-        total_offset, total_results, total_sent = search_results_walker(args, bot, chat_id, data, number,
-                                                                        requestText, results_this_page,
-                                                                        total_results)
+        total_offset, total_results, total_sent = search_results_walker(args, bot, chat_id, data, number, requestText,
+                                                                        results_this_page, total_results)
         if int(total_sent) < int(number):
             if int(number) > 1:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
@@ -133,8 +132,8 @@ def Send_Images(bot, chat_id, user, requestText, args, number):
                                                   string.capwords(requestText.encode('utf-8')))
 
 
-def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, total_offset=0,
-                          total_sent=0):
+def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results,
+                          total_offset=0, total_sent=0):
     offset_this_page = 0
     while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
         imagelink = data['items'][offset_this_page]['link']
