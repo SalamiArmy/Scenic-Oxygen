@@ -13,7 +13,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     if len(data['data']['translations']) >= 1:
         translation = data['data']['translations'][0]['translatedText']
         bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + \
-                                              "\nIn German: " + translation)
+                                              "In German: " + translation)
         return True
     else:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
