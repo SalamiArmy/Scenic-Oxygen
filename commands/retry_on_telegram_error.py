@@ -1,7 +1,6 @@
+# coding=utf-8
 import sys
 from time import sleep
-
-import threading
 
 
 def IsTooLongForCaption(text):
@@ -13,7 +12,7 @@ def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
-            caption_text = requestText + ': ' + imagelink if not IsTooLongForCaption(requestText + ':' + imagelink) \
+            caption_text = requestText + ': ' + imagelink.encode('utf-8') if not IsTooLongForCaption(requestText + ':' + imagelink) \
                 else imagelink
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
             bot.sendDocument(chat_id=chat_id,
@@ -38,7 +37,7 @@ def SendPhotoWithRetry(bot, chat_id, imagelink, requestText):
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
-            caption_text = requestText + ': ' + imagelink if not IsTooLongForCaption(requestText + ':' + imagelink) \
+            caption_text = requestText + ': ' + imagelink.encode('utf-8') if not IsTooLongForCaption(requestText + ':' + imagelink) \
                 else imagelink
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
             bot.sendPhoto(chat_id=chat_id,

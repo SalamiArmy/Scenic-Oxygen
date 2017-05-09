@@ -136,6 +136,9 @@ class WebhookHandler(webapp2.RequestHandler):
                 commandName = re.findall('^[a-z]+', commandName)[0]
             mod = importlib.import_module('commands.' + commandName)
             mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
+        except ImportError:
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
+                                                  ', I\'m afraid I do not recognize the ' + commandName + ' command.')
         except:
             print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
             try:

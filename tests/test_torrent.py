@@ -7,7 +7,7 @@ import commands.torrent as torrent
 
 class TestTorrent(unittest.TestCase):
     def test_torrent(self):
-        requestText = 'trippy swirl'
+        requestText = 'athf'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
