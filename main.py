@@ -106,13 +106,14 @@ class WebhookHandler(webapp2.RequestHandler):
                 user += '(editted)'
             chat = message['chat']
             chat_id = chat['id']
+            chat_type = chat['type']
 
             if not text:
                 logging.info('no text')
                 return
 
             if text.startswith('/'):
-                self.TryExecuteExplicitCommand(chat_id, user, text)
+                self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
 
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
@@ -125,7 +126,7 @@ class WebhookHandler(webapp2.RequestHandler):
         else:
             return 'unknown command'
 
-    def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
+    def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
         try:
             commandName = split[0].lower().replace(bot.name.lower(), '')
@@ -137,8 +138,9 @@ class WebhookHandler(webapp2.RequestHandler):
             mod = importlib.import_module('commands.' + commandName)
             mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
         except ImportError:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
-                                                  ', I\'m afraid I do not recognize the ' + commandName + ' command.')
+            if chat_type == 'private':
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
+                                                      ', I\'m afraid I do not recognize the ' + commandName + ' command.')
         except:
             print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
             try:
