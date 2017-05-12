@@ -173,24 +173,6 @@ class TriggerAllWatches(webapp2.RequestHandler):
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
 
-from commands import watchmc
-class TriggerMCWatch(webapp2.RequestHandler):
-    def get(self):
-        AllWatches = watchmc.getAllWatches()
-        watches_split = AllWatches.split(',')
-        if len(watches_split) >= 1:
-            for chat_id in watches_split:
-                watchmc.run(bot, chat_id, 'Watcher', keyConfig)
-
-from commands import watchcric
-class TriggerCricWatch(webapp2.RequestHandler):
-    def get(self):
-        AllWatches = watchcric.getAllWatches()
-        watches_split = AllWatches.split(',')
-        if len(watches_split) >= 1:
-            for chat_id in watches_split:
-                watchcric.run(bot, keyConfig, chat_id, 'Watcher')
-
 class ClearAllWatches(webapp2.RequestHandler):
     def get(self):
         setAllWatchesValue('')
@@ -201,7 +183,5 @@ app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
-    ('/watchmc', TriggerMCWatch),
-    ('/watchcric', TriggerCricWatch),
     ('/clearallwatches', ClearAllWatches)
 ], debug=True)
