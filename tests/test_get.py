@@ -24,7 +24,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_get(self):
-        requestText = 'גם זה יעבור'
+        requestText = 'schlackenblöcken'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
