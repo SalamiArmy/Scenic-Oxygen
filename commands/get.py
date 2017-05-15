@@ -107,7 +107,7 @@ def ImageIsSmallEnough(imagelink):
 def Send_Images(bot, chat_id, user, requestText, args, number):
     data, total_results, results_this_page = Google_Custom_Search(args)
     if 'items' in data and total_results > 0:
-        total_offset, total_results, total_sent = search_results_walker(args, bot, chat_id, data, number, requestText,
+        total_offset, total_results, total_sent = search_results_walker(args, bot, chat_id, data, number, user + ', ' + requestText,
                                                                         results_this_page, total_results)
         if int(total_sent) < int(number):
             if int(number) > 1:
