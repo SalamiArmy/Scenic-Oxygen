@@ -7,20 +7,22 @@ def IsTooLongForCaption(text):
     return len(text) > 200
 
 
-def SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
+def SendDocumentWithRetry(bot, chat_id, imagelink, caption, captionimagelink=''):
+    if captionimagelink == '':
+        captionimagelink = imagelink
     numberOfRetries = 5
     sendException = True
     while sendException and numberOfRetries > 0:
         try:
-            caption_text = requestText.encode('utf-8') + ': ' + imagelink.encode('utf-8') if not IsTooLongForCaption(requestText + ':' + imagelink) \
-                else imagelink
+            caption_text = caption.encode('utf-8') + ': ' + captionimagelink.encode('utf-8') if not IsTooLongForCaption(caption + ':' + captionimagelink) \
+                else captionimagelink
             IsUrlTooLongForCaption = IsTooLongForCaption(caption_text)
             bot.sendDocument(chat_id=chat_id,
                              document=imagelink.encode('utf-8'),
-                             filename=requestText.replace('.','').encode('utf-8'),
+                             filename=caption.replace('.', '').encode('utf-8'),
                              caption=(caption_text if not IsUrlTooLongForCaption else '').encode('utf-8'))
-            if (IsUrlTooLongForCaption):
-                print imagelink
+            if IsUrlTooLongForCaption:
+                print('is too long for caption ' + captionimagelink)
             sendException = False
         except:
             sendException = True
