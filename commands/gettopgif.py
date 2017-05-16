@@ -58,7 +58,7 @@ def removeFromAllWatches(watch):
                        .replace(',' + watch, '')
                        .replace(watch + ',', ''))
 
-def run(bot, chat_id, user, keyConfig, message, totalResults=1):
+def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if not AllWatchesContains(chat_id):
         addToAllWatches(chat_id)
     topgifs = 'https://www.reddit.com/r/gifs/top.json'
