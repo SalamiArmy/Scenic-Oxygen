@@ -3,6 +3,7 @@ import json
 import urllib2
 
 from google.appengine.ext import ndb
+from google.appengine.api import urlfetch
 from commands import retry_on_telegram_error
 from commands import getgif
 
@@ -61,8 +62,8 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     if not AllWatchesContains(chat_id):
         addToAllWatches(chat_id)
     topgifs = 'https://www.reddit.com/r/gifs/top.json'
-    topgifsUrlRequest = urllib2.Request(topgifs, headers={'User-Agent': "Magic Browser"})
-    data = json.load(urllib2.urlopen(topgifsUrlRequest))
+    topgifsUrlRequest = urlfetch.fetch(url=topgifs, headers={'User-Agent': "Magic Browser"})
+    data = json.loads(topgifsUrlRequest.content)
     top_gifs_walker(bot, chat_id, data)
 
 def top_gifs_walker(bot, chat_id, data):
