@@ -177,11 +177,21 @@ class ClearAllWatches(webapp2.RequestHandler):
     def get(self):
         setAllWatchesValue('')
 
+from commands import gettopgif
+class TriggerMCWatch(webapp2.RequestHandler):
+    def get(self):
+        AllWatches = gettopgif.getAllWatches()
+        watches_split = AllWatches.split(',')
+        if len(watches_split) >= 1:
+            for chat_id in watches_split:
+                gettopgif.run(bot, chat_id, 'Watcher', keyConfig)
+
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
     ('/updates', GetUpdatesHandler),
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
-    ('/clearallwatches', ClearAllWatches)
+    ('/clearallwatches', ClearAllWatches),
+    ('/gettopgif', GetTopGifs)
 ], debug=True)

@@ -2,11 +2,64 @@
 import json
 import urllib2
 
+from google.appengine.ext import ndb
 from commands import retry_on_telegram_error
 from commands import getgif
 
+watchedCommandName = 'gettopgif'
+
+
+class WatchValue(ndb.Model):
+    # key name: str(chat_id)
+    currentValue = ndb.StringProperty(indexed=False, default='')
+    all_chat_ids = ndb.StringProperty(indexed=False, default='')
+
+
+# ================================
+
+def setWatchValue(chat_id, NewValue):
+    es = WatchValue.get_or_insert(watchedCommandName + ':' + str(chat_id))
+    es.currentValue = NewValue
+    es.put()
+
+
+def getWatchValue(chat_id):
+    es = WatchValue.get_by_id(watchedCommandName + ':' + str(chat_id))
+    if es:
+        return es.currentValue
+    return ''
+
+def addToAllWatches(chat_id):
+    es = WatchValue.get_or_insert(watchedCommandName + ':' + 'AllWatchers')
+    es.all_chat_ids += ',' + str(chat_id)
+    es.put()
+
+def AllWatchesContains(chat_id):
+    es = WatchValue.get_by_id(watchedCommandName + ':' + 'AllWatchers')
+    if es:
+        return (',' + str(chat_id)) in str(es.all_chat_ids) or \
+               (str(chat_id) + ',') in str(es.all_chat_ids)
+    return False
+
+def setAllWatchesValue(NewValue):
+    es = WatchValue.get_or_insert(watchedCommandName + ':' + 'AllWatchers')
+    es.all_chat_ids = NewValue
+    es.put()
+
+def getAllWatches():
+    es = WatchValue.get_by_id(watchedCommandName + ':' + 'AllWatchers')
+    if es:
+        return es.all_chat_ids
+    return ''
+
+def removeFromAllWatches(watch):
+    setAllWatchesValue(getAllWatches().replace(',' + watch + ',', ',')
+                       .replace(',' + watch, '')
+                       .replace(watch + ',', ''))
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
+    if not AllWatchesContains(chat_id):
+        addToAllWatches(chat_id)
     topgifs = 'https://www.reddit.com/r/gifs/top.json'
     topgifsUrlRequest = urllib2.Request(topgifs, headers={'User-Agent': "Magic Browser"})
     data = json.load(urllib2.urlopen(topgifsUrlRequest))
