@@ -92,7 +92,7 @@ def is_valid_gif(imagelink):
 def Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults=1):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and int(total_results) > 0:
-        total_sent = search_results_walker(args, bot, chat_id, data, totalResults, requestText, results_this_page, total_results)
+        total_sent = search_results_walker(args, bot, chat_id, data, totalResults, user + ', ' + requestText, results_this_page, total_results)
         if int(total_sent) < int(totalResults):
             if int(totalResults) > 1:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
