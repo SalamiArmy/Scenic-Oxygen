@@ -71,13 +71,14 @@ def top_gifs_walker(bot, chat_id, data):
     while int(offset) < 25:
         gif_url = data['data']['children'][offset]['data']['url']
         imagelink = gif_url[:-1] if gif_url.endswith('.gifv') else gif_url
-        caption = data['data']['children'][offset]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')
+        requestText = data['data']['children'][offset]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')# + ': https://www.reddit.com' + \
+                      #data['data']['children'][offset]['data']['permalink']
         offset += 1
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
         if not getgif.wasPreviouslySeenGif(chat_id, imagelink):
             getgif.addPreviouslySeenGifsValue(chat_id, imagelink)
             if getgif.is_valid_gif(imagelink):
-                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, caption, ': https://www.reddit.com' + data['data']['children'][offset]['data']['permalink']):
+                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                     break
 
