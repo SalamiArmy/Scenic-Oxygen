@@ -61,7 +61,7 @@ def removeFromAllWatches(watch):
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if not AllWatchesContains(chat_id):
         addToAllWatches(chat_id)
-    topgifs = 'https://www.reddit.com/r/gifs/top.json'
+    topgifs = 'https://www.reddit.com/r/gifs/top.json?t=all'
     topgifsUrlRequest = urlfetch.fetch(url=topgifs, headers={'User-Agent': 'App Engine:Scenic-Oxygen:ImageBoet:v1.0 (by /u/SalamiArmy)'})
     data = json.loads(topgifsUrlRequest.content)
     top_gifs_walker(bot, chat_id, data)
