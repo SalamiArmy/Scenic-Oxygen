@@ -70,7 +70,7 @@ def top_gifs_walker(bot, chat_id, data):
     while int(offset) < 25:
         gif_url = data['data']['children'][offset]['data']['url']
         imagelink = gif_url[:-1] if gif_url.endswith('.gifv') else gif_url
-        requestText = data['data']['children'][offset]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')# + ': https://www.reddit.com' + \
+        requestText = data['data']['children'][offset]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')# + '\n https://www.reddit.com' + \
                       #data['data']['children'][offset]['data']['permalink']
         offset += 1
         if '?' in imagelink:
