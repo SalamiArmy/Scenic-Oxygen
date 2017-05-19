@@ -63,14 +63,16 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     topgifs = 'https://www.reddit.com/r/gifs/top.json?t=all'
     topgifsUrlRequest = urlfetch.fetch(url=topgifs, headers={'User-Agent': 'App Engine:Scenic-Oxygen:ImageBoet:v1.0 (by /u/SalamiArmy)'})
     data = json.loads(topgifsUrlRequest.content)
-    top_gifs_walker(bot, chat_id, data)
+    if not top_gifs_walker(bot, chat_id, data) and user != 'Watcher':
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                              ', I\'m afraid you\'ve seen all the best gifs I can find.')
 
 def top_gifs_walker(bot, chat_id, data):
     offset = 0
     while int(offset) < 25:
         gif_url = data['data']['children'][offset]['data']['url']
         imagelink = gif_url[:-1] if gif_url.endswith('.gifv') else gif_url
-        requestText = data['data']['children'][offset]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')# + '\n https://www.reddit.com' + \
+        caption = data['data']['children'][offset]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')# + '\n https://www.reddit.com' + \
                       #data['data']['children'][offset]['data']['permalink']
         offset += 1
         if '?' in imagelink:
@@ -78,8 +80,9 @@ def top_gifs_walker(bot, chat_id, data):
         if not getgif.wasPreviouslySeenGif(chat_id, imagelink):
             getgif.addPreviouslySeenGifsValue(chat_id, imagelink)
             if getgif.is_valid_gif(imagelink):
-                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
-                    break
+                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, caption):
+                    return True
+    return False
 
 def unwatch(bot, chat_id):
     if AllWatchesContains(chat_id):
