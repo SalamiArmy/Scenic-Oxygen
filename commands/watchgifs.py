@@ -1,13 +1,12 @@
 # coding=utf-8
 import json
-import urllib2
 
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 from commands import retry_on_telegram_error
 from commands import getgif
 
-watchedCommandName = 'gettopgif'
+watchedCommandName = 'watchgifs'
 
 
 class WatchValue(ndb.Model):
@@ -82,3 +81,9 @@ def top_gifs_walker(bot, chat_id, data):
                 if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                     break
 
+def unwatch(bot, chat_id):
+    if AllWatchesContains(chat_id):
+        removeFromAllWatches(str(chat_id))
+        bot.sendMessage(chat_id=chat_id, text='This chat is no longer watching gifs.')
+    else:
+        bot.sendMessage(chat_id=chat_id, text='This chat is not watching gifs.')
