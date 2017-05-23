@@ -60,12 +60,25 @@ def removeFromAllWatches(watch):
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if not AllWatchesContains(chat_id):
         addToAllWatches(chat_id)
-    topgifs = 'https://www.reddit.com/r/gifs/top.json?t=all'
-    topgifsUrlRequest = urlfetch.fetch(url=topgifs, headers={'User-Agent': 'App Engine:Scenic-Oxygen:ImageBoet:v1.0 (by /u/SalamiArmy)'})
-    data = json.loads(topgifsUrlRequest.content)
-    if not top_gifs_walker(bot, chat_id, data) and user != 'Watcher':
+    data, results_this_page, after = reddit_top_gifs_search()
+    #if not top_gifs_walker(bot, chat_id, data) and user != 'Watcher':
+    #    bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+    #                                          ', I\'m afraid you\'ve seen all the best gifs I can find.')
+    if multipage_top_gifs_walker(after, bot, chat_id, data, totalResults) <= 0:
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                               ', I\'m afraid you\'ve seen all the best gifs I can find.')
+
+
+def reddit_top_gifs_search(after=''):
+    if after =='':
+        topgifs = 'https://www.reddit.com/r/gifs/top.json?t=all'
+    else:
+        topgifs = 'https://www.reddit.com/r/gifs/top.json?t=all&after=' + after
+    topgifsUrlRequest = urlfetch.fetch(url=topgifs, headers={
+        'User-Agent': 'App Engine:Scenic-Oxygen:ImageBoet:v1.0 (by /u/SalamiArmy)'})
+    data = json.loads(topgifsUrlRequest.content)
+    return data, len(data['data']['children']), data['data']['after']
+
 
 def top_gifs_walker(bot, chat_id, data):
     offset = 0
@@ -83,6 +96,26 @@ def top_gifs_walker(bot, chat_id, data):
                 if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, caption):
                     return True
     return False
+
+def multipage_top_gifs_walker(after, bot, chat_id, data, number=1, results_this_page=25, total_sent=0):
+    offset_this_page = 0
+    while int(total_sent) < int(number) and int(offset_this_page) < 25:
+        gif_url = data['data']['children'][offset_this_page]['data']['url']
+        imagelink = gif_url[:-1] if gif_url.endswith('.gifv') else gif_url
+        caption = data['data']['children'][offset_this_page]['data']['title'].replace(' - Create, Discover and Share GIFs on Gfycat', '')# + '\n https://www.reddit.com' + \
+                      #data['data']['children'][offset_this_page]['data']['permalink']
+        offset_this_page += 1
+        if '?' in imagelink:
+            imagelink = imagelink[:imagelink.index('?')]
+        if not getgif.wasPreviouslySeenGif(chat_id, imagelink):
+            getgif.addPreviouslySeenGifsValue(chat_id, imagelink)
+            if getgif.is_valid_gif(imagelink):
+                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, caption):
+                    total_sent += 1
+    if int(total_sent) < int(number):
+        data, results_this_page, after = reddit_top_gifs_search(after)
+        return multipage_top_gifs_walker(after, bot, chat_id, data, number, results_this_page, total_sent)
+    return int(total_sent)
 
 def unwatch(bot, chat_id):
     if AllWatchesContains(chat_id):
