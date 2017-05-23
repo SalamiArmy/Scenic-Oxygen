@@ -10,7 +10,6 @@ from PIL import Image
 
 from commands import retry_on_telegram_error
 from commands import get
-from commands import watchgifs
 
 CommandName = 'getgif'
 
@@ -52,18 +51,14 @@ def wasPreviouslySeenGif(chat_id, gif_link):
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-    if requestText != '':
-        args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
-                'key': keyConfig.get('Google', 'GCSE_APP_ID'),
-                'searchType': "image",
-                'safe': "off",
-                'q': requestText,
-                'fileType': 'gif',
-                'start': 1}
-        Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults)
-    else:
-        data, results_this_page, after = watchgifs.reddit_top_gifs_search()
-        watchgifs.multipage_top_gifs_walker(after, bot, chat_id, data, totalResults)
+    args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'searchType': "image",
+            'safe': "off",
+            'q': requestText,
+            'fileType': 'gif',
+            'start': 1}
+    Send_Animated_Gifs(bot, chat_id, user, requestText, args, totalResults)
 
 
 def is_valid_gif(imagelink):
