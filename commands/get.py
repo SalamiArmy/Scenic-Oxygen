@@ -65,7 +65,10 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
 
 def Google_Custom_Search(args):
     googurl = 'https://www.googleapis.com/customsearch/v1'
-    realUrl = googurl + '?' + urllib.urlencode(args)
+    str_google_cse_data = {}
+    for k, v in args.iteritems():
+        str_google_cse_data[k] = unicode(v).encode('utf-8')
+    realUrl = googurl + '?' + urllib.urlencode(str_google_cse_data)
     data = json.load(urllib.urlopen(realUrl))
     total_results = 0
     results_this_page = 0

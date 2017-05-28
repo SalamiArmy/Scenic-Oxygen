@@ -1,15 +1,9 @@
 # coding=utf-8
-import ConfigParser
 import unittest
-
-import telegram
-
-import commands.getgif as getgif
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
 import main
-
 
 class TestGet(unittest.TestCase):
     def setUp(self):
@@ -27,13 +21,12 @@ class TestGet(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-    def test_getgif(self):
-        requestText = 'grade A 👌👌 100% 👌👌 good shit'
-
-        keyConfig = ConfigParser.ConfigParser()
-        keyConfig.read(["keys.ini", "..\keys.ini"])
-        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
-
-        getgif.setPreviouslySeenGifsValue(chatId, '')
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
+    def integration_test_getgif(self):
+        newRequestObject = main.WebhookHandler()
+        class Object(object):
+            pass
+        newRequestObject.request = Object()
+        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "/getgif grade A 👌👌 100% 👌👌 good shit", "chat": {"id": -55348600, "type": "group"}}}'
+        newRequestObject.response = Object()
+        newRequestObject.response.write = lambda x: None
+        newRequestObject.post()
