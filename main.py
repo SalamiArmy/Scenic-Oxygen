@@ -115,17 +115,6 @@ class WebhookHandler(webapp2.RequestHandler):
             if text.startswith('/'):
                 self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
 
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        command = self.request.get('command')
-        message = self.request.get('message')
-        if command == 'getxxx':
-            from commands import getxxx
-            args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, message)
-            return data
-        else:
-            return 'unknown command'
-
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
         try:
@@ -152,6 +141,17 @@ class WebhookHandler(webapp2.RequestHandler):
                                      str(sys.exc_info()[1]))
             except:
                 print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+
+    def get(self):
+        urlfetch.set_default_fetch_deadline(60)
+        command = self.request.get('command')
+        message = self.request.get('message')
+        if command == 'getxxx':
+            from commands import getxxx
+            args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, message)
+            return data
+        else:
+            return 'unknown command'
 
 
 class TriggerAllWatches(webapp2.RequestHandler):

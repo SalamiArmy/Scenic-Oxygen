@@ -8,6 +8,8 @@ import commands.getgif as getgif
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
+import main
+
 
 class TestGet(unittest.TestCase):
     def setUp(self):
@@ -26,7 +28,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getgif(self):
-        requestText = '👍👌👎👊'
+        requestText = 'grade A 👌👌 100% 👌👌 good shit'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -35,3 +37,13 @@ class TestGet(unittest.TestCase):
 
         getgif.setPreviouslySeenGifsValue(chatId, '')
         getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
+
+    def test_getgif_full(self):
+        newRequestObject = main.WebhookHandler()
+        class Object(object):
+            pass
+        newRequestObject.request = Object()
+        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "/getgif grade A 👌👌 100% 👌👌 good shit", "chat": {"id": -55348600, "type": "group"}}}'
+        newRequestObject.response = Object()
+        newRequestObject.response.write = lambda x: None
+        newRequestObject.post()
