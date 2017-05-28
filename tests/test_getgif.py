@@ -1,3 +1,4 @@
+# coding=utf-8
 import ConfigParser
 import unittest
 
@@ -25,7 +26,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getgif(self):
-        requestText = 'synchronized fucking'
+        requestText = '👍👌👎👊'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
