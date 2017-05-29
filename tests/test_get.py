@@ -24,14 +24,11 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_get(self):
-        requestText = 'schlackenblöcken'
+        requestText = 'esse meine scheiße'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
-
-        #for bot group:
-        #chatId = -130436192
 
         get.run(bot, chatId, 'Admin', keyConfig, requestText, 5)

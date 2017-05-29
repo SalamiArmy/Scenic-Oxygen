@@ -3,11 +3,19 @@ import string
 
 import main
 from commands import getgif
+from commands import get
 from commands import retry_on_telegram_error
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
-    data, total_results, results_this_page = getgif.search_google_for_gifs(keyConfig, requestText)
+    args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
+            'key': keyConfig.get('Google', 'GCSE_APP_ID'),
+            'searchType': "image",
+            'safe': "off",
+            'q': requestText,
+            'fileType': 'gif',
+            'start': 1}
+    data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and results_this_page >= 0:
         offset_this_page = 0
         while offset_this_page < results_this_page:
