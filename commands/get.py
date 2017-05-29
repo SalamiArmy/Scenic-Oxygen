@@ -65,9 +65,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
 
 def Google_Custom_Search(args):
     googurl = 'https://www.googleapis.com/customsearch/v1'
-    str_google_cse_data = {}
-    for k, v in args.iteritems():
-        str_google_cse_data[k] = unicode(v).encode('utf-8')
+    str_google_cse_data = nuke_encoding(args)
     realUrl = googurl + '?' + urllib.urlencode(str_google_cse_data)
     data = json.load(urllib.urlopen(realUrl))
     total_results = 0
@@ -78,6 +76,15 @@ def Google_Custom_Search(args):
             data['queries']['request'][0]:
         results_this_page = data['queries']['request'][0]['count']
     return data, total_results, results_this_page
+
+
+def nuke_encoding(args):
+    str_google_cse_data = {}
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+    for k, v in args.iteritems():
+        str_google_cse_data[k] = unicode(v).encode('utf-8')
+    return str_google_cse_data
 
 
 def is_valid_image(imagelink):

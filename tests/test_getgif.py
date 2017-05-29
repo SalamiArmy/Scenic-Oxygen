@@ -2,6 +2,7 @@
 import ConfigParser
 import unittest
 
+import sys
 import telegram
 
 import commands.getgif as getgif
