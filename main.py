@@ -86,7 +86,7 @@ class SetWebhookHandler(webapp2.RequestHandler):
 
 class WebhookHandler(webapp2.RequestHandler):
     def post(self):
-        #urlfetch.set_default_fetch_deadline(120)
+        urlfetch.set_default_fetch_deadline(120)
         body = json.loads(self.request.body)
         logging.info('request body:')
         logging.info(body)
