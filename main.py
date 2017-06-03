@@ -149,9 +149,7 @@ class WebhookHandler(webapp2.RequestHandler):
         if command == 'getxxx':
             from commands import getxxx
             args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, message)
-            return data
-        else:
-            return 'unknown command'
+            self.response.write(data)
 
 
 class TriggerAllWatches(webapp2.RequestHandler):

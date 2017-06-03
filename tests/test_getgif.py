@@ -29,7 +29,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getgif(self):
-        requestText = 'grade A 👌👌 100% 👌👌 good shit'
+        requestText = 'grade A'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
