@@ -21,12 +21,12 @@ class TestGet(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-    def integration_test_getgif(self):
+    def integration_test_get(self):
         newRequestObject = main.WebhookHandler()
         class Object(object):
             pass
         newRequestObject.request = Object()
-        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "/getgif grade A 👌👌 100% 👌👌 good shit", "chat": {"id": -55348600, "type": "group"}}}'
+        newRequestObject.request.get = lambda x: 'getxxx'
         newRequestObject.response = Object()
         newRequestObject.response.write = lambda x: None
-        newRequestObject.post()
+        newRequestObject.get()

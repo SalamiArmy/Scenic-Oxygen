@@ -145,11 +145,14 @@ class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         command = self.request.get('command')
-        message = self.request.get('message')
+        requestText = self.request.get('message')
         if command == 'getxxx':
             from commands import getxxx
-            args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, message)
-            self.response.write(data)
+            args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, requestText)
+            if data['searchInformation']['totalResults'] >= '1':
+                self.response.write(data['items'][0]['link'])
+            else:
+                self.response.write('I\'m sorry Dave, I\'m afraid I cannot find enough filth for ' + requestText + '.')
 
 
 class TriggerAllWatches(webapp2.RequestHandler):
