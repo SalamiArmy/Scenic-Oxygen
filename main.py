@@ -153,6 +153,7 @@ class WebhookHandler(webapp2.RequestHandler):
                 self.response.write(data['items'][0]['link'])
             else:
                 self.response.write('I\'m sorry Dave, I\'m afraid I cannot find enough filth for ' + requestText + '.')
+            return self.response
 
 
 class TriggerAllWatches(webapp2.RequestHandler):
