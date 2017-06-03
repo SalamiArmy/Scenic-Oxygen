@@ -26,7 +26,16 @@ class TestGet(unittest.TestCase):
         class Object(object):
             pass
         newRequestObject.request = Object()
-        newRequestObject.request.get = lambda x: 'getxxx'
+        newRequestObject.request.get = lambda x: 'getxxx' if (x == 'command') else 'gosh'
         newRequestObject.response = Object()
-        newRequestObject.response.write = lambda x: None
+        newRequestObject.response.write = lambda x: self.mockResponseWriter(x)
+        self.responseString = ''
         newRequestObject.get()
+        if self.responseString == '':
+            raise Exception
+
+    global responseString
+
+    def mockResponseWriter(self, inputText):
+        self.responseString = inputText
+        return inputText
