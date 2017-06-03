@@ -1,9 +1,7 @@
 import ConfigParser
-import httplib
 import importlib
 import json
 import logging
-import unittest
 import urllib
 import sys
 
@@ -15,6 +13,8 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
 import webapp2
+
+from commands import login
 
 BASE_URL = 'https://api.telegram.org/bot'
 
@@ -146,14 +146,11 @@ class WebhookHandler(webapp2.RequestHandler):
         urlfetch.set_default_fetch_deadline(60)
         command = self.request.get('command')
         requestText = self.request.get('message')
-        if command == 'getxxx':
-            from commands import getxxx
-            args, data, results_this_page, total_results = getxxx.search_gcse_for_xxx(keyConfig, requestText)
-            if data['searchInformation']['totalResults'] >= '1':
-                self.response.write(data['items'][0]['link'])
-            else:
-                self.response.write('I\'m sorry Dave, I\'m afraid I cannot find enough filth for ' + requestText + '.')
-            return self.response
+        loginPin = self.request.get('pin')
+        chat_id = self.request.get('chat_id')
+        total_results = self.request.get('total_results')
+        if loginPin == login.getLoginCodeValue(chat_id):
+            self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command + (total_results if total_results is not None else '') + ' ' + requestText, 'private')
 
 
 class TriggerAllWatches(webapp2.RequestHandler):
@@ -188,6 +185,13 @@ class TriggerWatchGifs(webapp2.RequestHandler):
             for chat_id in watches_split:
                 watchgifs.run(bot, chat_id, 'Watcher', keyConfig)
 
+class Login(webapp2.RequestHandler):
+    def get(self):
+        urlfetch.set_default_fetch_deadline(10)
+        login.run(bot, self.request.get('chat_id'))
+        self.response.write('A pin has been sent.')
+        return self.response
+
 app = webapp2.WSGIApplication([
     ('/me', MeHandler),
     ('/updates', GetUpdatesHandler),
@@ -195,5 +199,6 @@ app = webapp2.WSGIApplication([
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/clearallwatches', ClearAllWatches),
-    ('/watchgifs', TriggerWatchGifs)
+    ('/watchgifs', TriggerWatchGifs),
+    ('/login', Login)
 ], debug=True)
