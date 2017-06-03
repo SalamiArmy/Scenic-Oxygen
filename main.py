@@ -146,8 +146,8 @@ class WebhookHandler(webapp2.RequestHandler):
         urlfetch.set_default_fetch_deadline(60)
         command = self.request.get('command')
         requestText = self.request.get('message')
-        loginPin = self.request.get('pin')
-        chat_id = self.request.get('chat_id')
+        chat_id = self.request.get('username')
+        loginPin = self.request.get('password')
         total_results = self.request.get('total_results')
         if loginPin == login.getLoginCodeValue(chat_id):
             self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command + (total_results if total_results is not None else '') + ' ' + requestText, 'private')
@@ -188,7 +188,7 @@ class TriggerWatchGifs(webapp2.RequestHandler):
 class Login(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        login.run(bot, self.request.get('chat_id'))
+        login.run(bot, self.request.get('username'))
         self.response.write('A pin has been sent.')
         return self.response
 
