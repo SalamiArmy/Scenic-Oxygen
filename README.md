@@ -5,12 +5,12 @@
 Scenic Oxygen can perform autherization for for linking bots together or to the web, perform scheduled CRON jobs and store data about bot's state.
 
 ### How does it work?
-Scenic Oxygen will listen for all messages in many chat groups (either directly with him or in a chat room which you invite him to) starting with "/".
+Scenic Oxygen will listen for all messages in many chat groups (either directly with him or in a chat room which you invite him to) starting with "/". If that message is "/login" or "/login some_new_password" then the bot either generates a new password for that chat room and sends it or uses the password it's given. This password is then used by other bots and by websites to execute commands remotely and send messages to the chat room. All other commands are handled by seperate python files in the commands/ folder. Every 5 minutes and daily seperate CRON jobs are triggered which commands can be added to be executed automatically.
 
 ### How do I add new commands?
 All you have to do is create a new python script in commands/ that has a function called run which takes five arguments, the first argument is the id of the chat to reply to, the second is the name of the user to address when replying, the third is the incoming message text and the fourth and fifth are the keys if your command uses any and the number of responses the user is expecting.
 
-tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, message, keyConfig, number_of_responses) function.
+tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, request_text, keyConfig, number_of_responses) function.
 
 ### How do I make my own bot using this?
 Go to https://console.developers.google.com and create a Google App Engine project. Then take that project id (it will be two random words and a number eg. gorilla-something-374635) and your Telegram Bot ID which the Bot Father gave you and do the following:
