@@ -16,16 +16,20 @@ import webapp2
 
 from commands import login
 
-BASE_URL = 'https://api.telegram.org/bot'
 
-# Read keys.ini file at program start (don't forget to put your keys in there!)
+# Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
-keyConfig.read(["keys.ini", "..\keys.ini"])
+keyConfig.read(["bot_keys.ini", "..\bot_keys.ini"])
 
-bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
+#Telegram Bot Info
+BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
+telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+
+#TODO: Skype, Facebook bots etc.
+#skypeBot = telegram.Bot(keyConfig.get('BotIDs', 'SKYPE_BOT_ID'))
+#facebookBot = telegram.Bot(keyConfig.get('BotIDs', 'FACEBOOK_BOT_ID'))
 
 # ================================
-
 
 class AllWatchesValue(ndb.Model):
     # key name: AllWatches
@@ -61,27 +65,13 @@ def removeFromAllWatches(watch):
 
 # ================================
 
-class MeHandler(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        self.response.write(json.dumps(json.load(urllib2.urlopen(
-            BASE_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/getMe'))))
-
-
-class GetUpdatesHandler(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        self.response.write(json.dumps(json.load(urllib2.urlopen(
-            BASE_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/getUpdates'))))
-
-
 class SetWebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         url = self.request.get('url')
         if url:
             self.response.write(json.dumps(json.load(urllib2.urlopen(
-                BASE_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
+                BASE_TELEGRAM_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
 
 
 class WebhookHandler(webapp2.RequestHandler):
@@ -118,14 +108,14 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
         try:
-            commandName = split[0].lower().replace(bot.name.lower(), '')
+            commandName = split[0].lower().replace(telegramBot.name.lower(), '')
             totalResults = 1
             import re
             if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
                 totalResults = re.findall('\d+$', commandName)[0]
                 commandName = re.findall('^[a-z]+', commandName)[0]
             mod = importlib.import_module('commands.' + commandName)
-            mod.run(bot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
+            mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
         except ImportError:
             if chat_type == 'private':
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
@@ -167,38 +157,21 @@ class TriggerAllWatches(webapp2.RequestHandler):
                     chat_id = split[0]
                     request_text = (split[2] if len(split) == 3 else '')
                     removeCommaEncoding = request_text.replace('%2C', ',')
-                    mod.run(bot, chat_id, 'Watcher', keyConfig, removeCommaEncoding)
+                    mod.run(telegramBot, chat_id, 'Watcher', keyConfig, removeCommaEncoding)
                 else:
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
 
-class ClearAllWatches(webapp2.RequestHandler):
-    def get(self):
-        setAllWatchesValue('')
-
-from commands import watchgifs
-class TriggerWatchGifs(webapp2.RequestHandler):
-    def get(self):
-        AllWatches = watchgifs.getAllWatches()
-        watches_split = AllWatches.split(',')
-        if len(watches_split) >= 1:
-            for chat_id in watches_split:
-                watchgifs.run(bot, chat_id, 'Watcher', keyConfig)
-
 class Login(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        login.run(bot, self.request.get('username'))
+        login.run(telegramBot, self.request.get('username'))
         self.response.write('A pin has been sent.')
         return self.response
 
 app = webapp2.WSGIApplication([
-    ('/me', MeHandler),
-    ('/updates', GetUpdatesHandler),
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
-    ('/clearallwatches', ClearAllWatches),
-    ('/watchgifs', TriggerWatchGifs),
     ('/login', Login)
 ], debug=True)
