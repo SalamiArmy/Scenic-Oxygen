@@ -16,7 +16,7 @@ tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, 
 Go to https://console.developers.google.com and create a Google App Engine project. Then take that project id (it could be two random words and a number eg. gorilla-something-374635 depending on if your chosen names was taken) and your Telegram Bot ID which the Bot Father gave you and do the following:
 
 1. Copy bot_keys.ini.template and rename the copy to keys.ini.
-2. Update {Your Telegram Bot ID here} in keys.ini and do the same for Skype and Facebook bots.
+2. Update {Your Telegram Bot ID here} in bot_keys.ini and do the same for Discord, Skype and Facebook bots.
 
 ```bash
 git clone (url for your Scenic Oxygen fork) ~/bot
