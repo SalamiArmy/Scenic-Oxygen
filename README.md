@@ -29,5 +29,3 @@ Finally go to https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/set_webhook?url
 
 ### Why the name Scenic Oxygen?
 This repository contains code all my bots share. It's mostly my personalized Goole App Engine code. Scenic Oxygen is the codename Google gave my first ever bot.
-
-Tl;Dr - Scenic Oxygen will take your bot way up into the cloud were there is nothing but clean oxygen and scenic vistas!
