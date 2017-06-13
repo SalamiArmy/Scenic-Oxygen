@@ -2,7 +2,7 @@
 ## A simple shell for hosting python bots on Google App Engine.
 
 ### What is Scenic Oxygen?
-Scenic Oxygen hosts microservices for chat bots in Google App Engine. It also provides
+Scenic Oxygen hosts commands for chat bots in Google App Engine.
 
 ### How does it work?
 Scenic Oxygen can perform autherization for for linking bots together or to the web, perform scheduled CRON jobs and store data about bot's state.
