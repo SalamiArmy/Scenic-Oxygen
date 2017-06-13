@@ -14,7 +14,7 @@ All you have to do is create a new python script in commands/ that has a functio
 tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, request_text, keyConfig, number_of_responses) function.
 
 ### How do I make my own bot using this?
-Go to https://console.developers.google.com and create a Google App Engine project. Then take that project id (it could be two random words and a number eg. gorilla-something-374635 depending on if your chosen names was taken) and your Telegram Bot ID which the Bot Father gave you and do the following:
+Go to https://console.developers.google.com and create a Google App Engine project. Then take that project id (it could be two random words and a number eg. gorilla-something-374635 depending on if your chosen name was taken) and your Telegram Bot ID which the Bot Father gave you and do the following:
 
 1. Copy bot_keys.ini.template and rename the copy to bot_keys.ini.
 2. Update {Your Telegram Bot ID here} in bot_keys.ini and do the same for Discord, Skype and Facebook bots.
