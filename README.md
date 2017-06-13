@@ -27,4 +27,4 @@ cd ~/bot
 Finally go to https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/set_webhook?url=https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/webhook (replace both {GOOGLE APP ENGINE PROJECT ID}s with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father anything about web hooks.
 
 ### Why the name Scenic Oxygen?
-This repository contains code all my bots share, that's why it's got such an esoteric name, this repo is just to reduce code duplication between my bots. Scenic Oxygen is the codename Google gave my first ever bot. Scenic Oxygen will take your bot way up into the cloud were there is nothing but clean oxygen and scenic vistas!
+This repository contains code all my bots share, that's why it's got such an esoteric name, it's just to reduce code duplication. Scenic Oxygen is the codename Google gave my first ever bot. Scenic Oxygen will take your bot way up into the cloud were there is nothing but clean oxygen and scenic vistas!
