@@ -2,9 +2,10 @@
 ## A simple shell for hosting python bots on Google App Engine.
 
 ### What is Scenic Oxygen?
-Scenic Oxygen can perform autherization for for linking bots together or to the web, perform scheduled CRON jobs and store data about bot's state.
+Scenic Oxygen hosts microservices for chat bots in Google App Engine. It also provides
 
 ### How does it work?
+Scenic Oxygen can perform autherization for for linking bots together or to the web, perform scheduled CRON jobs and store data about bot's state.
 Scenic Oxygen will listen for all messages in many chat groups (either directly with him or in a group chat room) starting with "/". These "slashtags" are used to execute explicit commands. If that message is "/login" or "/login some_new_password" then the bot executes the python file in "commands/login.py". This command stores passwords for other bots and websites to execute commands remotely and send messages to the chat room in the bot's name. All other commands are handled by seperate python files in the "commands/" folder. These command files distinguish the bots from each other. If two bots both have a file "commands/executeme.py" and they are both added to the same group chat room then whenever a user sends the slashtag "/executeme" both of them will respond. The login command will not conflict with other bots hosted under the same Google account because they all share a storage bucket. Every 5 minutes and daily seperate CRON jobs are triggered which commands can be added to be executed automatically.
 
 ### How do I add new commands?
@@ -27,4 +28,6 @@ cd ~/bot
 Finally go to https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/set_webhook?url=https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/webhook (replace both {GOOGLE APP ENGINE PROJECT ID}s with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father anything about web hooks.
 
 ### Why the name Scenic Oxygen?
-This repository contains code all my bots share, that's why it's got such an esoteric name, it's just here to help me reduce code duplication. Scenic Oxygen is the codename Google gave my first ever bot. Scenic Oxygen will take your bot way up into the cloud were there is nothing but clean oxygen and scenic vistas!
+This repository contains code all my bots share. It's mostly my personalized Goole App Engine code. Scenic Oxygen is the codename Google gave my first ever bot.
+
+Tl;Dr - Scenic Oxygen will take your bot way up into the cloud were there is nothing but clean oxygen and scenic vistas!
