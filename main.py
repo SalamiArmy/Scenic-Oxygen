@@ -71,7 +71,7 @@ class SetWebhookHandler(webapp2.RequestHandler):
         url = self.request.get('url')
         if url:
             self.response.write(json.dumps(json.load(urllib2.urlopen(
-                BASE_TELEGRAM_URL + keyConfig.get('Telegram', 'TELE_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
+                BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
 
 
 class WebhookHandler(webapp2.RequestHandler):
