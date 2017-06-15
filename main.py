@@ -107,35 +107,32 @@ class WebhookHandler(webapp2.RequestHandler):
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
-            commandName = split[0].lower().replace(telegramBot.name.lower(), '')
-            totalResults = 1
-            import re
-            if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
-                totalResults = re.findall('\d+$', commandName)[0]
-                commandName = re.findall('^[a-z]+', commandName)[0]
-			if commandName.lower() == 'start':
-				login.run(telegramBot, chat_id, fr_username)
-			else:
-				try:
-					mod = importlib.import_module('commands.' + commandName)
-				except ImportError:
-					if chat_type == 'private':
-						bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
-															  ', I\'m afraid I do not recognize the ' + commandName + ' command.')
-					return
-				try:
-					mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
-				except:
-					print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
-					try:
-						bot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID'),
-										text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
-											 '\'s request ' + (('\'' + split[1] + '\'') if len(split) > 1 else '') +
-											 '. Command ' + split[0] + ' threw:\n' +
-											 str(sys.exc_info()[0]) + '\n' +
-											 str(sys.exc_info()[1]))
-					except:
-						print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+        commandName = split[0].lower().replace(telegramBot.name.lower(), '')
+        totalResults = 1
+        import re
+        if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
+            totalResults = re.findall('\d+$', commandName)[0]
+            commandName = re.findall('^[a-z]+', commandName)[0]
+        try:
+            mod = importlib.import_module('commands.' + commandName)
+        except ImportError:
+            if chat_type == 'private':
+                telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
+                                                      ', I\'m afraid I do not recognize the ' + commandName + ' command.')
+            return
+        try:
+            mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
+        except:
+            print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+            try:
+                telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID'),
+                                text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
+                                     '\'s request ' + (('\'' + split[1] + '\'') if len(split) > 1 else '') +
+                                     '. Command ' + split[0] + ' threw:\n' +
+                                     str(sys.exc_info()[0]) + '\n' +
+                                     str(sys.exc_info()[1]))
+            except:
+                print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
 
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
