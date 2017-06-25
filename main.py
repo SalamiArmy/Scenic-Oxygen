@@ -7,9 +7,6 @@ import sys
 import urllib2
 
 import telegram
-from lib import Skype4Py
-from lib.disco.client import Client as discord
-from lib import facebook_bot
 
 # standard app engine imports
 from google.appengine.api import urlfetch
@@ -19,7 +16,6 @@ import webapp2
 
 from commands import login
 
-
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\bot_keys.ini"])
@@ -27,19 +23,6 @@ keyConfig.read(["bot_keys.ini", "..\bot_keys.ini"])
 #Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
 telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
-
-BASE_DISCORD_URL = 'https://discordapp.com/api'
-discordBot = discord.Bot(keyConfig.get('BotIDs', 'DISCORD_BOT_ID'))
-
-BASE_SKYPE_URL = ''
-skypeBot = Skype4Py.Skype.Client
-
-BASE_FACEBOOK_URL = ''
-facebookBot = facebook_bot
-
-#TODO: Skype, Facebook bots etc.
-#skypeBot = telegram.Bot(keyConfig.get('BotIDs', 'SKYPE_BOT_ID'))
-#facebookBot = telegram.Bot(keyConfig.get('BotIDs', 'FACEBOOK_BOT_ID'))
 
 # ================================
 
@@ -183,48 +166,9 @@ class Login(webapp2.RequestHandler):
         self.response.write('A pin has been sent.')
         return self.response
 
-class SetDiscordWebhookHandler(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        url = self.request.get('url')
-        if url:
-            self.response.write(json.dumps(json.load(urllib2.urlopen(
-                BASE_DISCORD_URL + '/webhooks/' + keyConfig.get('BotIDs', 'DISCORD_BOT_TOKEN'), urllib.urlencode({'url': url})))))
-
-
-class DiscordWebhookHandler(webapp2.RequestHandler):
-    def post(self):
-        urlfetch.set_default_fetch_deadline(120)
-        body = json.loads(self.request.body)
-        logging.info('request body:')
-        logging.info(body)
-        self.response.write(json.dumps(body))
-        #var = WebhookHandler.TryExecuteExplicitCommand()
-
-class SetSkypeWebhookHandler(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        url = self.request.get('url')
-        if url:
-            self.response.write(json.dumps(json.load(urllib2.urlopen(
-                BASE_SKYPE_URL + '/webhooks/' + keyConfig.get('BotIDs', 'SKYPE_BOT_TOKEN'), urllib.urlencode({'url': url})))))
-
-class SkypeWebhookHandler(webapp2.RequestHandler):
-    def post(self):
-        urlfetch.set_default_fetch_deadline(120)
-        body = json.loads(self.request.body)
-        logging.info('request body:')
-        logging.info(body)
-        self.response.write(json.dumps(body))
-        #var = WebhookHandler.TryExecuteExplicitCommand()
-
 app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
-    ('/set_discord_webhook', SetDiscordWebhookHandler),
-    ('/discord_webhook', DiscordWebhookHandler),
-    ('/set_skype_webhook', SetSkypeWebhookHandler),
-    ('/skype_webhook', SkypeWebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login)
 ], debug=True)
