@@ -26,7 +26,7 @@ git clone (url for your Scenic Oxygen fork) ~/bot
 cd ~/bot
 (PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot Skype4Py python-facebook-bot
 git clone https://github.com/b1naryth1ef/disco
-cp ..\disco\disco lib
+cp disco\disco lib
 (PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 

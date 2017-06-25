@@ -25,6 +25,10 @@ def getLoginCodeValue(chat_id):
     return ''
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
+    bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id) + '\nNew Password: ' + generate_new_pin(chat_id))
+
+
+def generate_new_pin(chat_id):
     loginCodeValue = str(uuid.uuid4())[:4]
     setLoginCodeValue(chat_id, loginCodeValue)
-    bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id) + '\nPassword: ' + loginCodeValue)
+    return loginCodeValue
