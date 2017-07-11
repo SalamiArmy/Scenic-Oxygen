@@ -28,4 +28,6 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        login.run(bot, chatId, 'Admin', keyConfig, 'someval')
+        login.run(bot, chatId, 'Admin', keyConfig, 'ee4a')
+        login.setPin(chatId, 'ee4a')
+        login.run(bot, chatId, 'Admin', keyConfig, 'ee4a')
