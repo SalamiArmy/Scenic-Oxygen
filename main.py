@@ -136,7 +136,7 @@ class WebhookHandler(webapp2.RequestHandler):
         chat_id = self.request.get('username')
         loginPin = self.request.get('password')
         total_results = self.request.get('total_results')
-        if loginPin == login.getLoginCodeValue(chat_id):
+        if loginPin == login.getPin(chat_id):
             self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command + (total_results if total_results is not None else '') + ' ' + requestText, 'private')
 
 
