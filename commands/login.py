@@ -60,7 +60,9 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if count and int(count) > 3:
         return bot.sendMessage(chat_id=chat_id, text='You have been locked out due to too many incorrect login attempts.')
     pin = getPin(chat_id)
-    if getLoggedinValue(chat_id) == 'True':
+    if chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'):
+        bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id) + '\nYou are an admin!')
+    elif getLoggedinValue(chat_id) == 'True':
         bot.sendMessage(chat_id=chat_id, text='You have already logged in.')
     elif message == pin:
         Login(chat_id)
@@ -69,8 +71,6 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
         bot.sendMessage(chat_id=chat_id, text='Login requires the use of a One Time Pin which you can get by visitting:\n ' +
                                               keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +
                                               'You have ' + incrementCount(chat_id, count) + ' remaining attempts to log in.')
-    #elif chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'):
-    #    bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id) + '\nYou are an admin!')
 
 
 def incrementCount(chat_id, count):
