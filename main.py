@@ -162,8 +162,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
 class Login(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        login.generate_new_pin(telegramBot, self.request.get('username'))
-        self.response.write('A pin has been sent.')
+        self.response.write(login.generate_new_pin(self.request.get('username')))
         return self.response
 
 app = webapp2.WSGIApplication([
