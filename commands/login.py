@@ -2,7 +2,6 @@
 import uuid
 
 from google.appengine.ext import ndb
-import telegram
 
 class LoginCodeValue(ndb.Model):
     # key name: str(chat_id)
@@ -11,7 +10,6 @@ class LoginCodeValue(ndb.Model):
 class LoggedinValue(ndb.Model):
     # key name: str(chat_id)
     currentValue = ndb.BooleanProperty(indexed=False, default='')
-
 
 # ================================
 
@@ -43,11 +41,15 @@ def getPin(chat_id):
     return ''
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
-    if message == '':
-        bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id))
-    elif message == getPin(chat_id):
+    pin = getPin(chat_id)
+    if message == '' or pin == '':
+        bot.sendMessage(chat_id=chat_id, text='Login requires the use of a One Time Pin which you can get by visitting:\n ' +
+                                              keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id)
+    elif message == pin:
         Login(chat_id)
         bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id) + '\nThat password is correct, you may proceed.')
+    else:
+        bot.sendMessage(chat_id=chat_id, text='You have already logged in.')
     #elif chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'):
     #    bot.sendMessage(chat_id=chat_id, text='Username: ' + str(chat_id) + '\nYou are an admin!')
 

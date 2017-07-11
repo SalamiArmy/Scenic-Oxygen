@@ -8,3 +8,6 @@ TESTING_TELEGRAM_GROUP_CHAT_ID: {ID of Telegram Group to Test Sending and Receiv
 TESTING_TELEGRAM_PRIVATE_CHAT_ID: {ID of Telegram Private Chat to Test Sending and Receiving Messages}
 TESTING_SKYPE_CHAT_ID: {ID of Skype User to test Sending and Receiving Messages}
 TESTING_FACEBOOK_CHAT_ID: {ID of Facebook User to Test Sending and Receiving Messages}
+
+[InternetShortcut]
+URL: {Web URL for web bridging eg: google.com}
