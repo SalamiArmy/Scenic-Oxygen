@@ -5,7 +5,7 @@
 Scenic Oxygen hosts commands for chat bots in Google App Engine.
 
 ### How does it work?
-Scenic Oxygen can perform autherization for for linking bots together or to the web, perform scheduled CRON jobs and store data about bot's state. Scenic Oxygen will listen for all messages in many chat groups (either directly with him or in a group chat room) starting with "/". These "slashtags" are used to execute explicit commands. If that message is "/login" or "/login some_new_password" then the bot executes the python file in "commands/login.py". 
+Scenic Oxygen can perform *autherization* for for linking bots together or to the web, perform scheduled *CRON jobs* and *store data* about bot's state. Scenic Oxygen will listen for all messages in many chat groups (either directly with him or in a group chat room) starting with "/". These "slashtags" are used to execute explicit commands. If that message is "/login" or "/login some_new_password" then the bot executes the python file in "commands/login.py". 
 
 ### What is commands/login.py?
 The login command stores encrypted passwords that other bots and websites use to execute commands remotely and send messages to the chat room in the bot's name. All commands are handled by seperate python files in the "commands/" folder. These command files distinguish the bots from each other. If two bots both have a file "commands/executeme.py" and they are both members of the same group chat room then whenever a user sends the slashtag "/executeme" both of them will respond. Unless they are programmed not to like the login command is.
