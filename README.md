@@ -11,7 +11,7 @@ Scenic Oxygen can perform *autherization* for for linking bots together or to th
 The login command stores encrypted passwords that other bots and websites use to execute commands remotely and send messages to the chat room in the bot's name. All commands are handled by seperate python files in the "commands/" folder. These command files distinguish the bots from each other. If two bots both have a file "commands/executeme.py" and they are both members of the same group chat room then whenever a user sends the slashtag "/executeme" both of them will respond. Unless they are programmed not to like the login command is.
 
 ### How do I add new commands?
-All you have to do is create a new python script in commands/ that has a function called run which takes five arguments, the first argument is the id of the chat to reply to, the second is the name of the user to address when replying, the third is the incoming message text and the fourth and fifth are the keys if your command uses any and the number of responses the user is expecting.
+All you have to do is create a new python script in commands/ folder that has a function called run which takes four arguments, the first is the username, the second is the incoming message text, the third are the keys if your command uses any and the fourth is the number of responses the user is expecting.
 
 tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, request_text, keyConfig, number_of_responses) function.
 
