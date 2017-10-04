@@ -165,9 +165,23 @@ class Login(webapp2.RequestHandler):
         self.response.write(login.generate_new_pin(self.request.get('username')))
         return self.response
 
+class GithubWebhookHandler(webapp2.RequestHandler):
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        body = json.loads(self.request.body)
+        logging.info('request body:')
+        logging.info(body)
+        self.response.write(json.dumps(body))
+
+        if 'message' in body:
+            message = body['message']
+            import commands
+            commands.add.update_commands(message['username'] + ' ' + message['reponame'] + ' ' + message['token'])
+
 app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
-    ('/login', Login)
+    ('/login', Login),
+    ('/github_webhook', GithubWebhookHandler)
 ], debug=True)
