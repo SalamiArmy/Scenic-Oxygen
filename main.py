@@ -5,6 +5,7 @@ import logging
 import urllib
 import sys
 import urllib2
+import os
 
 import telegram
 
@@ -15,6 +16,7 @@ from google.appengine.ext import ndb
 import webapp2
 
 from commands import login
+from commands import add
 
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
@@ -173,10 +175,12 @@ class GithubWebhookHandler(webapp2.RequestHandler):
         logging.info(body)
         self.response.write(json.dumps(body))
 
-        if 'message' in body:
-            message = body['message']
-            import commands
-            commands.add.update_commands(message['username'] + ' ' + message['reponame'] + ' ' + message['token'])
+        if 'repository' in body and 'owner' in body['repository'] and 'name' in body['repository'] and 'login' in body['repository']['owner']:
+            repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
+            token = add.getTokenValue(repo_url)
+            if not os.curdir.endswith('commands') and not os.curdir.endswith('commands/'):
+                os.chdir('commands')
+            add.update_commands(repo_url, token)
 
 app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
