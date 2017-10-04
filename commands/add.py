@@ -20,6 +20,15 @@ def setTokenValue(repo_url, NewValue):
     es.currentValue = str(NewValue)
     es.put()
 
+class CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def setCommandCode(command_name, NewValue):
+    es = CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
+
 # ================================
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
