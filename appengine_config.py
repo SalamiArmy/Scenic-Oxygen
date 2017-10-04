@@ -4,4 +4,4 @@ from google.appengine.ext import vendor
 try:
     vendor.add('lib')
 except:
-    print('ImageBoet failed to add it\'s third-party libraries folder to app engine\'s vendor.')
+    print('Failed to add third-party libraries folder to app engine\'s vendor.')
