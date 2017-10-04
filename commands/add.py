@@ -1,17 +1,4 @@
-from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
-
-class TokenValue(ndb.Model):
-    # key name: str(chat_id)
-    currentValue = ndb.StringProperty(indexed=False, default='')
-
-def getTokenValue(repo_url):
-    es = TokenValue.get_by_id(str(repo_url))
-    if es:
-        return es.currentValue
-    return ''
-
-# ================================
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     request_text = str(message)
