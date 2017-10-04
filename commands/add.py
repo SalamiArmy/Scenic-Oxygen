@@ -50,8 +50,8 @@ def update_commands(repo_url, token):
                 raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                               '/master/commands/' + command_data['name'],
                                           headers={'Authorization': 'token ' + token})
-
-                setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
+                if not command_data['name'] == '__init__.py':
+                    setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
 
 def create_hook(bot, chat_id, keyConfig, request_text):
     repo_url = request_text.split(' ')[0] + '/' + request_text.split(' ')[1]
