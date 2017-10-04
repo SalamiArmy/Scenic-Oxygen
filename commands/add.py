@@ -3,8 +3,6 @@ import json
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
-from main import setCommandCode
-
 class TokenValue(ndb.Model):
     # key name: str(repo_url)
     currentValue = ndb.StringProperty(indexed=False, default='')
