@@ -10,13 +10,28 @@ import os
 import telegram
 
 # standard app engine imports
-from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
+from google.appengine.api import urlfetch
 
 import webapp2
 
 from commands import login
 from commands import add
+
+class CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def getCommandCode(command_name):
+    es = CommandsValue.get_by_id(command_name)
+    if es:
+        return str(es.codeValue)
+    return ''
+
+def setCommandCode(command_name, NewValue):
+    es = CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
 
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()

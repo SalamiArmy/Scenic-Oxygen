@@ -1,8 +1,9 @@
-import io
 import json
 
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
+
+from main import setCommandCode
 
 class TokenValue(ndb.Model):
     # key name: str(repo_url)
@@ -42,8 +43,8 @@ def update_commands(repo_url, token):
                 raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                               '/master/commands/' + command_data['name'],
                                           headers={'Authorization': 'token ' + token})
-                command_file = io.FileIO(command_data['name'], 'w')
-                command_file.write(raw_data.content)
+
+                setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
 
 def create_hook(bot, chat_id, keyConfig, request_text):
     repo_url = request_text.split(' ')[0] + '/' + request_text.split(' ')[1]
