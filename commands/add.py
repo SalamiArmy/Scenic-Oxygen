@@ -15,8 +15,8 @@ def getTokenValue(repo_url):
 
 def setTokenValue(repo_url, NewValue):
     es = TokenValue.get_or_insert(str(repo_url))
-    print 'Setting token value for ' + repo_url
     es.currentValue = str(NewValue)
+    print 'Setting token value for ' + str(repo_url)
     es.put()
 
 class CommandsValue(ndb.Model):
