@@ -5,8 +5,10 @@ from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
 import main
+import commands.add as add
+import command_codes
 
-class TestModLoader(unittest.TestCase):
+class TestModLoader_Unit(unittest.TestCase):
     def setUp(self):
         # First, create an instance of the Testbed class.
         self.testbed = testbed.Testbed()
@@ -22,8 +24,22 @@ class TestModLoader(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-    def integration_test_mod_load(self):
-        newModLoaderObject = main.WebhookHandler()
-        mod = newModLoaderObject.load_code_as_module('print \'Hello World\'', 'HelloWorldMod')
+    def test_mod_load(self):
+        main.load_code_as_module('def run():\r\n    print \'Hello World\'', 'HelloWorldMod')
         mod = importlib.import_module('HelloWorldMod')
-        mod
+        mod.run()
+
+    def test_perform_ndb_query(self):
+        add.setCommandCode('retry_on_telegram_error', command_codes.retry_on_telegram_error_command_code())
+        add.setCommandCode('get', command_codes.get_command_code())
+        add.setCommandCode('getgif', command_codes.getgif_command_code())
+
+        newRequestObject = main.WebhookHandler()
+        class Object(object):
+            pass
+        newRequestObject.request = Object()
+        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "/getgif grade A 👌👌 100% 👌👌 good shit", "chat": {"id": -55348600, "type": "group"}}}'
+        newRequestObject.response = Object()
+        newRequestObject.response.write = lambda x: None
+        newRequestObject.post()
+

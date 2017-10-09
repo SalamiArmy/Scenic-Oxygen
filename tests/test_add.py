@@ -6,7 +6,7 @@ import commands.add as add
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
-class TestLogin(unittest.TestCase):
+class TestAdd(unittest.TestCase):
     def setUp(self):
         # First, create an instance of the Testbed class.
         self.testbed = testbed.Testbed()
@@ -23,7 +23,7 @@ class TestLogin(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-    def test_login(self):
+    def test_add(self):
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))

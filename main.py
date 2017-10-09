@@ -5,7 +5,7 @@ import logging
 import urllib
 import sys
 import urllib2
-import os
+import imp
 
 import telegram
 
@@ -24,7 +24,6 @@ from types import ModuleType
 def getCommandCode(command_name):
     es = add.CommandsValue.get_by_id(command_name)
     if es:
-        print 'got ' + str(es.codeValue)
         return str(es.codeValue)
     return ''
 
@@ -128,16 +127,8 @@ class WebhookHandler(webapp2.RequestHandler):
         elif commandName == 'start':
             start.run(telegramBot, chat_id, fr_username, keyConfig)
         else:
-            command_code = getCommandCode(commandName)
-            if command_code != '':
-                try:
-                    self.load_code_as_module(command_code, commandName)
-                    mod = importlib.import_module(commandName)
-                except ImportError:
-                    if chat_type == 'private':
-                        telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
-                                                              ', I\'m afraid I do not recognize the ' + commandName + ' command.')
-                    return
+            if load_code_as_module(commandName):
+                mod = importlib.import_module(commandName)
                 try:
                     mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
                 except:
@@ -151,13 +142,11 @@ class WebhookHandler(webapp2.RequestHandler):
                                              str(sys.exc_info()[1]))
                     except:
                         print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
-
-    def load_code_as_module(self, command_code, module_name):
-        import imp
-        module = imp.new_module(module_name)
-        exec command_code in module.__dict__
-        sys.modules[module_name] = module
-        return module
+            else:
+                if chat_type == 'private':
+                    telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
+                                                          ', I\'m afraid I do not recognize the ' + commandName + ' command.')
+                return
 
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
@@ -169,6 +158,14 @@ class WebhookHandler(webapp2.RequestHandler):
         if loginPin == login.getPin(chat_id):
             self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command + (total_results if total_results is not None else '') + ' ' + requestText, 'private')
 
+def load_code_as_module(module_name):
+    command_code = getCommandCode(module_name)
+    if command_code != '':
+        module = imp.new_module(module_name)
+        exec command_code in module.__dict__
+        sys.modules[module_name] = module
+        return True
+    return False
 
 class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
