@@ -120,7 +120,7 @@ class WebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
         if commandName == 'add':
-            add.run(telegramBot, chat_id, fr_username, keyConfig)
+            add.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '')
         elif commandName == 'login':
             login.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'start':
