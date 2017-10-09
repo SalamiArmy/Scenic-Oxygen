@@ -24,6 +24,7 @@ from types import ModuleType
 def getCommandCode(command_name):
     es = add.CommandsValue.get_by_id(command_name)
     if es:
+        print 'got ' + str(es.codeValue)
         return str(es.codeValue)
     return ''
 
@@ -114,13 +115,14 @@ class WebhookHandler(webapp2.RequestHandler):
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
         commandName = split[0].lower().replace(telegramBot.name.lower(), '')
+        request_text = split[1] if len(split) > 1 else ''
         totalResults = 1
         import re
         if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
         if commandName == 'add':
-            add.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '')
+            add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'login':
             login.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'start':
