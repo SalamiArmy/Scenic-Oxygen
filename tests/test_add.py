@@ -32,3 +32,8 @@ class TestLogin(unittest.TestCase):
         add.run(bot, chatId, 'Admin', keyConfig, keyConfig.get('BotAdministration', 'TESTING_GITHUB_USERNAME') + ' ' +
                 keyConfig.get('BotAdministration', 'TESTING_GITHUB_REPO') + ' ' +
                 keyConfig.get('BotAdministration', 'TESTING_GITHUB_TOKEN'))
+
+    def token_value_store(self):
+        expectValue = 'garbled'
+        add.setTokenValue('username/reponame', expectValue)
+        self.assertEqual(add.getTokenValue('username/reponame'), expectValue)

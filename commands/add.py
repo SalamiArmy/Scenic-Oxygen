@@ -16,7 +16,6 @@ def getTokenValue(repo_url):
 def setTokenValue(repo_url, NewValue):
     es = TokenValue.get_or_insert(str(repo_url))
     es.currentValue = str(NewValue)
-    print 'Setting token value for ' + str(repo_url)
     es.put()
 
 class CommandsValue(ndb.Model):
@@ -62,5 +61,5 @@ def create_hook(bot, chat_id, keyConfig, request_text):
         keyConfig.get('InternetShortcut', 'URL') +
         "/github_webhook\",\r\n    \"content_type\": \"json\"\r\n  }\r\n}",
         urlfetch.POST, {'Authorization': 'token ' + request_text.split(' ')[2]})
-    setTokenValue(repo_url, request_text.split(' ')[0])
+    setTokenValue(repo_url, request_text.split(' ')[2])
     bot.sendMessage(chat_id=chat_id, text=raw_data.content)

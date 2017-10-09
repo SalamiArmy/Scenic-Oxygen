@@ -204,8 +204,6 @@ class GithubWebhookHandler(webapp2.RequestHandler):
         if 'repository' in body and 'owner' in body['repository'] and 'name' in body['repository'] and 'login' in body['repository']['owner']:
             repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
             token = add.getTokenValue(repo_url)
-            if not os.curdir.endswith('commands') and not os.curdir.endswith('commands/'):
-                os.chdir('commands')
             add.update_commands(repo_url, token)
 
 app = webapp2.WSGIApplication([
