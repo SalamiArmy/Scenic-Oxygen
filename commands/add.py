@@ -31,7 +31,6 @@ def setCommandCode(command_name, NewValue):
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     request_text = str(message)
-    print request_text
     repo_url = request_text.split(' ')[0] + '/' + request_text.split(' ')[1]
     token = request_text.split(' ')[2]
     if getTokenValue(repo_url) == request_text.split(' ')[2]:
