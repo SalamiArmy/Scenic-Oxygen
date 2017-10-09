@@ -15,6 +15,7 @@ def getTokenValue(repo_url):
 
 def setTokenValue(repo_url, NewValue):
     es = TokenValue.get_or_insert(str(repo_url))
+    print 'Setting token value for ' + repo_url
     es.currentValue = str(NewValue)
     es.put()
 
@@ -61,6 +62,5 @@ def create_hook(bot, chat_id, keyConfig, request_text):
         keyConfig.get('InternetShortcut', 'URL') +
         "/github_webhook\",\r\n    \"content_type\": \"json\"\r\n  }\r\n}",
         urlfetch.POST, {'Authorization': 'token ' + request_text.split(' ')[2]})
-    print 'Setting token value for ' + repo_url
     setTokenValue(repo_url, request_text.split(' ')[0])
     bot.sendMessage(chat_id=chat_id, text=raw_data.content)
