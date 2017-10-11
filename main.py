@@ -200,6 +200,7 @@ def load_code_as_module(module_name):
                   str(sys.exc_info()[0]) + '\n' + \
                   str(sys.exc_info()[1]) + '\n' + \
                   command_code
+            return None
         return module
     return None
 
