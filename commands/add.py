@@ -63,10 +63,11 @@ def parse_repo_url_and_token(request_text):
 
 
 def update_commands(repo_url, token):
-    logging.info('Executing github hook request using the following basic auth header: ' +
+    github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/commands'
+    logging.info('Executing github hook request against ' + github_contents_url +
+                 ' using the following basic auth header: ' +
                  'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token))
-    raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
-                                  repo_url + '/contents/commands',
+    raw_data = urlfetch.fetch(url=github_contents_url,
                               headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
     logging.info('Got raw_data as ' + raw_data.content)
     json_data = json.loads(raw_data.content)
