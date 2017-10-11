@@ -24,6 +24,7 @@ from types import ModuleType
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+keyConfig.read(["keys.ini", "..\\keys.ini"])
 
 #Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
