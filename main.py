@@ -186,8 +186,11 @@ class GithubWebhookHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(body))
         if 'repository' in body and 'owner' in body['repository'] and 'name' in body['repository'] and 'login' in body['repository']['owner']:
             repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
+            self.response.write('pulling from ' + repo_url)
             token = add.getTokenValue(repo_url)
             add.update_commands(repo_url, token)
+        else:
+            self.response.write('unrecognized ' + json.dumps(body))
 
 def load_code_as_module(module_name):
     command_code = str(add.CommandsValue.get_by_id(module_name).codeValue)
@@ -197,6 +200,8 @@ def load_code_as_module(module_name):
             exec command_code in module.__dict__
         except ImportError:
             print module_name + '\n' + \
+                  'imports between commands must be replaced with command = main.import_code_as_module(command) ' + \
+                  'for Scenic Oxygen to be able to resolve them' + \
                   str(sys.exc_info()[0]) + '\n' + \
                   str(sys.exc_info()[1]) + '\n' + \
                   command_code
