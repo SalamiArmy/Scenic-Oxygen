@@ -42,8 +42,7 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
 
 def update_commands(repo_url, token):
     raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
-                                  repo_url + '/contents/commands',
-                              headers={'Authorization': 'token ' + token})
+                                  repo_url + '/contents/commands')
     logging.info('Got raw_data as ' + raw_data.content)
     json_data = json.loads(raw_data.content)
     if len(json_data) > 0 and ( 'message' not in json_data or json_data['message'] != 'Bad credentials'):
