@@ -46,7 +46,7 @@ def update_commands(repo_url, token):
                               headers={'Authorization': 'token ' + token})
     logging.info('Got raw_data as ' + raw_data.content)
     json_data = json.loads(raw_data.content)
-    if len(json_data) > 0:
+    if len(json_data) > 0 and ( 'message' not in json_data or json_data['message'] != 'Bad credentials'):
         logging.info('more than 0 commands found!')
         for command_data in json_data:
             logging.info('Got command_data as ' + command_data)
