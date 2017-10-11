@@ -193,7 +193,13 @@ def load_code_as_module(module_name):
     command_code = str(add.CommandsValue.get_by_id(module_name).codeValue)
     if command_code != '':
         module = imp.new_module(module_name)
-        exec command_code in module.__dict__
+        try:
+            exec command_code in module.__dict__
+        except ImportError:
+            print module_name + '\n' + \
+                  str(sys.exc_info()[0]) + '\n' + \
+                  str(sys.exc_info()[1]) + '\n' + \
+                  command_code
         return module
     return None
 
