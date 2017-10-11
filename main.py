@@ -121,7 +121,7 @@ class WebhookHandler(webapp2.RequestHandler):
         elif commandName == 'start':
             start.run(telegramBot, chat_id, fr_username, keyConfig)
         else:
-            mod = importlib.import_module(commandName)
+            mod = load_code_as_module(commandName)
             if mod:
                 try:
                     mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
