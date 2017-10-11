@@ -188,8 +188,11 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             logging.info('Got repo_url as ' + repo_url)
             token = add.getTokenValue(repo_url)
             logging.info('Got token as ' + token)
-            add.update_commands(repo_url, token)
-            self.response.write('Commands imported from ' + repo_url)
+            response = add.update_commands(repo_url, token)
+            if response == '':
+                self.response.write('Commands imported from ' + repo_url)
+            else:
+                self.response.write(response)
         else:
             self.response.write('unrecognized ' + json.dumps(body))
 
