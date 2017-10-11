@@ -18,6 +18,7 @@ import webapp2
 from commands import start
 from commands import login
 from commands import add
+from commands import remove
 
 from types import ModuleType
 
@@ -117,6 +118,8 @@ class WebhookHandler(webapp2.RequestHandler):
             commandName = re.findall('^[a-z]+', commandName)[0]
         if commandName == 'add':
             add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
+        if commandName == 'remove':
+            remove.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'login':
             login.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'start':
