@@ -74,16 +74,13 @@ def update_commands(repo_url, token):
         if 'message' not in json_data:
             logging.info('more than 0 commands found!')
             for command_data in json_data:
-                logging.info('Got command_data as ')
+                logging.info('Got command meta data as ')
                 logging.info(command_data)
                 if 'name' in command_data and not command_data['name'] == '__init__.py':
                     raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                                   '/master/commands/' + command_data['name'],
                                               headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
-                    if 'message' not in raw_data:
-                        setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
-                    else:
-                        return raw_data['message']
+                    setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
             return ''
         else:
             return json_data['message']
