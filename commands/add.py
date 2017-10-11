@@ -42,6 +42,8 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
         create_hook(bot, chat_id, keyConfig, request_text)
 
 def update_commands(repo_url, token):
+    logging.info('Executing github hook request using the following basic auth header: ' +
+                 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token))
     raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
                                   repo_url + '/contents/commands',
                               headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
