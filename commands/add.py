@@ -78,7 +78,7 @@ def update_commands(repo_url, token):
                 logging.info('Got command meta data as ')
                 logging.info(command_data)
                 if 'name' in command_data and \
-                    command_data['name'] != '__init__.py' and \
+                                command_data['name'] != '__init__.py' and \
                                 command_data['name'] != 'add.py' and \
                                 command_data['name'] != 'remove.py' and \
                                 command_data['name'] != 'login.py' and \
@@ -97,8 +97,8 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
         "{\r\n  \"name\": \"web\",\r\n  \"active\": true,\r\n  \"config\": {\r\n    \"url\": \"" +
         keyConfig.get('InternetShortcut', 'URL') +
         "/github_webhook\",\r\n    \"content_type\": \"json\"\r\n  }\r\n}",
-        urlfetch.POST, {'Authorization': 'token ' + token})
-    json_data = json.load(raw_data)
+        urlfetch.POST, {'Authorization': 'token ' + token}).content
+    json_data = json.loads(raw_data)
     setTokenValue(repo_url, token)
     setHookIDValue(repo_url, json_data['id'])
-    bot.sendMessage(chat_id=chat_id, text=raw_data.content)
+    bot.sendMessage(chat_id=chat_id, text=raw_data)
