@@ -10,7 +10,7 @@ import imp
 import telegram
 
 # standard app engine imports
-from google.appengine.ext import ndb
+from google.appengine.ext import ndb, endpoints
 from google.appengine.api import urlfetch
 
 import webapp2
@@ -194,8 +194,13 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                 self.response.write('Commands imported from ' + repo_url)
             else:
                 self.response.write(response)
+                if response == 'Bad credentials':
+                    raise endpoints.UnauthorizedException()
+                else:
+                    raise endpoints.InternalServerErrorException()
         else:
             self.response.write('unrecognized ' + json.dumps(body))
+            raise endpoints.InternalServerErrorException()
 
 def load_code_as_module(module_name):
     get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
