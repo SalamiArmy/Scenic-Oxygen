@@ -1,4 +1,5 @@
 import json
+import logging
 
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
@@ -43,9 +44,12 @@ def update_commands(repo_url, token):
     raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
                                   repo_url + '/contents/commands',
                               headers={'Authorization': 'token ' + token})
+    logging.info('Got raw_data as ' + raw_data.content)
     json_data = json.loads(raw_data.content)
     if len(json_data) > 0:
+        logging.info('more than 0 commands found!')
         for command_data in json_data:
+            logging.info('Got command_data as ' + command_data)
             if 'name' in command_data:
                 raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                               '/master/commands/' + command_data['name'],
