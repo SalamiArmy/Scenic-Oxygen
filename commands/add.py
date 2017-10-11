@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 
@@ -43,7 +44,7 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
 def update_commands(repo_url, token):
     raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
                                   repo_url + '/contents/commands',
-                              headers={'Authorization': 'token ' + token})
+                              headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
     logging.info('Got raw_data as ' + raw_data.content)
     json_data = json.loads(raw_data.content)
     if json_data and len(json_data) > 0:
@@ -54,7 +55,7 @@ def update_commands(repo_url, token):
                 if 'name' in command_data and not command_data['name'] == '__init__.py':
                     raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                                   '/master/commands/' + command_data['name'],
-                                              headers={'Authorization': 'token ' + token})
+                                              headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
                     if 'message' not in raw_data:
                         setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
                     else:

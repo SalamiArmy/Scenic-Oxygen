@@ -29,9 +29,9 @@ class TestAdd(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        add.run(bot, chatId, 'Admin', keyConfig, keyConfig.get('BotAdministration', 'TESTING_GITHUB_USERNAME') + ' ' +
-                keyConfig.get('BotAdministration', 'TESTING_GITHUB_REPO') + ' ' +
-                keyConfig.get('BotAdministration', 'TESTING_GITHUB_TOKEN'))
+        add.run(bot, chatId, 'Admin', keyConfig, keyConfig.get('GitHub', 'TESTING_GITHUB_USERNAME') + ' ' +
+                keyConfig.get('GitHub', 'TESTING_GITHUB_REPO') + ' ' +
+                keyConfig.get('GitHub', 'TESTING_GITHUB_TOKEN'))
 
     def token_value_store(self):
         expectValue = 'garbled'
