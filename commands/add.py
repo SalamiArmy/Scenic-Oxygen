@@ -77,7 +77,12 @@ def update_commands(repo_url, token):
             for command_data in json_data:
                 logging.info('Got command meta data as ')
                 logging.info(command_data)
-                if 'name' in command_data and not command_data['name'] == '__init__.py':
+                if 'name' in command_data and \
+                    command_data['name'] != '__init__.py' and \
+                                command_data['name'] != 'add.py' and \
+                                command_data['name'] != 'remove.py' and \
+                                command_data['name'] != 'login.py' and \
+                                command_data['name'] != 'start.py':
                     raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                                   '/master/commands/' + command_data['name'],
                                               headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
