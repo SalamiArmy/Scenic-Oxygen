@@ -21,12 +21,6 @@ from commands import add
 
 from types import ModuleType
 
-def getCommandCode(command_name):
-    es = add.CommandsValue.get_by_id(command_name)
-    if es:
-        return str(es.codeValue)
-    return ''
-
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
@@ -127,8 +121,8 @@ class WebhookHandler(webapp2.RequestHandler):
         elif commandName == 'start':
             start.run(telegramBot, chat_id, fr_username, keyConfig)
         else:
-            if load_code_as_module(commandName):
-                mod = importlib.import_module(commandName)
+            mod = importlib.import_module(commandName)
+            if mod:
                 try:
                     mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
                 except:
@@ -157,15 +151,6 @@ class WebhookHandler(webapp2.RequestHandler):
         total_results = self.request.get('total_results')
         if loginPin == login.getPin(chat_id):
             self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command + (total_results if total_results is not None else '') + ' ' + requestText, 'private')
-
-def load_code_as_module(module_name):
-    command_code = getCommandCode(module_name)
-    if command_code != '':
-        module = imp.new_module(module_name)
-        exec command_code in module.__dict__
-        sys.modules[module_name] = module
-        return True
-    return False
 
 class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
@@ -199,11 +184,18 @@ class GithubWebhookHandler(webapp2.RequestHandler):
         logging.info('request body:')
         logging.info(body)
         self.response.write(json.dumps(body))
-
         if 'repository' in body and 'owner' in body['repository'] and 'name' in body['repository'] and 'login' in body['repository']['owner']:
             repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
             token = add.getTokenValue(repo_url)
             add.update_commands(repo_url, token)
+
+def load_code_as_module(module_name):
+    command_code = str(add.CommandsValue.get_by_id(module_name).codeValue)
+    if command_code != '':
+        module = imp.new_module(module_name)
+        exec command_code in module.__dict__
+        return module
+    return None
 
 app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
