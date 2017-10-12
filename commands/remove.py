@@ -4,8 +4,7 @@ import logging
 
 from google.appengine.api import urlfetch
 
-import main
-add = main.load_code_as_module('add')
+import add
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     request_text = str(message)
