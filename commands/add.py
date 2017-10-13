@@ -52,6 +52,7 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if getTokenValue(repo_url) == request_text.split(' ')[2]:
         bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
     else:
+        setTokenValue(repo_url, token)
         update_commands(repo_url, token)
         create_hook(bot, chat_id, keyConfig, repo_url, token)
 
@@ -101,7 +102,6 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
     json_data = json.loads(raw_data)
     if 'id' in json_data:
         setHookIDValue(repo_url, json_data['id'])
-        setTokenValue(repo_url, token)
         bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data)
     else:
         if 'message' in json_data:
