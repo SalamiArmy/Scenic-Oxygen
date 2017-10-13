@@ -11,13 +11,17 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     repo_url, token = add.parse_repo_url_and_token(request_text)
     existing_token = add.getTokenValue(repo_url)
     request_token = request_text.split(' ')[2]
-    if existing_token == request_token:
-        remove_hook_response = remove_hook(repo_url, token)
-        remove_commands(repo_url, token)
-        bot.sendMessage(chat_id=chat_id, text=remove_hook_response)
+    if request_token != '':
+        if existing_token == request_token:
+            remove_hook_response = remove_hook(repo_url, token)
+            remove_commands(repo_url, token)
+            bot.sendMessage(chat_id=chat_id, text=remove_hook_response)
+        else:
+            bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url +
+                                                  ' have not been hooked or wrong token in request.')
     else:
-        bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url +
-                                              ' have not been hooked or wrong token in request.')
+        bot.sendMessage(chat_id=chat_id, text='A Github token is required. ' +
+                                              'With permission to list all commands in the repo.')
 
 def remove_commands(repo_url, token):
     logging.info('Executing github hook request using the following basic auth header: ' +
