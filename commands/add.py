@@ -53,12 +53,12 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     stored_token = getTokenValue(repo_url)
     logging.info('comparing stored_token: ' + stored_token + ' to request_token: ' + request_token)
     if stored_token != request_token:
-        logging('not equal')
+        logging.info('not equal')
         setTokenValue(repo_url, request_token)
         update_commands(repo_url, request_token)
         create_hook(bot, chat_id, keyConfig, repo_url, request_token)
     else:
-        logging('equal')
+        logging.info('equal')
         bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
 
 
