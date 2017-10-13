@@ -33,7 +33,7 @@ class TestAdd(unittest.TestCase):
                 keyConfig.get('GitHub', 'TESTING_GITHUB_REPO') + ' ' +
                 keyConfig.get('GitHub', 'TESTING_GITHUB_TOKEN'))
 
-    def token_value_store(self):
+    def test_token_value_store(self):
         expectValue = 'garbled'
         add.setTokenValue('username/reponame', expectValue)
         self.assertEqual(add.getTokenValue('username/reponame'), expectValue)

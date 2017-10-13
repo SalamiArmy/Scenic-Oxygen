@@ -102,7 +102,7 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
     if 'id' in json_data:
         setHookIDValue(repo_url, json_data['id'])
         setTokenValue(repo_url, token)
-        bot.sendMessage(chat_id=chat_id, text=raw_data)
+        bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data)
     else:
         if 'message' in json_data:
             bot.sendMessage(chat_id=chat_id, text=json_data['message'])

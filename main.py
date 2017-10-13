@@ -119,7 +119,7 @@ class WebhookHandler(webapp2.RequestHandler):
             commandName = re.findall('^[a-z]+', commandName)[0]
         if commandName == 'add':
             add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
-        if commandName == 'remove':
+        elif commandName == 'remove':
             remove.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'login':
             login.run(telegramBot, chat_id, fr_username, keyConfig)

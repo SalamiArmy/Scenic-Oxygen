@@ -9,7 +9,9 @@ import add
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     request_text = str(message)
     repo_url, token = add.parse_repo_url_and_token(request_text)
-    if add.getTokenValue(repo_url) == request_text.split(' ')[2]:
+    existing_token = add.getTokenValue(repo_url)
+    request_token = request_text.split(' ')[2]
+    if existing_token == request_token:
         remove_hook_response = remove_hook(repo_url, token)
         remove_commands(repo_url, token)
         bot.sendMessage(chat_id=chat_id, text=remove_hook_response)
@@ -31,7 +33,11 @@ def remove_commands(repo_url, token):
             for command_data in json_data:
                 logging.info('Got command_data as ')
                 logging.info(command_data)
-                if 'name' in command_data and not command_data['name'] == '__init__.py':
+                if 'name' in command_data and not command_data['name'] == '__init__.py' and \
+                        not command_data['name'] == 'add.py' and \
+                        not command_data['name'] == 'remove.py' and \
+                        not command_data['name'] == 'login.py' and \
+                        not command_data['name'] == 'start.py':
                     add.setCommandCode(str(command_data['name']).replace('.py', ''), '')
             return ''
         else:
