@@ -10,14 +10,14 @@ class TokenValue(ndb.Model):
     currentValue = ndb.StringProperty(indexed=False, default='')
 
 def getTokenValue(repo_url):
-    es = TokenValue.get_by_id(str(repo_url))
+    es = TokenValue.get_by_id(str(repo_url).lower())
     if es:
         return str(es.currentValue)
     return ''
 
 def setTokenValue(repo_url, NewValue):
-    es = TokenValue.get_or_insert(str(repo_url))
-    logging.info('setting token value for ' + str(repo_url) + ' to ' + str(NewValue))
+    es = TokenValue.get_or_insert(str(repo_url).lower())
+    logging.info('setting token value for ' + str(repo_url).lower() + ' to ' + str(NewValue))
     es.currentValue = str(NewValue)
     es.put()
 
