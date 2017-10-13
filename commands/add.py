@@ -51,15 +51,17 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     request_text = str(message)
     repo_url, request_token = parse_repo_url_and_token(request_text)
     stored_token = getTokenValue(repo_url)
-    logging.info('comparing stored_token: ' + stored_token + ' to request_token: ' + request_token)
-    if stored_token != request_token:
-        logging.info('not equal')
-        setTokenValue(repo_url, request_token)
-        update_commands(repo_url, request_token)
-        create_hook(bot, chat_id, keyConfig, repo_url, request_token)
+    if request_token != '':
+        if stored_token != request_token:
+            setTokenValue(repo_url, request_token)
+            update_commands(repo_url, request_token)
+            create_hook(bot, chat_id, keyConfig, repo_url, request_token)
+        else:
+            bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
     else:
-        logging.info('equal')
-        bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
+        bot.sendMessage(chat_id=chat_id, text='A Github token is required. ' +
+                                              'With permission to read all commands in the repo ' +
+                                              'and create hooks.')
 
 
 def parse_repo_url_and_token(request_text):
@@ -97,6 +99,30 @@ def update_commands(repo_url, token):
         else:
             return json_data['message']
 
+def remove_commands(repo_url, token):
+    logging.info('Executing github hook request using the following basic auth header: ' +
+                 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token))
+    raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
+                                  repo_url + '/contents/commands',
+                              headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
+    logging.info('Got raw_data as ' + raw_data.content)
+    json_data = json.loads(raw_data.content)
+    if json_data and len(json_data) > 0:
+        if 'message' not in json_data:
+            logging.info('more than 0 commands found!')
+            for command_data in json_data:
+                logging.info('Got command_data as ')
+                logging.info(command_data)
+                if 'name' in command_data and not command_data['name'] == '__init__.py' and \
+                        not command_data['name'] == 'add.py' and \
+                        not command_data['name'] == 'remove.py' and \
+                        not command_data['name'] == 'login.py' and \
+                        not command_data['name'] == 'start.py':
+                    setCommandCode(str(command_data['name']).replace('.py', ''), '')
+            return ''
+        else:
+            return json_data['message']
+
 def create_hook(bot, chat_id, keyConfig, repo_url, token):
     raw_data = urlfetch.fetch(
         'https://api.github.com/repos/' + repo_url + '/hooks',
@@ -115,3 +141,10 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
         if 'errors' in json_data:
             for error in json_data['errors']:
                 bot.sendMessage(chat_id=chat_id, text=error['message'])
+
+def remove_hook(repo_url, token):
+    hookID = getHookIDValue(repo_url)
+    raw_data = urlfetch.fetch('https://api.github.com/repos/' + repo_url + '/hooks/' + hookID,
+                              method=urlfetch.DELETE, headers={'Authorization': 'token ' + token})
+    setHookIDValue(repo_url, '')
+    return raw_data.content
