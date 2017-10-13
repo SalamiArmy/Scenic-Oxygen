@@ -12,6 +12,7 @@ class TokenValue(ndb.Model):
 def getTokenValue(repo_url):
     es = TokenValue.get_by_id(str(repo_url))
     if es:
+        logging.info('got token value for ' + repo_url + ' as ' + str(es.currentValue))
         return str(es.currentValue)
     return ''
 

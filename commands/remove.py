@@ -11,7 +11,6 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     repo_url, token = add.parse_repo_url_and_token(request_text)
     existing_token = add.getTokenValue(repo_url)
     request_token = request_text.split(' ')[2]
-    logging.info('Remove is not checking if the token already exists or not.\nTo that end it is comparing what it read from it\'s data store: ' + existing_token + ' to the request coming in: ' + request_token)
     if existing_token == request_token:
         remove_hook_response = remove_hook(repo_url, token)
         remove_commands(repo_url, token)
