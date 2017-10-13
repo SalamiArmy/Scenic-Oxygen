@@ -37,3 +37,10 @@ class TestAdd(unittest.TestCase):
         expectValue = 'garbled'
         add.setTokenValue('username/reponame', expectValue)
         self.assertEqual(add.getTokenValue('username/reponame'), expectValue)
+
+    def test_add_CreateHook(self):
+        keyConfig = ConfigParser.ConfigParser()
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+        chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
+        add.create_hook(bot, chatId, keyConfig, keyConfig.get('GitHub', 'TESTING_GITHUB_USERNAME') + '/' + keyConfig.get('GitHub', 'TESTING_GITHUB_REPO'), keyConfig.get('GitHub', 'TESTING_GITHUB_TOKEN'))

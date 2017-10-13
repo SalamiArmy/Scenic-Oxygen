@@ -99,6 +99,13 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
         "/github_webhook\",\r\n    \"content_type\": \"json\"\r\n  }\r\n}",
         urlfetch.POST, {'Authorization': 'token ' + token}).content
     json_data = json.loads(raw_data)
-    setTokenValue(repo_url, token)
-    setHookIDValue(repo_url, json_data['id'])
-    bot.sendMessage(chat_id=chat_id, text=raw_data)
+    if 'id' in json_data:
+        setHookIDValue(repo_url, json_data['id'])
+        setTokenValue(repo_url, token)
+        bot.sendMessage(chat_id=chat_id, text=raw_data)
+    else:
+        if 'message' in json_data:
+            bot.sendMessage(chat_id=chat_id, text=json_data['message'])
+        if 'errors' in json_data:
+            for error in json_data['errors']:
+                bot.sendMessage(chat_id=chat_id, text=error['message'])
