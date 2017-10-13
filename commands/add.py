@@ -12,7 +12,9 @@ class TokenValue(ndb.Model):
 def getTokenValue(repo_url):
     es = TokenValue.get_by_id(str(repo_url).lower())
     if es:
+        logging.info('got token value as ' + str(es.currentValue) + ' for ' + str(repo_url).lower())
         return str(es.currentValue)
+    logging.info('got null token value from ' + str(repo_url).lower())
     return ''
 
 def setTokenValue(repo_url, NewValue):
