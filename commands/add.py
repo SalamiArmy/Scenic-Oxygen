@@ -12,12 +12,12 @@ class TokenValue(ndb.Model):
 def getTokenValue(repo_url):
     es = TokenValue.get_by_id(str(repo_url))
     if es:
-        logging.info('got token value for ' + repo_url + ' as ' + str(es.currentValue))
         return str(es.currentValue)
     return ''
 
 def setTokenValue(repo_url, NewValue):
     es = TokenValue.get_or_insert(str(repo_url))
+    logging.info('setting token value for ' + str(repo_url) + ' to ' + str(NewValue))
     es.currentValue = str(NewValue)
     es.put()
 
