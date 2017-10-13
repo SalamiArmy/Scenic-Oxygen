@@ -6,11 +6,12 @@ import urllib
 import sys
 import urllib2
 import imp
+import endpoints
 
 import telegram
 
 # standard app engine imports
-from google.appengine.ext import ndb, endpoints
+from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
 import webapp2
