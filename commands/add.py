@@ -49,13 +49,17 @@ def setCommandCode(command_name, NewValue):
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     request_text = str(message)
-    repo_url, token = parse_repo_url_and_token(request_text)
-    if getTokenValue(repo_url) == request_text.split(' ')[2]:
-        bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
+    repo_url, request_token = parse_repo_url_and_token(request_text)
+    stored_token = getTokenValue(repo_url)
+    logging.info('comparing stored_token: ' + stored_token + ' to request_token: ' + request_token)
+    if stored_token != request_token:
+        logging('not equal')
+        setTokenValue(repo_url, request_token)
+        update_commands(repo_url, request_token)
+        create_hook(bot, chat_id, keyConfig, repo_url, request_token)
     else:
-        setTokenValue(repo_url, token)
-        update_commands(repo_url, token)
-        create_hook(bot, chat_id, keyConfig, repo_url, token)
+        logging('equal')
+        bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
 
 
 def parse_repo_url_and_token(request_text):
