@@ -29,7 +29,8 @@ def remove_commands(repo_url, token):
         if 'message' not in json_data:
             logging.info('more than 0 commands found!')
             for command_data in json_data:
-                logging.info('Got command_data as ' + command_data)
+                logging.info('Got command_data as ')
+				logging.info(command_data)
                 if 'name' in command_data and not command_data['name'] == '__init__.py':
                     add.setCommandCode(str(command_data['name']).replace('.py', ''), '')
             return ''
