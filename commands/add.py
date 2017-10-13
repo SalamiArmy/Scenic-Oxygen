@@ -103,11 +103,12 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
         "{\r\n  \"name\": \"web\",\r\n  \"active\": true,\r\n  \"config\": {\r\n    \"url\": \"" +
         keyConfig.get('InternetShortcut', 'URL') +
         "/github_webhook\",\r\n    \"content_type\": \"json\"\r\n  }\r\n}",
-        urlfetch.POST, {'Authorization': 'token ' + token}).content
-    json_data = json.loads(raw_data)
-    if 'id' in json_data:
-        setHookIDValue(repo_url, json_data['id'])
-        bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data)
+        urlfetch.POST, {'Authorization': 'token ' + token})
+    json_data = json.loads(raw_data.content)
+    if raw_data.status_code == 200:
+        if 'id' in json_data:
+            setHookIDValue(repo_url, json_data['id'])
+            bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data)
     else:
         if 'message' in json_data:
             bot.sendMessage(chat_id=chat_id, text=json_data['message'])
