@@ -12,9 +12,7 @@ class TokenValue(ndb.Model):
 def getTokenValue(repo_url):
     es = TokenValue.get_by_id(str(repo_url).lower())
     if es:
-        logging.info('got token value as ' + str(es.currentValue) + ' for ' + str(repo_url).lower())
         return str(es.currentValue)
-    logging.info('got null token value from ' + str(repo_url).lower())
     return ''
 
 def setTokenValue(repo_url, NewValue):
@@ -135,9 +133,14 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
             setHookIDValue(repo_url, json_data['id'])
             bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
             return True
+        else:
+            bot.sendMessage(chat_id=chat_id, text='Webhook creation failed:\n' + raw_data.content)
+            return False
     else:
         if 'message' in json_data:
             bot.sendMessage(chat_id=chat_id, text=json_data['message'])
+        else:
+            bot.sendMessage(chat_id=chat_id, text='Webhook creation failed:\n' + raw_data.content)
         if 'errors' in json_data:
             for error in json_data['errors']:
                 bot.sendMessage(chat_id=chat_id, text=error['message'])
