@@ -9,13 +9,13 @@ Scenic Oxygen can:
 1. Perform *autherization* for for linking bots together or to the web.
 2. Perform scheduled *CRON jobs* and *store data* about bot's state. 
 3. Listens for all messages in many chat groups (either directly with him or in a group chat room) starting with a forward slash  (eg: "/get happy dog"). These "slashtags" are used to execute explicit commands. If that message is "/login" or "/login some_new_password" then the bot executes the python file in "commands/login.py". For example "/get happy dog" would execute the python file "commands/get.py" and pass it the text "happy dog".
-4. TODO: Hook into Github repositories to automatically update commands.
+4. Hook into Github repositories to automatically update commands.
 
 ### What is commands/login.py?
 The login command stores encrypted passwords that other bots and websites use to execute commands remotely and send messages to the chat room in the bot's name. All commands are handled by seperate python files in the "commands/" folder. These command files distinguish the bots from each other. If two bots both have a file "commands/executeme.py" and they are both members of the same group chat room then whenever a user sends the slashtag "/executeme" both of them will respond. Unless they are programmed not to like the login command is.
 
 ### How do I add new commands?
-All you have to do is create a new python script in commands/ folder that has a function called run which takes four arguments, the first is the username, the second is the incoming message text, the third are the keys if your command uses any and the fourth is the number of responses the user is expecting.
+Create a seperate GitHub repo. Add a folder called "commands" and add each command into that folder as a seperate python file named after the command. Send a message to this bot of the form: "/add [[Repo Username or Organization Name]] [[Repo Name]] [[Acces Token]]" Where [[Repo Username or Organization Name]] and [[Repo Name]] are parts of the git hub url of the repo and [[Acces Token]] is a Personal Access token granted to you by GitHub (in your user settings) which permission to create hooks, delete hooks and read content on the new command's repository.
 
 tl;dr: Look at one of the existing commands, you must have a run(chat_id, user, request_text, keyConfig, number_of_responses) function.
 
