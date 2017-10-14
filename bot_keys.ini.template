@@ -15,4 +15,5 @@ TESTING_GITHUB_REPO: {Github repo name for testing Github hooking}
 TESTING_GITHUB_TOKEN: {Github token for testing Github hooking}
 
 [InternetShortcut]
-URL: {Web URL for web bridging eg: google.com}
+URL: {Web URL including protocol for web bridging eg: http://google.com}
+TELEGRAM_URL: {Web URL for linking straight to a private chat with the telegram bot eg: http://t.me/google_bot}

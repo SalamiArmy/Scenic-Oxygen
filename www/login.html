@@ -1,10 +1,23 @@
 <html>
-  <head>
+<head>
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-  </head>
+    <script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    document.getElementById("TelegramLinkDiv").innerHTML = getParameterByName('telegramlink');
+    </script>
+</head>
   <body>
     <h1>Login</h1>
+    <div id="TelegramLinkDiv"
     <p>
 		<form action="/login">
 		  Username:<br>
