@@ -152,16 +152,10 @@ def remove_hook(bot, chat_id, keyConfig, repo_url, token):
     hookID = getHookIDValue(repo_url)
     raw_data = urlfetch.fetch('https://api.github.com/repos/' + repo_url + '/hooks/' + hookID,
                               method=urlfetch.DELETE, headers={'Authorization': 'token ' + token})
-    json_data = json.loads(raw_data.content)
     logging.info('webhook remove api call status code: ' + str(raw_data.status_code))
     if raw_data.status_code == 200 or raw_data.status_code == 201:
         setHookIDValue(repo_url, '')
         bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
         return True
     else:
-        if 'message' in json_data:
-            bot.sendMessage(chat_id=chat_id, text=json_data['message'])
-        if 'errors' in json_data:
-            for error in json_data['errors']:
-                bot.sendMessage(chat_id=chat_id, text=error['message'])
         return False
