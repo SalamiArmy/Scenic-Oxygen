@@ -1,4 +1,5 @@
 import ConfigParser
+import base64
 import importlib
 import json
 import logging
@@ -192,19 +193,47 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
             logging.info('Got repo_url as ' + repo_url)
             token = add.getTokenValue(repo_url)
-            logging.info('Got token as ' + token)
-            response = add.update_commands(repo_url, token)
-            if response == '':
-                self.response.write('Commands imported from ' + repo_url)
-            else:
-                self.response.write(response)
-                if response == 'Bad credentials':
-                    raise endpoints.UnauthorizedException()
+            if token != '':
+                response = self.update_commands(repo_url, token)
+                if response == '':
+                    self.response.write('Commands imported from ' + repo_url)
                 else:
-                    raise endpoints.InternalServerErrorException()
+                    self.response.write(response)
+                    if response == 'Bad credentials':
+                        raise endpoints.UnauthorizedException()
+                    else:
+                        raise endpoints.InternalServerErrorException()
+            else:
+                raise endpoints.InternalServerErrorException('Internal data store error: no token found ' +
+                                                             'in the data store for ' + repo_url)
         else:
             self.response.write('unrecognized ' + json.dumps(body))
             raise endpoints.InternalServerErrorException()
+
+    def update_commands(self, repo_url, token):
+        github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/commands'
+        raw_data = urlfetch.fetch(url=github_contents_url,
+                                  headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
+        logging.info('Got raw_data as ' + raw_data.content)
+        json_data = json.loads(raw_data.content)
+        if json_data and len(json_data) > 0:
+            if 'message' not in json_data:
+                for command_data in json_data:
+                    logging.info('Got command meta data as ')
+                    logging.info(command_data)
+                    if 'name' in command_data and \
+                                    command_data['name'] != '__init__.py' and \
+                                    command_data['name'] != 'add.py' and \
+                                    command_data['name'] != 'remove.py' and \
+                                    command_data['name'] != 'login.py' and \
+                                    command_data['name'] != 'start.py':
+                        raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
+                                                      '/master/commands/' + command_data['name'],
+                                                  headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
+                        add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
+                return ''
+            else:
+                return json_data['message']
 
 def load_code_as_module(module_name):
     get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
