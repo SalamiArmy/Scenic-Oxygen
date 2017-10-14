@@ -12,12 +12,12 @@
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
-    document.getElementById("TelegramLinkDiv").innerHTML = getParameterByName('telegramlink');
+    document.getElementById("TelegramLinkDiv").innerHTML = getParameterByName("telegramlink");
     </script>
 </head>
   <body>
     <h1>Login</h1>
-    <div id="TelegramLinkDiv"
+    <div id="TelegramLinkDiv"></div>
     <p>
 		<form action="/login">
 		  Username:<br>
