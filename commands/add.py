@@ -70,6 +70,8 @@ def parse_repo_url_and_token(request_text):
 
 
 def update_commands(repo_url, token):
+    logging.info('repo_url=' + repo_url)
+    logging.info('token=' + token)
     github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/commands'
     logging.info('Executing github hook request against ' + github_contents_url +
                  ' using the following basic auth header: ' +
@@ -80,7 +82,6 @@ def update_commands(repo_url, token):
     json_data = json.loads(raw_data.content)
     if json_data and len(json_data) > 0:
         if 'message' not in json_data:
-            logging.info('more than 0 commands found!')
             for command_data in json_data:
                 logging.info('Got command meta data as ')
                 logging.info(command_data)
