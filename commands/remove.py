@@ -18,6 +18,8 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
                     add.setTokenValue(repo_url, '')
                     remove_commands(repo_url, token)
                 else:
+                    error_message = 'Error removing hook ' + hookID + ' from ' + repo_url
+                    logging.info(error_message)
                     bot.sendMessage(chat_id=chat_id, text='Error removing hook ' + hookID + ' from ' + repo_url)
             else:
                 bot.sendMessage(chat_id=chat_id, text='Wrong token in request.')
