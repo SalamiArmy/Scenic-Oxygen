@@ -12,7 +12,9 @@
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
-    document.getElementById("TelegramLinkDiv").innerHTML = getParameterByName("telegramlink");
+    window.onload = function() {
+        document.getElementById("TelegramLinkDiv").innerHTML = getParameterByName("telegramlink");
+    }
     </script>
 </head>
   <body>
