@@ -53,8 +53,7 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     stored_token = getTokenValue(repo_url)
     if request_token != '':
         if stored_token != request_token:
-            if create_hook(bot, chat_id, keyConfig, repo_url, request_token):
-                setTokenValue(repo_url, request_token)
+            create_hook(bot, chat_id, keyConfig, repo_url, request_token)
         else:
             bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
     else:
@@ -122,6 +121,7 @@ def remove_commands(repo_url, token):
             return json_data['message']
 
 def create_hook(bot, chat_id, keyConfig, repo_url, token):
+    setTokenValue(repo_url, token)
     raw_data = urlfetch.fetch(
         'https://api.github.com/repos/' + repo_url + '/hooks',
         "{\r\n  \"name\": \"web\",\r\n  \"active\": true,\r\n  \"config\": {\r\n    \"url\": \"" +
