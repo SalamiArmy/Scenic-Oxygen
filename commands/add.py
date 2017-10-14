@@ -130,7 +130,7 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
         urlfetch.POST, {'Authorization': 'token ' + token})
     json_data = json.loads(raw_data.content)
     logging.info('webhook create api call status code: ' + str(raw_data.status_code))
-    if raw_data.status_code == 200 or raw_data.status_code == 201:
+    if raw_data.status_code >= 200 and raw_data.status_code < 300:
         if 'id' in json_data:
             setHookIDValue(repo_url, json_data['id'])
             bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
@@ -153,7 +153,7 @@ def remove_hook(bot, chat_id, keyConfig, repo_url, token):
     raw_data = urlfetch.fetch('https://api.github.com/repos/' + repo_url + '/hooks/' + hookID,
                               method=urlfetch.DELETE, headers={'Authorization': 'token ' + token})
     logging.info('webhook remove api call status code: ' + str(raw_data.status_code))
-    if raw_data.status_code == 200 or raw_data.status_code == 201:
+    if raw_data.status_code >= 200 and raw_data.status_code < 300:
         setHookIDValue(repo_url, '')
         bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
         return True
