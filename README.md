@@ -2,7 +2,7 @@
 ## A simple shell for hosting python bots on Google App Engine.
 
 ### What is Scenic Oxygen?
-Scenic Oxygen hosts commands for chat bots in Google App Engine.
+Scenic Oxygen turns Google App Engine into Google Bot Engine.
 
 ### How does it work?
 Scenic Oxygen can: 
