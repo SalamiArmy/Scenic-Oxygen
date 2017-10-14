@@ -185,9 +185,9 @@ class Login(webapp2.RequestHandler):
 class GithubWebhookHandler(webapp2.RequestHandler):
     def post(self):
         urlfetch.set_default_fetch_deadline(120)
-        body = json.loads(self.request.body)
         logging.info('request body:')
-        logging.info(body)
+        logging.info(self.request.body)
+        body = json.loads(self.request.body)
         if 'repository' in body and 'owner' in body['repository'] and 'login' in body['repository']['owner'] and 'name' in body['repository']:
             repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
             logging.info('Got repo_url as ' + repo_url)
