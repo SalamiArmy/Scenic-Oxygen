@@ -133,7 +133,7 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
     if raw_data.status_code == 200:
         if 'id' in json_data:
             setHookIDValue(repo_url, json_data['id'])
-            bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data)
+            bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
     else:
         if 'message' in json_data:
             bot.sendMessage(chat_id=chat_id, text=json_data['message'])
@@ -141,9 +141,17 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
             for error in json_data['errors']:
                 bot.sendMessage(chat_id=chat_id, text=error['message'])
 
-def remove_hook(repo_url, token):
+def remove_hook(bot, chat_id, keyConfig, repo_url, token):
     hookID = getHookIDValue(repo_url)
     raw_data = urlfetch.fetch('https://api.github.com/repos/' + repo_url + '/hooks/' + hookID,
                               method=urlfetch.DELETE, headers={'Authorization': 'token ' + token})
-    setHookIDValue(repo_url, '')
-    return raw_data.content
+    json_data = json.loads(raw_data.content)
+    if raw_data.status_code == 200:
+        setHookIDValue(repo_url, '')
+        bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
+    else:
+        if 'message' in json_data:
+            bot.sendMessage(chat_id=chat_id, text=json_data['message'])
+        if 'errors' in json_data:
+            for error in json_data['errors']:
+                bot.sendMessage(chat_id=chat_id, text=error['message'])

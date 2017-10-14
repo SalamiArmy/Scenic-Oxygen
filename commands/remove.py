@@ -8,7 +8,7 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if request_token != '':
         if existing_token != '':
             if existing_token == request_token:
-                remove_hook_response = add.remove_hook(repo_url, token)
+                remove_hook_response = add.remove_hook(bot, chat_id, keyConfig, repo_url, token)
                 add.setTokenValue(repo_url, '')
                 add.remove_commands(repo_url, token)
                 bot.sendMessage(chat_id=chat_id, text=remove_hook_response)
