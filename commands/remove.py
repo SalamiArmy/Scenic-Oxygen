@@ -14,13 +14,15 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
         if existing_token != '':
             if existing_token == request_token:
                 hookID = add.getHookIDValue(repo_url)
-                if add.remove_hook(bot, chat_id, repo_url, token, hookID):
+                remove_hook_result = add.remove_hook(bot, chat_id, repo_url, token, hookID)
+                logging.info('remove hook result: ' + remove_hook_result)
+                if remove_hook_result:
                     add.setTokenValue(repo_url, '')
                     remove_commands(repo_url, token)
                 else:
                     error_message = 'Error removing hook ' + hookID + ' from ' + repo_url
                     logging.info(error_message)
-                    bot.sendMessage(chat_id=chat_id, text='Error removing hook ' + hookID + ' from ' + repo_url)
+                    bot.sendMessage(chat_id=chat_id, text=error_message)
             else:
                 bot.sendMessage(chat_id=chat_id, text='Wrong token in request.')
         else:
