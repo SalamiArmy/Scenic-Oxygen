@@ -100,7 +100,7 @@ def remove_hook(bot, chat_id, repo_url, token, hookID):
     logging.info('webhook remove api call status code: ' + str(raw_data.status_code))
     if raw_data.status_code >= 200 and raw_data.status_code < 300:
         setHookIDValue(repo_url, '')
-        bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
+        bot.sendMessage(chat_id=chat_id, text='Webhook removed.')
         return True
     else:
         return False
