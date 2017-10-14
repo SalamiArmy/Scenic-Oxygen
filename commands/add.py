@@ -55,8 +55,8 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     stored_token = getTokenValue(repo_url)
     if request_token != '':
         if stored_token != request_token:
-            setTokenValue(repo_url, request_token)
-            create_hook(bot, chat_id, keyConfig, repo_url, request_token)
+            if create_hook(bot, chat_id, keyConfig, repo_url, request_token):
+                setTokenValue(repo_url, request_token)
         else:
             bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
     else:
@@ -134,12 +134,14 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
         if 'id' in json_data:
             setHookIDValue(repo_url, json_data['id'])
             bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
+            return True
     else:
         if 'message' in json_data:
             bot.sendMessage(chat_id=chat_id, text=json_data['message'])
         if 'errors' in json_data:
             for error in json_data['errors']:
                 bot.sendMessage(chat_id=chat_id, text=error['message'])
+        return False
 
 def remove_hook(bot, chat_id, keyConfig, repo_url, token):
     hookID = getHookIDValue(repo_url)
@@ -149,9 +151,11 @@ def remove_hook(bot, chat_id, keyConfig, repo_url, token):
     if raw_data.status_code == 200:
         setHookIDValue(repo_url, '')
         bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
+        return True
     else:
         if 'message' in json_data:
             bot.sendMessage(chat_id=chat_id, text=json_data['message'])
         if 'errors' in json_data:
             for error in json_data['errors']:
                 bot.sendMessage(chat_id=chat_id, text=error['message'])
+        return False
