@@ -235,24 +235,36 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             else:
                 return json_data['message']
 
+
 def load_code_as_module(module_name):
-    get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
-    if get_value_from_data_store:
-        command_code = str(get_value_from_data_store.codeValue)
-        if command_code != '':
-            module = imp.new_module(module_name)
-            try:
-                exec command_code in module.__dict__
-            except ImportError:
-                print module_name + '\n' + \
-                      'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
-                      'for Scenic Oxygen to be able to resolve them' + \
-                      str(sys.exc_info()[0]) + '\n' + \
-                      str(sys.exc_info()[1]) + '\n' + \
-                      command_code
-                return None
-            return module
+    if module_name != '':
+        get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
+        if get_value_from_data_store:
+            command_code = str(get_value_from_data_store.codeValue)
+            if command_code != '':
+                module = sys.modules.setdefault(module_name, imp.new_module(module_name))
+                try:
+                    exec command_code in module.__dict__
+                except ImportError:
+                    print module_name + '\n' + \
+                          'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
+                          'for Scenic Oxygen to be able to resolve them' + \
+                          str(sys.exc_info()[0]) + '\n' + \
+                          str(sys.exc_info()[1]) + '\n' + \
+                          command_code
+                    return None
+                return module
     return None
+es = add.CommandsValue.query()
+if es.app:
+    for mod in es:
+        mod_key = mod.key
+        mod_key_pairs = mod_key._Key__pairs
+        if len(mod_key_pairs) > 0:
+            mod_key_pair = mod_key_pairs[0]
+            if len(mod_key_pair) > 1:
+                command_name = str(mod_key_pair[1])
+                load_code_as_module(command_name)
 
 app = webapp2.WSGIApplication([
     ('/set_webhook', SetWebhookHandler),
