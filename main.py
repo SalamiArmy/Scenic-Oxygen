@@ -129,19 +129,7 @@ class WebhookHandler(webapp2.RequestHandler):
         else:
             mod = load_code_as_module(commandName)
             if mod:
-                try:
-                    mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
-                except:
-                    print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
-                    try:
-                        telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID'),
-                                        text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
-                                             '\'s request ' + (('\'' + split[1] + '\'') if len(split) > 1 else '') +
-                                             '. Command ' + split[0] + ' threw:\n' +
-                                             str(sys.exc_info()[0]) + '\n' +
-                                             str(sys.exc_info()[1]))
-                    except:
-                        print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+                mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
             else:
                 if chat_type == 'private':
                     telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
