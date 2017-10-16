@@ -223,6 +223,10 @@ def load_code_as_module(module_name):
                       command_code
                 return None
             return module
+        else:
+            logging.warn('Got blank dynamic command module: ' + module_name)
+    else:
+        logging.warn('Failed to get dynamic command module: ' + module_name)
     return None
 
 app = webapp2.WSGIApplication([
