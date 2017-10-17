@@ -48,19 +48,20 @@ def setCommandCode(command_name, NewValue):
 # ================================
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
-    logging.info('Checking the chat id of ' + chat_id + ' against the known admins ' +
+    chat_id_str = str(chat_id)
+    logging.info('Checking the chat id of ' + chat_id_str + ' against the known admins ' +
                  keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') + ' and ' +
                  keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID') + ' and ' +
                  keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_ALT_GROUP_CHAT_ID'))
-    if chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or \
-                    chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID') or \
-                    chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_ALT_GROUP_CHAT_ID'):
+    if chat_id_str == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or \
+                    chat_id_str == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID') or \
+                    chat_id_str == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_ALT_GROUP_CHAT_ID'):
         request_text = str(message)
         repo_url, request_token = parse_repo_url_and_token(request_text)
         stored_token = getTokenValue(repo_url)
         if request_token != '':
             if stored_token != request_token:
-                create_hook(bot, chat_id, keyConfig, repo_url, request_token)
+                create_hook(bot, chat_id_str, keyConfig, repo_url, request_token)
             else:
                 bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url + ' have already been hooked.')
         else:
