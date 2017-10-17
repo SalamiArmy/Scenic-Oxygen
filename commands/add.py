@@ -48,6 +48,10 @@ def setCommandCode(command_name, NewValue):
 # ================================
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
+    logging.info('Checking the chat id of ' + chat_id + ' against the known admins ' +
+                 keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') + ' and ' +
+                 keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID') + ' and ' +
+                 keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_ALT_GROUP_CHAT_ID'))
     if chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or \
                     chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID') or \
                     chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_ALT_GROUP_CHAT_ID'):
