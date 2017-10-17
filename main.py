@@ -168,7 +168,7 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 split = watch.split(':')
                 if len(split) >= 2:
                     removeGet = split[1].replace('get', '')
-                    mod = importlib.import_module('commands.watch' + removeGet)
+                    mod = load_code_as_module(removeGet)
                     chat_id = split[0]
                     request_text = (split[2] if len(split) == 3 else '')
                     removeCommaEncoding = request_text.replace('%2C', ',')
