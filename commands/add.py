@@ -89,7 +89,10 @@ def create_hook(bot, chat_id, keyConfig, repo_url, token):
     if raw_data.status_code >= 200 and raw_data.status_code < 300:
         if 'id' in json_data:
             setHookIDValue(repo_url, json_data['id'])
-            bot.sendMessage(chat_id=chat_id, text='Webhook created:\n' + raw_data.content)
+            bot.sendMessage(chat_id=chat_id, text='Webhook created' +
+                                                  (':\n' + json_data['config']['test_url']
+                                                   if 'config' in json_data and 'test_url' in json_data['config']
+                                                   else ''))
             return True
         else:
             bot.sendMessage(chat_id=chat_id, text='Webhook creation failed:\n' + raw_data.content)
