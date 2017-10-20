@@ -168,7 +168,11 @@ class TriggerAllWatches(webapp2.RequestHandler):
 class Login(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        self.response.write(login.generate_new_pin(self.request.get('username')))
+        user = self.request.get('username')
+        if user != '':
+            self.response.write(login.generate_new_pin(user))
+        else:
+            self.response.write(keyConfig.get('InternetShortcut', 'URL') + '/login?username=')
         return self.response
 
 class GithubWebhookHandler(webapp2.RequestHandler):
@@ -225,12 +229,11 @@ class GithubWebhookHandler(webapp2.RequestHandler):
 
 
 class FacebookWebhookHandler(webapp2.RequestHandler):
-    def post(self):
-        logging.info('faccebook posted')
-        logging.info(self.request.body)
     def get(self):
         logging.info('faccebook got')
         logging.info(self.request.body)
+        self.response.write(self.request.get('hub.challenge'))
+        return self.response
 
 def load_code_as_module(module_name):
     if module_name != '':
