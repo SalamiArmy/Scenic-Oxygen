@@ -72,15 +72,7 @@ def removeFromAllWatches(watch):
 
 # ================================
 
-class SetTelegramWebhookHandler(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(60)
-        url = self.request.get('url')
-        if url:
-            self.response.write(json.dumps(json.load(urllib2.urlopen(
-                BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
-
-class SetFacebookWebhookHandler(webapp2.RequestHandler):
+class FacebookWebhookHandler(webapp2.RequestHandler):
     def get(self):
         verification_code = keyConfig.get('BotIDs', 'FACEBOOK_VERIFICATION_CODE')
         verify_token = self.request.get('hub.verify_token')
@@ -100,7 +92,14 @@ class SetFacebookWebhookHandler(webapp2.RequestHandler):
                         facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
 
 
-class WebhookHandler(webapp2.RequestHandler):
+class TelegramWebhookHandler(webapp2.RequestHandler):
+    def get(self):
+        urlfetch.set_default_fetch_deadline(60)
+        url = self.request.get('url')
+        if url:
+            self.response.write(json.dumps(json.load(urllib2.urlopen(
+                BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
+
     def post(self):
         urlfetch.set_default_fetch_deadline(120)
         body = json.loads(self.request.body)
@@ -158,6 +157,7 @@ class WebhookHandler(webapp2.RequestHandler):
                                                           ', I\'m afraid I do not recognize the ' + commandName + ' command.')
                 return
 
+class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         command = self.request.get('command')
@@ -280,10 +280,9 @@ if es.app:
                 load_code_as_module(command_name)
 
 app = webapp2.WSGIApplication([
-    ('/set_webhook', SetTelegramWebhookHandler),
-    ('/webhook', WebhookHandler),
+    ('/telegram_webhook', TelegramWebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
     ('/github_webhook', GithubWebhookHandler),
-    ('/facebook_webhook', SetFacebookWebhookHandler)
+    ('/facebook_webhook', FacebookWebhookHandler)
 ], debug=True)

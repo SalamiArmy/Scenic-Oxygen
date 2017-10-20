@@ -28,11 +28,11 @@ Go to https://console.developers.google.com and create a Google App Engine proje
 ```bash
 git clone (url for your Scenic Oxygen fork) ~/bot
 cd ~/bot
-(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot, pymessager
+(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot, pymessager, Requests, Flask, enum34
 (PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 
-Finally go to https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/set_webhook?url=https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/webhook (replace both {GOOGLE APP ENGINE PROJECT ID}s with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father anything about web hooks.
+Finally go to https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/telegram_webhook?url=https://{GOOGLE APP ENGINE PROJECT ID}.appspot.com/telegram_webhook (replace both {GOOGLE APP ENGINE PROJECT ID}s with the Google App Engine Project ID) to tell Telegram where to send web hooks. This is all that is required to setup web hooks, you do not need to tell the Bot Father anything about web hooks.
 
 ### Why the name Scenic Oxygen?
 This repository contains code all my personalized Goole App Engine code. Scenic Oxygen is the codename Google gave my first ever App Engine project.

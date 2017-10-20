@@ -34,7 +34,7 @@ class TestModLoader_Unit(unittest.TestCase):
         add.setCommandCode('get', command_codes.get_command_code())
         add.setCommandCode('getgif', command_codes.getgif_command_code())
 
-        newRequestObject = main.WebhookHandler()
+        newRequestObject = main.TelegramWebhookHandler()
         class Object(object):
             pass
         newRequestObject.request = Object()
