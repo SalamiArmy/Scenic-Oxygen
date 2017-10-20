@@ -10,6 +10,7 @@ import imp
 import endpoints
 
 import telegram
+from pymessager.message import Messager
 
 # standard app engine imports
 from google.appengine.ext import ndb
@@ -32,6 +33,8 @@ keyConfig.read(["keys.ini", "..\\keys.ini"])
 #Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
 telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+
+facebookBot = Messager(keyConfig.get('BotIDs', 'FACEBOOK_BOT_ID'))
 
 # ================================
 
@@ -69,13 +72,20 @@ def removeFromAllWatches(watch):
 
 # ================================
 
-class SetWebhookHandler(webapp2.RequestHandler):
+class SetTelegramWebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         url = self.request.get('url')
         if url:
             self.response.write(json.dumps(json.load(urllib2.urlopen(
                 BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
+
+class SetFacebookWebhookHandler(webapp2.RequestHandler):
+    def get(self):
+        verification_code = keyConfig.get('BotIDs', 'FACEBOOK_VERIFICATION_CODE')
+        verify_token = self.request.get('hub.verify_token')
+        if verification_code == verify_token:
+            return self.request.get('hub.challenge')
 
 
 class WebhookHandler(webapp2.RequestHandler):
@@ -108,6 +118,12 @@ class WebhookHandler(webapp2.RequestHandler):
 
             if text.startswith('/'):
                 self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+        else:
+            if 'entry' in body:
+                for entry in body['entry']:
+                    for message in entry['messaging']:
+                        if 'message' in message and 'sender' in message:
+                            facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -227,12 +243,6 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             else:
                 return json_data['message']
 
-
-class FacebookWebhookHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write(self.request.get('hub.challenge'))
-        return self.response
-
 def load_code_as_module(module_name):
     if module_name != '':
         get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
@@ -264,10 +274,10 @@ if es.app:
                 load_code_as_module(command_name)
 
 app = webapp2.WSGIApplication([
-    ('/set_webhook', SetWebhookHandler),
+    ('/set_webhook', SetTelegramWebhookHandler),
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
     ('/github_webhook', GithubWebhookHandler),
-    ('/facebook_webhook', FacebookWebhookHandler)
+    ('/facebook_webhook', SetFacebookWebhookHandler)
 ], debug=True)
