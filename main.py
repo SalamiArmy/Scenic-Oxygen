@@ -230,8 +230,6 @@ class GithubWebhookHandler(webapp2.RequestHandler):
 
 class FacebookWebhookHandler(webapp2.RequestHandler):
     def get(self):
-        logging.info('faccebook got')
-        logging.info(self.request.body)
         self.response.write(self.request.get('hub.challenge'))
         return self.response
 
