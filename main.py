@@ -87,6 +87,18 @@ class SetFacebookWebhookHandler(webapp2.RequestHandler):
         if verification_code == verify_token:
             return self.request.get('hub.challenge')
 
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        body = json.loads(self.request.body)
+        logging.info('request body:')
+        logging.info(body)
+        self.response.write(json.dumps(body))
+        if 'entry' in body:
+            for entry in body['entry']:
+                for message in entry['messaging']:
+                    if 'message' in message and 'sender' in message:
+                        facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
+
 
 class WebhookHandler(webapp2.RequestHandler):
     def post(self):
@@ -118,12 +130,6 @@ class WebhookHandler(webapp2.RequestHandler):
 
             if text.startswith('/'):
                 self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
-        else:
-            if 'entry' in body:
-                for entry in body['entry']:
-                    for message in entry['messaging']:
-                        if 'message' in message and 'sender' in message:
-                            facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
