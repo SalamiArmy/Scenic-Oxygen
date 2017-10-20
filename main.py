@@ -224,6 +224,14 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                 return json_data['message']
 
 
+class FacebookWebhookHandler(webapp2.RequestHandler):
+    def post(self):
+        logging.info('faccebook posted')
+        logging.info(self.request.body)
+    def get(self):
+        logging.info('faccebook got')
+        logging.info(self.request.body)
+
 def load_code_as_module(module_name):
     if module_name != '':
         get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
@@ -259,5 +267,6 @@ app = webapp2.WSGIApplication([
     ('/webhook', WebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
-    ('/github_webhook', GithubWebhookHandler)
+    ('/github_webhook', GithubWebhookHandler),
+    ('/facebook_webhook', FacebookWebhookHandler)
 ], debug=True)
