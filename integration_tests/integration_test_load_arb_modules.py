@@ -1,10 +1,8 @@
 # coding=utf-8
-import importlib
 import unittest
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
-import main
 import commands.add as add
 import command_codes
 
@@ -23,18 +21,20 @@ class TestModLoader_Unit(unittest.TestCase):
         # Alternatively, you could disable caching by
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
+        add.setCommandCode('HelloWorldMod', 'def run():\r\n    print \'Hello World\'')
 
     def test_mod_load(self):
-        main.load_code_as_module('def run():\r\n    print \'Hello World\'', 'HelloWorldMod')
-        mod = importlib.import_module('HelloWorldMod')
-        mod.run()
+        import main
+        import HelloWorldMod
+        HelloWorldMod.run()
 
     def test_perform_ndb_query(self):
+        import main
         add.setCommandCode('retry_on_telegram_error', command_codes.retry_on_telegram_error_command_code())
         add.setCommandCode('get', command_codes.get_command_code())
         add.setCommandCode('getgif', command_codes.getgif_command_code())
 
-        newRequestObject = main.WebhookHandler()
+        newRequestObject = main.TelegramWebhookHandler()
         class Object(object):
             pass
         newRequestObject.request = Object()
