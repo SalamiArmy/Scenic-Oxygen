@@ -1,6 +1,6 @@
+# coding=utf-8
 import ConfigParser
 import base64
-import importlib
 import json
 import logging
 import urllib

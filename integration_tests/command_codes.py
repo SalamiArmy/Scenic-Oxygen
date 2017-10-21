@@ -1,3 +1,4 @@
+# coding=utf-8
 
 def get_command_code():
     return """# coding=utf-8
