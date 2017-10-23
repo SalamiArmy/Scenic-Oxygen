@@ -1,6 +1,6 @@
+# coding=utf-8
 import ConfigParser
 import base64
-import importlib
 import json
 import logging
 import urllib
@@ -10,6 +10,7 @@ import imp
 import endpoints
 
 import telegram
+from pymessager.message import Messager
 
 # standard app engine imports
 from google.appengine.ext import ndb
@@ -32,6 +33,8 @@ keyConfig.read(["keys.ini", "..\\keys.ini"])
 #Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
 telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+
+facebookBot = Messager(keyConfig.get('BotIDs', 'FACEBOOK_BOT_ID'))
 
 # ================================
 
@@ -69,7 +72,27 @@ def removeFromAllWatches(watch):
 
 # ================================
 
-class SetWebhookHandler(webapp2.RequestHandler):
+class FacebookWebhookHandler(webapp2.RequestHandler):
+    def get(self):
+        verification_code = keyConfig.get('BotIDs', 'FACEBOOK_VERIFICATION_CODE')
+        verify_token = self.request.get('hub.verify_token')
+        if verification_code == verify_token:
+            return self.request.get('hub.challenge')
+
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        body = json.loads(self.request.body)
+        logging.info('request body:')
+        logging.info(body)
+        self.response.write(json.dumps(body))
+        if 'entry' in body:
+            for entry in body['entry']:
+                for message in entry['messaging']:
+                    if 'message' in message and 'sender' in message:
+                        facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
+
+
+class TelegramWebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         url = self.request.get('url')
@@ -77,8 +100,6 @@ class SetWebhookHandler(webapp2.RequestHandler):
             self.response.write(json.dumps(json.load(urllib2.urlopen(
                 BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
 
-
-class WebhookHandler(webapp2.RequestHandler):
     def post(self):
         urlfetch.set_default_fetch_deadline(120)
         body = json.loads(self.request.body)
@@ -129,25 +150,14 @@ class WebhookHandler(webapp2.RequestHandler):
         else:
             mod = load_code_as_module(commandName)
             if mod:
-                try:
-                    mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
-                except:
-                    print("Unexpected Exception running command:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
-                    try:
-                        telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID'),
-                                        text='I\'m sorry Admin, I\'m afraid there\'s been an error. For ' + fr_username +
-                                             '\'s request ' + (('\'' + split[1] + '\'') if len(split) > 1 else '') +
-                                             '. Command ' + split[0] + ' threw:\n' +
-                                             str(sys.exc_info()[0]) + '\n' +
-                                             str(sys.exc_info()[1]))
-                    except:
-                        print("Unexpected error sending error response:",  str(sys.exc_info()[0]) + str(sys.exc_info()[1]))
+                mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
             else:
                 if chat_type == 'private':
                     telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
                                                           ', I\'m afraid I do not recognize the ' + commandName + ' command.')
                 return
 
+class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         command = self.request.get('command')
@@ -180,7 +190,11 @@ class TriggerAllWatches(webapp2.RequestHandler):
 class Login(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        self.response.write(login.generate_new_pin(self.request.get('username')))
+        user = self.request.get('username')
+        if user != '':
+            self.response.write(login.generate_new_pin(user))
+        else:
+            self.response.write(keyConfig.get('InternetShortcut', 'URL') + '/login?username=')
         return self.response
 
 class GithubWebhookHandler(webapp2.RequestHandler):
@@ -256,12 +270,39 @@ def load_code_as_module(module_name):
             logging.warn('Got blank dynamic command module: ' + module_name)
     else:
         logging.warn('Failed to get dynamic command module: ' + module_name)
+    if module_name != '':
+        get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
+        if get_value_from_data_store:
+            command_code = str(get_value_from_data_store.codeValue)
+            if command_code != '':
+                module = sys.modules.setdefault(module_name, imp.new_module(module_name))
+                try:
+                    exec command_code in module.__dict__
+                except ImportError:
+                    print module_name + '\n' + \
+                          'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
+                          'for Scenic Oxygen to be able to resolve them' + \
+                          str(sys.exc_info()[0]) + '\n' + \
+                          str(sys.exc_info()[1]) + '\n' + \
+                          command_code
+                    return None
+                return module
     return None
+es = add.CommandsValue.query()
+if es.app:
+    for mod in es:
+        mod_key = mod.key
+        mod_key_pairs = mod_key._Key__pairs
+        if len(mod_key_pairs) > 0:
+            mod_key_pair = mod_key_pairs[0]
+            if len(mod_key_pair) > 1:
+                command_name = str(mod_key_pair[1])
+                load_code_as_module(command_name)
 
 app = webapp2.WSGIApplication([
-    ('/set_webhook', SetWebhookHandler),
-    ('/webhook', WebhookHandler),
+    ('/telegram_webhook', TelegramWebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
-    ('/github_webhook', GithubWebhookHandler)
+    ('/github_webhook', GithubWebhookHandler),
+    ('/facebook_webhook', FacebookWebhookHandler)
 ], debug=True)

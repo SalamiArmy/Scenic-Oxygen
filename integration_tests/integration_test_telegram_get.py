@@ -22,7 +22,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def integration_test_get(self):
-        newRequestObject = main.WebhookHandler()
+        newRequestObject = main.TelegramWebhookHandler()
         class Object(object):
             pass
         newRequestObject.request = Object()

@@ -2,6 +2,8 @@
 import unittest
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+import commands.add as add
+import command_codes
 
 import main
 
@@ -20,9 +22,12 @@ class TestPost(unittest.TestCase):
         # Alternatively, you could disable caching by
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
+        add.setCommandCode('retry_on_telegram_error', command_codes.retry_on_telegram_error_command_code())
+        add.setCommandCode('get', command_codes.getgif_command_code())
+        add.setCommandCode('getgif', command_codes.get_command_code())
 
     def integration_test_post(self):
-        newRequestObject = main.WebhookHandler()
+        newRequestObject = main.TelegramWebhookHandler()
         class Object(object):
             pass
         newRequestObject.request = Object()
