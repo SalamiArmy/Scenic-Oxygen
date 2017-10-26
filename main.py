@@ -220,7 +220,8 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
                                             text='Admins, The Scenic-Oxygen Github Webhook ' +
                                                  'has failed to perform automatic update for ' + body['compare'] +
-                                                 '\n' + response)
+                                                 '\n' + response,
+                                            disable_web_page_preview=True)
                     self.response.write(response)
                     if response == 'Bad credentials':
                         raise endpoints.UnauthorizedException()
