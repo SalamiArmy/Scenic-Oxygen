@@ -247,8 +247,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                         add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
                 telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
                                         text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                             'has performed update from https://github.com/' + repo_url +
-                                             ' successfully.\n' + json_data['compare'])
+                                             'has performed update from https://github.com/' + repo_url + ' successfully.')
                 return ''
             else:
                 telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
