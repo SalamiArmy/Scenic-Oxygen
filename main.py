@@ -210,8 +210,17 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             if token != '':
                 response = self.update_commands(repo_url, token)
                 if response == '':
+                    telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                                            text='Admins, The Scenic-Oxygen Github Webhook ' +
+                                                 'has performed update for ' + body['compare'] +
+                                                 ' successfully.',
+                                            disable_web_page_preview=True)
                     self.response.write('Commands imported from ' + repo_url)
                 else:
+                    telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                                            text='Admins, The Scenic-Oxygen Github Webhook ' +
+                                                 'has failed to perform automatic update for ' + body['compare'] +
+                                                 '\n' + response)
                     self.response.write(response)
                     if response == 'Bad credentials':
                         raise endpoints.UnauthorizedException()
@@ -245,16 +254,8 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                                                       '/master/commands/' + command_data['name'],
                                                   headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
                         add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
-                telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                                        text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                             'has performed update from https://github.com/' + repo_url + ' successfully.')
                 return ''
             else:
-                telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                                        text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                             'has failed to perform automatic update from ' +
-                                             'https://github.com/' + repo_url + '\n' +
-                                             json_data['message'])
                 return json_data['message']
 
 def load_code_as_module(module_name):
