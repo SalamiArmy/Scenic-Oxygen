@@ -29,4 +29,4 @@ class TestLogin(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        login.run(bot, chatId)
+        login.run(bot, chatId, 'Web')
