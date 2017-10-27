@@ -36,10 +36,7 @@ def getCount(chat_id):
     return 0
 
 def incrementCount(chat_id, count):
-    if count:
-        count = count + 1
-    else:
-        count = 1
+    count = count + 1
     setCount(chat_id, count)
     return count
 

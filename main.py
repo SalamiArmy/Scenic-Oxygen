@@ -167,20 +167,24 @@ class WebhookHandler(webapp2.RequestHandler):
         chat_id = str(self.request.get('username'))
         loginPin = str(self.request.get('password'))
         total_results = self.request.get('total_results')
-        count = login.getCount(chat_id)
-        if count > 3:
-            return self.response.write('You have been locked out due to too many incorrect login attempts.')
-        else:
-            if loginPin != '' and loginPin == login.getPin(chat_id):
-                self.response.write(TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
-                                                                                     (total_results if total_results is not None else '') +
-                                                                                     ' ' + requestText, 'private'))
-                login.setPin(chat_id, '')
+        if chat_id != '':
+            count = login.getCount(chat_id)
+            if count > 3:
+                self.response.write('You have been locked out due to too many incorrect login attempts.')
             else:
-                return 'Login requires the use of a One Time Pin which you can get by visitting:\n ' +\
-                       keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
-                       'You have ' + str(login.incrementCount(chat_id, count)) + ' remaining attempts to log in.'
-            return self.response
+                if loginPin != '' and loginPin == login.getPin(chat_id):
+                    self.response.write(TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
+                                                                                         (total_results if total_results is not None else '') +
+                                                                                         ' ' + requestText, 'private'))
+                    login.setPin(chat_id, '')
+                else:
+                    self.response.write('Web requests require the use of a One Time Pin which you can get by visitting:\n ' +\
+                                        keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
+                                        'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
+            else:
+                self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot:\n ' +\
+                                    'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
+        return self.response
 
 class Login(webapp2.RequestHandler):
     def get(self):
