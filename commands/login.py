@@ -14,23 +14,23 @@ class LoginCountValue(ndb.Model):
 # ================================
 
 def setPin(chat_id, NewValue):
-    es = LoginCodeValue.get_or_insert('logincode:' + chat_id)
+    es = LoginCodeValue.get_or_insert(chat_id)
     es.currentValue = NewValue
     es.put()
 
 def getPin(chat_id):
-    es = LoginCodeValue.get_by_id('logincode:' + chat_id)
+    es = LoginCodeValue.get_by_id(chat_id)
     if es:
         return str(es.currentValue)
     return ''
 
 def setCount(chat_id, NewValue):
-    es = LoginCountValue.get_or_insert('logincount:' + chat_id)
+    es = LoginCountValue.get_or_insert(chat_id)
     es.currentValue = int(NewValue)
     es.put()
 
 def getCount(chat_id):
-    es = LoginCountValue.get_by_id('logincount:' + chat_id)
+    es = LoginCountValue.get_by_id(chat_id)
     if es:
         return int(es.currentValue)
     return 0
