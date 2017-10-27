@@ -328,5 +328,6 @@ app = webapp2.WSGIApplication([
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
     ('/github_webhook', GithubWebhookHandler),
-    ('/facebook_webhook', FacebookWebhookHandler)
+    ('/facebook_webhook', FacebookWebhookHandler),
+    ('/webhook', WebhookHandler)
 ], debug=True)
