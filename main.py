@@ -183,6 +183,8 @@ class WebhookHandler(webapp2.RequestHandler):
                                         'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
         else:
             self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
+        logging.info('responding to web request with')
+        logging.info(self.response)
         return self.response
 
 class Login(webapp2.RequestHandler):
