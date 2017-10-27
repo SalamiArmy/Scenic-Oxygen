@@ -50,4 +50,4 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     pin = generate_new_pin(str_chat_id)
     bot.sendMessage(chat_id=chat_id, text=user + ', your new One Time Pin for ' + str_chat_id +
                                           ' is hidden from preview below:\n\n\n\n\n\n\n\n' + pin)
-    return 'New One Time Pin sent to ' + str_chat_id + ' for ' + user
+    return 'New One Time Pin sent to ' + str_chat_id
