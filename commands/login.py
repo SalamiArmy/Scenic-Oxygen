@@ -9,7 +9,7 @@ class LoginCodeValue(ndb.Model):
 
 class LoginCountValue(ndb.Model):
     # key name: str(chat_id)
-    currentValue = ndb.StringProperty(indexed=False, default='')
+    currentValue = ndb.IntegerProperty(indexed=False, default=0)
 
 class LoggedinValue(ndb.Model):
     # key name: str(chat_id)
