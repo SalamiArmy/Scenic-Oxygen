@@ -173,7 +173,7 @@ class WebhookHandler(webapp2.RequestHandler):
                 self.response.write('You have been locked out due to too many incorrect login attempts.')
             else:
                 if loginPin != '' and loginPin == login.getPin(chat_id):
-                    response_text, response_type = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web',
+                    response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web',
                                                                                                       '/' + command + (
                                                                                                           total_results if total_results is not None else '') + ' ' + requestText,
                                                                                                       'private')
