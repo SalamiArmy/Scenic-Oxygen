@@ -181,9 +181,9 @@ class WebhookHandler(webapp2.RequestHandler):
                     self.response.write('Web requests require the use of a One Time Pin which you can get by visitting:\n ' +\
                                         keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
                                         'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
-            else:
-                self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot:\n ' +\
-                                    'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
+        else:
+            self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot:\n ' +\
+                                'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
         return self.response
 
 class Login(webapp2.RequestHandler):
