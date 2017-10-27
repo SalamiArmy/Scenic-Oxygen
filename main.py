@@ -178,7 +178,7 @@ class WebhookHandler(webapp2.RequestHandler):
                                                                                          ' ' + requestText, 'private'))
                     login.setPin(chat_id, '')
                 else:
-                    self.response.write('Web requests require the use of a One Time Pin which you can get by visitting:\n ' +\
+                    self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
                                         keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
                                         'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
         else:
