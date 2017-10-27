@@ -140,13 +140,13 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
         if commandName == 'add':
-            add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
+            return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'remove':
-            remove.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
+            return remove.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'login':
-            login.run(telegramBot, chat_id, fr_username, keyConfig)
+            return login.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'start':
-            start.run(telegramBot, chat_id, fr_username, keyConfig)
+            return start.run(telegramBot, chat_id, fr_username, keyConfig)
         else:
             mod = load_code_as_module(commandName)
             if mod:
@@ -182,8 +182,7 @@ class WebhookHandler(webapp2.RequestHandler):
                                         keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
                                         'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
         else:
-            self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot:\n ' +\
-                                'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
+            self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
         return self.response
 
 class Login(webapp2.RequestHandler):
