@@ -150,13 +150,13 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         else:
             mod = load_code_as_module(commandName)
             if mod:
-                mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
+                return mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
             else:
                 if chat_type == 'private':
-                    telegramBot.sendMessage(chat_id=chat_id,
-                                            text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
-                                                 ', I\'m afraid I do not recognize the ' + commandName + ' command.')
-                return
+                    errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +\
+                               ', I\'m afraid I do not recognize the ' + commandName + ' command.'
+                    telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
+                return errorMsg
 
 
 class WebhookHandler(webapp2.RequestHandler):
@@ -164,14 +164,32 @@ class WebhookHandler(webapp2.RequestHandler):
         urlfetch.set_default_fetch_deadline(60)
         command = self.request.get('command')
         requestText = self.request.get('message')
-        chat_id = self.request.get('username')
-        loginPin = self.request.get('password')
+        chat_id = str(self.request.get('username'))
+        loginPin = str(self.request.get('password'))
         total_results = self.request.get('total_results')
-        if loginPin == login.getPin(chat_id):
-            self.response.write(self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
-                                                               (total_results if total_results is not None else '') +
-                                                               ' ' + requestText, 'private'))
+        count = login.getCount(chat_id)
+        if count > 3:
+            return self.response.write('You have been locked out due to too many incorrect login attempts.')
+        else:
+            if loginPin == login.getPin(chat_id):
+                self.response.write(TelegramWebhookHandler.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
+                                                                                     (total_results if total_results is not None else '') +
+                                                                                     ' ' + requestText, 'private'))
+            else:
+                return 'Login requires the use of a One Time Pin which you can get by visitting:\n ' +\
+                       keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
+                       'You have ' + str(login.incrementCount(chat_id, count)) + ' remaining attempts to log in.'
             return self.response
+
+class Login(webapp2.RequestHandler):
+    def get(self):
+        urlfetch.set_default_fetch_deadline(10)
+        user = self.request.get('username')
+        if user != '':
+            self.response.write(TelegramWebhookHandler.TryExecuteExplicitCommand(user, 'Web', '/login', 'private'))
+        else:
+            self.response.write(keyConfig.get('InternetShortcut', 'URL') + '/login?username=')
+        return self.response
 
 class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
@@ -191,16 +209,6 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 else:
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
-
-class Login(webapp2.RequestHandler):
-    def get(self):
-        urlfetch.set_default_fetch_deadline(10)
-        user = self.request.get('username')
-        if user != '':
-            self.response.write(login.generate_new_pin(user))
-        else:
-            self.response.write(keyConfig.get('InternetShortcut', 'URL') + '/login?username=')
-        return self.response
 
 class GithubWebhookHandler(webapp2.RequestHandler):
     def post(self):
