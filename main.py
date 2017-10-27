@@ -173,9 +173,11 @@ class WebhookHandler(webapp2.RequestHandler):
                 self.response.write('You have been locked out due to too many incorrect login attempts.')
             else:
                 if loginPin != '' and loginPin == login.getPin(chat_id):
-                    self.response.write(TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
-                                                                                         (total_results if total_results is not None else '') +
-                                                                                         ' ' + requestText, 'private'))
+                    response_text, response_type = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web',
+                                                                                                      '/' + command + (
+                                                                                                          total_results if total_results is not None else '') + ' ' + requestText,
+                                                                                                      'private')
+                    self.response.write(response_text)
                     login.setPin(chat_id, '')
                 else:
                     self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
@@ -183,8 +185,8 @@ class WebhookHandler(webapp2.RequestHandler):
                                         'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
         else:
             self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
-        logging.info('responding to web request with')
-        logging.info(self.response.headers)
+        if command == 'say':
+            self.response.headers['Content-Type'] = 'audio/ogg'
         return self.response
 
 class Login(webapp2.RequestHandler):
