@@ -46,18 +46,18 @@ def getPin(chat_id):
 
 def setCount(chat_id, NewValue):
     es = LoginCountValue.get_or_insert('logincount:' + str(chat_id))
-    es.currentValue = NewValue
+    es.currentValue = int(NewValue)
     es.put()
 
 def getCount(chat_id):
     es = LoginCountValue.get_by_id('logincount:' + str(chat_id))
     if es:
-        return es.currentValue.encode('utf-8')
-    return ''
+        return int(es.currentValue)
+    return 0
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     count = getCount(chat_id)
-    if count and int(count) > 3:
+    if count > 3:
         return bot.sendMessage(chat_id=chat_id, text='You have been locked out due to too many incorrect login attempts.')
     pin = getPin(chat_id)
     if chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'):
@@ -70,16 +70,16 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     else:
         bot.sendMessage(chat_id=chat_id, text='Login requires the use of a One Time Pin which you can get by visitting:\n ' +
                                               keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +
-                                              'You have ' + incrementCount(chat_id, count) + ' remaining attempts to log in.')
+                                              'You have ' + str(incrementCount(chat_id, count)) + ' remaining attempts to log in.')
 
 
 def incrementCount(chat_id, count):
     if count:
-        count = str(int(count) + 1)
+        count = int(count) + 1
     else:
-        count = '1'
+        count = 1
     setCount(chat_id, count)
-    return count
+    return int(count)
 
 
 def generate_new_pin(chat_id):
