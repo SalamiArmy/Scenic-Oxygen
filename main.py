@@ -175,6 +175,7 @@ class WebhookHandler(webapp2.RequestHandler):
                 self.response.write(TelegramWebhookHandler.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
                                                                                      (total_results if total_results is not None else '') +
                                                                                      ' ' + requestText, 'private'))
+                login.generate_new_pin(chat_id)
             else:
                 return 'Login requires the use of a One Time Pin which you can get by visitting:\n ' +\
                        keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
