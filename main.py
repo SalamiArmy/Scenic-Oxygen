@@ -172,7 +172,7 @@ class WebhookHandler(webapp2.RequestHandler):
             return self.response.write('You have been locked out due to too many incorrect login attempts.')
         else:
             if loginPin != '' and loginPin == login.getPin(chat_id):
-                self.response.write(TelegramWebhookHandler.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
+                self.response.write(TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
                                                                                      (total_results if total_results is not None else '') +
                                                                                      ' ' + requestText, 'private'))
                 login.setPin(chat_id, '')
@@ -187,7 +187,7 @@ class Login(webapp2.RequestHandler):
         urlfetch.set_default_fetch_deadline(10)
         user = self.request.get('username')
         if user != '':
-            self.response.write(TelegramWebhookHandler.TryExecuteExplicitCommand(user, 'Web', '/login', 'private'))
+            self.response.write(TelegramWebhookHandler().TryExecuteExplicitCommand(user, 'Web', '/login', 'private'))
         else:
             self.response.write(keyConfig.get('InternetShortcut', 'URL') + '/login?username=')
         return self.response
