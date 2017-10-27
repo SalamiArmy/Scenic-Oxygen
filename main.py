@@ -171,11 +171,11 @@ class WebhookHandler(webapp2.RequestHandler):
         if count > 3:
             return self.response.write('You have been locked out due to too many incorrect login attempts.')
         else:
-            if loginPin == login.getPin(chat_id):
+            if loginPin != '' and loginPin == login.getPin(chat_id):
                 self.response.write(TelegramWebhookHandler.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
                                                                                      (total_results if total_results is not None else '') +
                                                                                      ' ' + requestText, 'private'))
-                login.generate_new_pin(chat_id)
+                login.setPin(chat_id, '')
             else:
                 return 'Login requires the use of a One Time Pin which you can get by visitting:\n ' +\
                        keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
