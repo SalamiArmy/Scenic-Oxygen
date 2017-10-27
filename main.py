@@ -153,9 +153,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
             else:
                 if chat_type == 'private':
-                    telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
-                                                          ', I\'m afraid I do not recognize the ' + commandName + ' command.')
+                    telegramBot.sendMessage(chat_id=chat_id,
+                                            text='I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +
+                                                 ', I\'m afraid I do not recognize the ' + commandName + ' command.')
                 return
+
 
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
@@ -166,7 +168,10 @@ class WebhookHandler(webapp2.RequestHandler):
         loginPin = self.request.get('password')
         total_results = self.request.get('total_results')
         if loginPin == login.getPin(chat_id):
-            self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command + (total_results if total_results is not None else '') + ' ' + requestText, 'private')
+            self.response.write(self.TryExecuteExplicitCommand(chat_id, 'Web', '/' + command +
+                                                               (total_results if total_results is not None else '') +
+                                                               ' ' + requestText, 'private'))
+            return self.response
 
 class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
