@@ -178,15 +178,16 @@ class WebhookHandler(webapp2.RequestHandler):
                                                                                                           total_results if total_results is not None else '') + ' ' + requestText,
                                                                                                       'private')
                     self.response.write(response_text)
+                    if command == 'say':
+                        self.response.headers['Content-Type'] = 'audio/ogg'
                     login.setPin(chat_id, '')
+                    login.setCount(chat_id, 0)
                 else:
                     self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
                                         keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
                                         'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
         else:
             self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
-        if command == 'say':
-            self.response.headers['Content-Type'] = 'audio/ogg'
         return self.response
 
 class Login(webapp2.RequestHandler):
