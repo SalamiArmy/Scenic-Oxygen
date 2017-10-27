@@ -184,7 +184,7 @@ class WebhookHandler(webapp2.RequestHandler):
         else:
             self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
         logging.info('responding to web request with')
-        logging.info(self.response)
+        logging.info(self.response.headers)
         return self.response
 
 class Login(webapp2.RequestHandler):
