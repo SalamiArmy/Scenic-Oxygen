@@ -5,6 +5,8 @@ import json
 import logging
 import urllib
 import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 import urllib2
 import imp
 import endpoints
@@ -173,10 +175,10 @@ class WebhookHandler(webapp2.RequestHandler):
                 self.response.write('You have been locked out due to too many incorrect login attempts.')
             else:
                 if loginPin != '' and loginPin == login.getPin(chat_id):
-                    response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web',
-                                                                                                      '/' + command + (
-                                                                                                          total_results if total_results is not None else '') + ' ' + requestText,
-                                                                                                      'private')
+                    response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' +
+                                                                                       command + (
+                        total_results if total_results is not None else '') + ' ' + requestText,
+                                                                                       'private')
                     self.response.write(response_text)
                     if command == 'say':
                         self.response.headers['Content-Type'] = 'audio/ogg'
