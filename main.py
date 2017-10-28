@@ -156,7 +156,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +\
                                ', I\'m afraid I do not recognize the ' + commandName + ' command.'
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
-                return errorMsg
+                    return errorMsg
 
 
 class WebhookHandler(webapp2.RequestHandler):
