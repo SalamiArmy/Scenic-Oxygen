@@ -25,8 +25,6 @@ from commands import login
 from commands import add
 from commands import remove
 
-from types import ModuleType
-
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
