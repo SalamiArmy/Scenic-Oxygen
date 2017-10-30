@@ -237,8 +237,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                         commitMsg += '\n' + commit['message']
                     telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
                                             text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                                 'has performed update for ' + body['compare'] +
-                                                 ' successfully.' + commitMsg,
+                                                 'has performed update for:\n' + commitMsg + '\nSee ' + body['compare'],
                                             disable_web_page_preview=True)
                     self.response.write('Commands imported from ' + repo_url)
                 else:
