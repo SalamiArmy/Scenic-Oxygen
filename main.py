@@ -13,7 +13,6 @@ import endpoints
 
 import telegram
 from pymessager.message import Messager
-import disco.bot as DiscordBot
 
 # standard app engine imports
 from google.appengine.ext import ndb
@@ -31,14 +30,11 @@ keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
 keyConfig.read(["keys.ini", "..\\keys.ini"])
 
+#Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
-
 telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+
 facebookBot = Messager(keyConfig.get('BotIDs', 'FACEBOOK_BOT_ID'))
-discordBot = DiscordBot.BotConfig.http_host = keyConfig.get('InternetShortcut', 'URL') + '/discord_webhook'
-discordBot = DiscordBot.BotConfig.http_port = '80'
-discordBot = DiscordBot.BotConfig.http_enabled = True
-discordBot = DiscordBot.BotConfig.storage_enabled = False
 
 # ================================
 
@@ -94,17 +90,6 @@ class FacebookWebhookHandler(webapp2.RequestHandler):
                 for message in entry['messaging']:
                     if 'message' in message and 'sender' in message:
                         facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
-
-class DiscordWebhookHandler(webapp2.RequestHandler):
-    def get(self):
-        print 'Not implemented.'
-
-    def post(self):
-        urlfetch.set_default_fetch_deadline(120)
-        body = json.loads(self.request.body)
-        logging.info('request body:')
-        logging.info(body)
-        print 'Not implemented.'
 
 
 class TelegramWebhookHandler(webapp2.RequestHandler):
@@ -336,6 +321,5 @@ app = webapp2.WSGIApplication([
     ('/login', Login),
     ('/github_webhook', GithubWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
-    ('/discord_webhook', DiscordWebhookHandler),
     ('/webhook', WebhookHandler)
 ], debug=True)

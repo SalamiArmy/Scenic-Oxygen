@@ -28,7 +28,7 @@ Go to https://console.developers.google.com and create a Google App Engine proje
 ```bash
 git clone (url for your Scenic Oxygen fork) ~/bot
 cd ~/bot
-(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot pymessager Requests Flask enum34 disco-py
+(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot pymessager Requests Flask enum34
 (PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
 ```
 
