@@ -291,7 +291,9 @@ def load_code_as_module(module_name):
             if command_code != '':
                 module = sys.modules.setdefault(module_name, imp.new_module(module_name))
                 try:
+                    logging.info('begin exec')
                     exec command_code in module.__dict__
+                    logging.info('end exec')
                 except ImportError:
                     print module_name + '\n' + \
                           'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
