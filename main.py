@@ -284,26 +284,6 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                 return json_data['message']
 
 def load_code_as_module(module_name):
-    get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
-    if get_value_from_data_store:
-        command_code = str(get_value_from_data_store.codeValue)
-        if command_code != '':
-            module = imp.new_module(module_name)
-            try:
-                exec command_code in module.__dict__
-            except ImportError:
-                print module_name + '\n' + \
-                      'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
-                      'for Scenic Oxygen to be able to resolve them' + \
-                      str(sys.exc_info()[0]) + '\n' + \
-                      str(sys.exc_info()[1]) + '\n' + \
-                      command_code
-                return None
-            return module
-        else:
-            logging.warn('Got blank dynamic command module: ' + module_name)
-    else:
-        logging.warn('Failed to get dynamic command module: ' + module_name)
     if module_name != '':
         get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
         if get_value_from_data_store:

@@ -442,3 +442,112 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
 
 def github_webhook_payload():
     return "%7B%22zen%22%3A%22It%27s+not+fully+shipped+until+it%27s+fast.%22%2C%22hook_id%22%3A16912121%2C%22hook%22%3A%7B%22type%22%3A%22Repository%22%2C%22id%22%3A16912121%2C%22name%22%3A%22web%22%2C%22active%22%3Atrue%2C%22events%22%3A%5B%22push%22%5D%2C%22config%22%3A%7B%22content_type%22%3A%22form%22%2C%22insecure_ssl%22%3A%220%22%2C%22secret%22%3A%22%2A%2A%2A%2A%2A%2A%2A%2A%22%2C%22url%22%3A%22https%3A%2F%2Fhey-boet.com%2Fgithub_webhook%22%7D%2C%22updated_at%22%3A%222017-10-14T07%3A41%3A28Z%22%2C%22created_at%22%3A%222017-10-14T07%3A41%3A28Z%22%2C%22url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fhooks%2F16912121%22%2C%22test_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fhooks%2F16912121%2Ftest%22%2C%22ping_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fhooks%2F16912121%2Fpings%22%2C%22last_response%22%3A%7B%22code%22%3Anull%2C%22status%22%3A%22unused%22%2C%22message%22%3Anull%7D%7D%2C%22repository%22%3A%7B%22id%22%3A97470323%2C%22name%22%3A%22ImageBoet%22%2C%22full_name%22%3A%22SalamiArmy%2FImageBoet%22%2C%22owner%22%3A%7B%22login%22%3A%22SalamiArmy%22%2C%22id%22%3A8664897%2C%22avatar_url%22%3A%22https%3A%2F%2Favatars2.githubusercontent.com%2Fu%2F8664897%3Fv%3D4%22%2C%22gravatar_id%22%3A%22%22%2C%22url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%22%2C%22html_url%22%3A%22https%3A%2F%2Fgithub.com%2FSalamiArmy%22%2C%22followers_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Ffollowers%22%2C%22following_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Ffollowing%7B%2Fother_user%7D%22%2C%22gists_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fgists%7B%2Fgist_id%7D%22%2C%22starred_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fstarred%7B%2Fowner%7D%7B%2Frepo%7D%22%2C%22subscriptions_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fsubscriptions%22%2C%22organizations_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Forgs%22%2C%22repos_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Frepos%22%2C%22events_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fevents%7B%2Fprivacy%7D%22%2C%22received_events_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Freceived_events%22%2C%22type%22%3A%22User%22%2C%22site_admin%22%3Afalse%7D%2C%22private%22%3Afalse%2C%22html_url%22%3A%22https%3A%2F%2Fgithub.com%2FSalamiArmy%2FImageBoet%22%2C%22description%22%3A%22Stupid+Chat+Bot%22%2C%22fork%22%3Afalse%2C%22url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%22%2C%22forks_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fforks%22%2C%22keys_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fkeys%7B%2Fkey_id%7D%22%2C%22collaborators_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fcollaborators%7B%2Fcollaborator%7D%22%2C%22teams_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fteams%22%2C%22hooks_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fhooks%22%2C%22issue_events_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fissues%2Fevents%7B%2Fnumber%7D%22%2C%22events_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fevents%22%2C%22assignees_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fassignees%7B%2Fuser%7D%22%2C%22branches_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fbranches%7B%2Fbranch%7D%22%2C%22tags_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Ftags%22%2C%22blobs_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fgit%2Fblobs%7B%2Fsha%7D%22%2C%22git_tags_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fgit%2Ftags%7B%2Fsha%7D%22%2C%22git_refs_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fgit%2Frefs%7B%2Fsha%7D%22%2C%22trees_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fgit%2Ftrees%7B%2Fsha%7D%22%2C%22statuses_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fstatuses%2F%7Bsha%7D%22%2C%22languages_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Flanguages%22%2C%22stargazers_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fstargazers%22%2C%22contributors_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fcontributors%22%2C%22subscribers_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fsubscribers%22%2C%22subscription_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fsubscription%22%2C%22commits_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fcommits%7B%2Fsha%7D%22%2C%22git_commits_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fgit%2Fcommits%7B%2Fsha%7D%22%2C%22comments_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fcomments%7B%2Fnumber%7D%22%2C%22issue_comment_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fissues%2Fcomments%7B%2Fnumber%7D%22%2C%22contents_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fcontents%2F%7B%2Bpath%7D%22%2C%22compare_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fcompare%2F%7Bbase%7D...%7Bhead%7D%22%2C%22merges_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fmerges%22%2C%22archive_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2F%7Barchive_format%7D%7B%2Fref%7D%22%2C%22downloads_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fdownloads%22%2C%22issues_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fissues%7B%2Fnumber%7D%22%2C%22pulls_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fpulls%7B%2Fnumber%7D%22%2C%22milestones_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fmilestones%7B%2Fnumber%7D%22%2C%22notifications_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fnotifications%7B%3Fsince%2Call%2Cparticipating%7D%22%2C%22labels_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Flabels%7B%2Fname%7D%22%2C%22releases_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Freleases%7B%2Fid%7D%22%2C%22deployments_url%22%3A%22https%3A%2F%2Fapi.github.com%2Frepos%2FSalamiArmy%2FImageBoet%2Fdeployments%22%2C%22created_at%22%3A%222017-07-17T11%3A47%3A10Z%22%2C%22updated_at%22%3A%222017-07-17T12%3A23%3A58Z%22%2C%22pushed_at%22%3A%222017-10-11T08%3A11%3A35Z%22%2C%22git_url%22%3A%22git%3A%2F%2Fgithub.com%2FSalamiArmy%2FImageBoet.git%22%2C%22ssh_url%22%3A%22git%40github.com%3ASalamiArmy%2FImageBoet.git%22%2C%22clone_url%22%3A%22https%3A%2F%2Fgithub.com%2FSalamiArmy%2FImageBoet.git%22%2C%22svn_url%22%3A%22https%3A%2F%2Fgithub.com%2FSalamiArmy%2FImageBoet%22%2C%22homepage%22%3Anull%2C%22size%22%3A27%2C%22stargazers_count%22%3A0%2C%22watchers_count%22%3A0%2C%22language%22%3A%22Python%22%2C%22has_issues%22%3Atrue%2C%22has_projects%22%3Atrue%2C%22has_downloads%22%3Atrue%2C%22has_wiki%22%3Atrue%2C%22has_pages%22%3Afalse%2C%22forks_count%22%3A0%2C%22mirror_url%22%3Anull%2C%22open_issues_count%22%3A0%2C%22forks%22%3A0%2C%22open_issues%22%3A0%2C%22watchers%22%3A0%2C%22default_branch%22%3A%22master%22%7D%2C%22sender%22%3A%7B%22login%22%3A%22SalamiArmy%22%2C%22id%22%3A8664897%2C%22avatar_url%22%3A%22https%3A%2F%2Favatars2.githubusercontent.com%2Fu%2F8664897%3Fv%3D4%22%2C%22gravatar_id%22%3A%22%22%2C%22url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%22%2C%22html_url%22%3A%22https%3A%2F%2Fgithub.com%2FSalamiArmy%22%2C%22followers_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Ffollowers%22%2C%22following_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Ffollowing%7B%2Fother_user%7D%22%2C%22gists_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fgists%7B%2Fgist_id%7D%22%2C%22starred_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fstarred%7B%2Fowner%7D%7B%2Frepo%7D%22%2C%22subscriptions_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fsubscriptions%22%2C%22organizations_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Forgs%22%2C%22repos_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Frepos%22%2C%22events_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Fevents%7B%2Fprivacy%7D%22%2C%22received_events_url%22%3A%22https%3A%2F%2Fapi.github.com%2Fusers%2FSalamiArmy%2Freceived_events%22%2C%22type%22%3A%22User%22%2C%22site_admin%22%3Afalse%7D%7D"
+
+def get_launch_code():
+    return """
+# coding=utf-8
+import datetime
+import json
+import urllib2
+
+import telegram
+
+from dateutil import tz
+
+
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
+    formattedLaunchInfo = ''
+    formattedLaunchInfo, has_results = get_launch_data(formattedLaunchInfo, keyConfig)
+    if has_results:
+        bot.sendMessage(chat_id=chat_id, text=formattedLaunchInfo,
+                        parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+        return True
+    else:
+        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                                              ', I\'m afraid I can\'t find any upcoming rocket launches.')
+
+
+def get_launch_data(formattedLaunchInfo, keyConfig):
+    rocketUrl = 'https://launchlibrary.net/1.2.1/launch/next/5'
+    rocketUrlRequest = urllib2.Request(rocketUrl, headers={'User-Agent': "Magic Browser"})
+    rocketData = json.load(urllib2.urlopen(rocketUrlRequest))
+    has_results = 'launches' in rocketData
+    if has_results:
+        blast = rocketData['launches']
+        formattedLaunchInfo = formatted_launch_message(blast, keyConfig)
+    return formattedLaunchInfo, has_results
+
+
+def formatted_launch_message(blast, keyConfig):
+    b1 = blast[0]
+    b2 = blast[1]
+    b3 = blast[2]
+    b4 = blast[3]
+    b5 = blast[4]
+    utc_zone = tz.tzutc()
+    timezone_string = keyConfig.get('BotAdministration', 'Timezone')
+    local_zone = tz.tzoffset('Offset TZ from server to local',
+                             int(timezone_string) * 60 * 60)
+    blast1UtcTime = datetime.datetime.strptime(b1['net'], '%B %d, %Y %H:%M:%S %Z')
+    if blast1UtcTime.hour >= '22' or blast1UtcTime.hour == 0:
+        blast1UtcTime = blast1UtcTime + datetime.timedelta(days=1)
+    blast1UtcTime = blast1UtcTime.replace(tzinfo=utc_zone)
+    blast1LocalString = str(blast1UtcTime.astimezone(local_zone))
+    blast1LocalTime = datetime.datetime.strptime(blast1LocalString, '%Y-%m-%d %H:%M:%S' + timezone_string + ':00')
+    blast2UtcTime = datetime.datetime.strptime(b2['net'], '%B %d, %Y %H:%M:%S %Z')
+    if blast2UtcTime.hour >= '22' or blast2UtcTime.hour == 0:
+        blast2UtcTime = blast2UtcTime + datetime.timedelta(days=1)
+    blast2UtcTime = blast2UtcTime.replace(tzinfo=utc_zone)
+    blast2LocalString = str(blast2UtcTime.astimezone(local_zone))
+    blast2LocalTime = datetime.datetime.strptime(blast2LocalString, '%Y-%m-%d %H:%M:%S' + timezone_string + ':00')
+    blast3UtcTime = datetime.datetime.strptime(b3['net'], '%B %d, %Y %H:%M:%S %Z')
+    if blast3UtcTime.hour >= '22' or blast3UtcTime.hour == 0:
+        blast3UtcTime = blast3UtcTime + datetime.timedelta(days=1)
+    blast3UtcTime = blast3UtcTime.replace(tzinfo=utc_zone)
+    blast3LocalString = str(blast3UtcTime.astimezone(local_zone))
+    blast3LocalTime = datetime.datetime.strptime(blast3LocalString, '%Y-%m-%d %H:%M:%S' + timezone_string + ':00')
+    blast4UtcTime = datetime.datetime.strptime(b4['net'], '%B %d, %Y %H:%M:%S %Z')
+    if blast4UtcTime.hour >= '22' or blast4UtcTime.hour == 0:
+        blast4UtcTime = blast4UtcTime + datetime.timedelta(days=1)
+    blast4UtcTime = blast4UtcTime.replace(tzinfo=utc_zone)
+    blast4LocalString = str(blast4UtcTime.astimezone(local_zone))
+    blast4LocalTime = datetime.datetime.strptime(blast4LocalString, '%Y-%m-%d %H:%M:%S' + timezone_string + ':00')
+    blast5UtcTime = datetime.datetime.strptime(b5['net'], '%B %d, %Y %H:%M:%S %Z')
+    if blast5UtcTime.hour >= '22' or blast5UtcTime.hour == 0:
+        blast5UtcTime = blast5UtcTime + datetime.timedelta(days=1)
+    blast5UtcTime = blast5UtcTime.replace(tzinfo=utc_zone)
+    blast5LocalString = str(blast5UtcTime.astimezone(local_zone))
+    blast5LocalTime = datetime.datetime.strptime(blast5LocalString, '%Y-%m-%d %H:%M:%S' + timezone_string + ':00')
+    formattedLaunchInfo = 'Upcoming Rocket Launches: (all times UTC' + timezone_string + ')\n\n' + \
+                          str(blast1LocalTime) + '\n*' + b1['name'] + \
+                          '*\nLaunching from ' + ('[' if b1['location']['pads'][0]['mapURL'] != '' and b1['location']['pads'][0]['mapURL'] != None else '') + \
+                          b1['location']['pads'][0]['name'] + \
+                          ('](' + b1['location']['pads'][0]['mapURL'] + ')' if b1['location']['pads'][0][
+                                                                                   'mapURL'] != '' and b1['location']['pads'][0]['mapURL'] != None else '') + \
+                          ('\nWatch live at ' + b1['vidURL'] if 'vidURL' in b1 and b1['vidURL'] != '' and b1['vidURL'] != None else '') + \
+                          '\n\n' + str(blast2LocalTime) + '\n*' + b2['name'] + \
+                          '*\nLaunching from ' + ('[' if b2['location']['pads'][0]['mapURL'] != '' and b2['location']['pads'][0]['mapURL'] != None else '') + \
+                          b2['location']['pads'][0]['name'] + \
+                          ('](' + b2['location']['pads'][0]['mapURL'] + ')' if b2['location']['pads'][0][
+                                                                                   'mapURL'] != '' and b2['location']['pads'][0]['mapURL'] != None else '') + \
+                          ('\nWatch live at ' + b2['vidURL'] if 'vidURL' in b2 and b2['vidURL'] != '' and b2['vidURL'] != None else '') + \
+                          '\n\n' + str(blast3LocalTime) + '\n*' + b3['name'] + \
+                          '*\nLaunching from ' + ('[' if b3['location']['pads'][0]['mapURL'] != '' and b3['location']['pads'][0]['mapURL'] != None else '') + \
+                          b3['location']['pads'][0]['name'] + \
+                          ('](' + b3['location']['pads'][0]['mapURL'] + ')' if b3['location']['pads'][0][
+                                                                                   'mapURL'] != '' and b3['location']['pads'][0]['mapURL'] != None else '') + \
+                          ('\nWatch live at ' + b3['vidURL'] if 'vidURL' in b3 and b3['vidURL'] != '' and b3['vidURL'] != None else '') + \
+                          '\n\n' + str(blast4LocalTime) + '\n*' + b4['name'] + \
+                          '*\nLaunching from ' + ('[' if b4['location']['pads'][0]['mapURL'] != '' and b4['location']['pads'][0]['mapURL'] != None else '') + \
+                          b4['location']['pads'][0]['name'] + \
+                          ('](' + b4['location']['pads'][0]['mapURL'] + ')' if b4['location']['pads'][0][
+                                                                                   'mapURL'] != '' and b4['location']['pads'][0]['mapURL'] != None else '') + \
+                          ('\nWatch live at ' + b4['vidURL'] if 'vidURL' in b4 and b4['vidURL'] != '' and b4['vidURL'] != None else '') + \
+                          '\n\n' + str(blast5LocalTime) + '\n*' + b5['name'] + \
+                          '*\nLaunching from ' + ('[' if b5['location']['pads'][0]['mapURL'] != '' and b5['location']['pads'][0]['mapURL'] != None else '') + \
+                          b5['location']['pads'][0]['name'] + \
+                          ('](' + b5['location']['pads'][0]['mapURL'] + ')' if b5['location']['pads'][0][
+                                                                                   'mapURL'] != '' and b5['location']['pads'][0]['mapURL'] != None else '') + \
+                          ('\nWatch live at ' + b5['vidURL'] if 'vidURL' in b5 and b5['vidURL'] != '' and b5['vidURL'] != None else '')
+    return formattedLaunchInfo
+    """
