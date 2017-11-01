@@ -37,3 +37,18 @@ class TestGet(unittest.TestCase):
         add.setCommandCode('launch', command_codes.get_launch_code())
         launch = main.load_code_as_module('launch')
         launch.run(bot, chatId, 'Admin', keyConfig)
+
+    def integration_test_post_launch(self):
+        keyConfig = ConfigParser.ConfigParser()
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+        keyConfig.read(["keys.ini", "..\keys.ini"])
+        newRequestObject = main.TelegramWebhookHandler()
+        class Object(object):
+            pass
+        newRequestObject.request = Object()
+        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "/launch", "chat": {"id": ' + keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') + ', "type": "group"}}}'
+        newRequestObject.response = Object()
+        newRequestObject.response.write = lambda x: None
+
+        add.setCommandCode('launch', command_codes.get_launch_code())
+        newRequestObject.post()
