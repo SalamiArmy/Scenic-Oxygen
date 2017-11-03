@@ -31,6 +31,16 @@ handlers:
   upload: www/sjCxccZ.jpg
   secure: always
 
+- url: /q21BHh4.png
+  static_files: www/q21BHh4.png
+  upload: www/q21BHh4.png
+  secure: always
+
+- url: /zkZbB5k.png
+  static_files: www/zkZbB5k.png
+  upload: www/zkZbB5k.png
+  secure: always
+
 - url: /.+
   script: main.app
   
