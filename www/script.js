@@ -16,18 +16,6 @@ $(function () {
 function checkforhelp(){
   if (document.getElementById('messagetextarea').value == "help") {
     showText("#msg2", 'commands:', 0, 100);
-    var xhttp = new XMLHttpRequest();
-    var commandList = [];
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        commandList = this.responseText;
-      }
-    };
-    xhttp.open("GET", "/list_commands", true);
-    xhttp.send();
-    for (counter = 0; counter < commandList.length; counter++) {
-	    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
-    }
     var counter = 3;
 	showText("#msg" + counter++, '#2 getxxlargegif, get an extra extra large gif', 0, 100);
 	showText("#msg" + counter++, '#3 getxxx, get smut', 0, 100);
@@ -48,12 +36,31 @@ function checkforhelp(){
 	showText("#msg" + counter++, '#19 getxlarge, get an extra large image', 0, 100);
 	showText("#msg" + counter++, '#20 getxlargegif, get an extra large gif', 0, 100);
     document.getElementById('messagetextarea').value = '';
-    return false; 
-  }
-  else{
+
+    //var xhttp = new XMLHttpRequest();
+    //var commandList = [];
+    //xhttp.onreadystatechange = function() {
+    //  if (this.readyState == 4 && this.status == 200) {
+    //    commandList = this.responseText;
+    //  } else {
+    //    xhttp.onreadystatechange = function() {
+    //      if (this.readyState == 4 && this.status == 200) {
+    //        commandList = this.responseText;
+    //      }
+    //    };
+    //    xhttp.open("GET", "https://hey-boet.com/list_commands", true);
+    //    xhttp.send();
+    //  }
+    //};
+    //xhttp.open("GET", "/list_commands", true);
+    //xhttp.send();
+    //for (counter = 0; counter < commandList.length; counter++) {
+	//    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
+    //}
+    return false;
+  } else {
     return true;
   }
-
 }
 
 $("messagetextarea").keypress(function(event) {
