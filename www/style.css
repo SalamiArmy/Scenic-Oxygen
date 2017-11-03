@@ -103,7 +103,7 @@ textarea{
   text-decoration: none;
 -webkit-animation: blur 30ms infinite, jerk 50ms infinite;/**/
   border-left:4px solid green;
-  cursor: url("https://i.imgur.com/sjCxccZ.jpg"), auto;
+  cursor: url("sjCxccZ.jpg"), auto;
   padding: 25px;
   overflow:hidden;
   /*display: none;*/

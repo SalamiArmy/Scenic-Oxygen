@@ -26,6 +26,11 @@ handlers:
   upload: www/style.css
   secure: always
 
+- url: /sjCxccZ.jpg
+  static_files: www/sjCxccZ.jpg
+  upload: www/sjCxccZ.jpg
+  secure: always
+
 - url: /.+
   script: main.app
   

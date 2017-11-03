@@ -7,14 +7,14 @@ var showText = function (target, message, index, interval) {
   }
 }
 $(function () {
-  showText("#msg", "Terminal", 0, 100);
-  showText("#msg1", "My portfolio, type help", 0, 100);
+  showText("#msg", "Scenic Terminal", 0, 100);
+  showText("#msg1", "type help", 0, 100);
 });
  $(document).ready(function () {
             setTimeout("$('#messagetextarea').focus();", 500);
 });
 function checkforhelp(){
-  if (document.getElementById('messagetextarea').value == "help") {
+  if (document.getElementById('messagetextarea').value.toLowerCase() == "help") {
     showText("#msg2", 'commands:', 0, 100);
     var counter = 3;
 	showText("#msg" + counter++, '#2 getxxlargegif, get an extra extra large gif', 0, 100);
@@ -63,16 +63,12 @@ function checkforhelp(){
   }
 }
 
-$("messagetextarea").keypress(function(event) {
-    if (event.which == 13) {
+$(document).keypress(function(e) {
+	if(e.which == 13) {
       event.preventDefault();
-      $("executecommandform").submit();
-    } else {
-      var el = this;
-      setTimeout(function(){
-        el.style.cssText = 'height:0; padding:0';
-        el.style.cssText = 'height:' + el.scrollHeight + 'px';
-      },0);
+      if (checkforhelp()) {
+        $("executecommandform").submit();
+      }
     }
 });
 
