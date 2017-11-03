@@ -68,7 +68,6 @@ setTimeout(function(){
 },500); // 3 second delay
 
 
-
 setTimeout(function(){
    $("textarea").text("STAND BY");
 },2500); // 3 second delay
@@ -85,5 +84,9 @@ setTimeout(function(){
 
 
 
-
-
+$("input").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        $("executecommandform").submit();
+    }
+});
