@@ -26,7 +26,7 @@ function checkforhelp(){
     xhttp.open("GET", "/list_commands", true);
     xhttp.send();
     for (counter = 0; counter < commandList.length; counter++) {
-	    showText("#msg" + counter+3, '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
+	    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
     }
     var counter = 3;
 	showText("#msg" + counter++, '#2 getxxlargegif, get an extra extra large gif', 0, 100);
