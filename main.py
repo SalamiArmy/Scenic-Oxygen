@@ -174,7 +174,7 @@ class WebhookHandler(webapp2.RequestHandler):
         #        self.response.write('You have been locked out due to too many incorrect login attempts.')
         #    else:
         #        if loginPin != '' and loginPin == login.getPin(chat_id):
-        self.run_web_command(keyConfig, requestText, 1)
+        self.run_web_command(keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'), requestText, 1)
         #        else:
         #            self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
         #                                keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
