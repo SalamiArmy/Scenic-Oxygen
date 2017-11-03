@@ -16,6 +16,16 @@ handlers:
   upload: www/login.html
   secure: always
 
+- url: /script.js
+  static_files: www/script.js
+  upload: www/script.js
+  secure: always
+
+- url: /style.css
+  static_files: www/style.css
+  upload: www/style.css
+  secure: always
+
 - url: /.+
   script: main.app
   
