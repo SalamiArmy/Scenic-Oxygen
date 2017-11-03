@@ -25,8 +25,8 @@
 	</div>
 	<br /><br /><br /><br />
 	<div>
-	<form method= "post" action='WebhookHandler' onsubmit="return checkforblank()">
-	  <textarea id="fname" rows="1" spellcheck="false" ></textarea> <br />
+	<form method= "post" action="/webhook" onsubmit="return checkforblank()">
+	  <textarea id="fname" rows="1" spellcheck="false" name="message" ></textarea> <br />
 	  <input type="submit" id="but" value="execute" />
 
 	</form>
