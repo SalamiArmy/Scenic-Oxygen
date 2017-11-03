@@ -186,7 +186,7 @@ class WebhookHandler(webapp2.RequestHandler):
     def run_web_command(self, chat_id, message, total_results):
         response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id,
                                                                            'Admins, Scenic Oxygen ' +
-                                                                           'has received a web request', '/' +
+                                                                           'has received a web request from ' + keyConfig.get('InternetShortcut', 'URL'), '/' +
                                                                            #(total_results if total_results is not None else '') + ' ' +
                                                                            message, 'private')
         self.response.write(response_text)
