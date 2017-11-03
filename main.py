@@ -165,22 +165,16 @@ class WebhookHandler(webapp2.RequestHandler):
         #command = self.request.get('command')
         requestText = self.request.get('message')
         #
-        if 'username' in self.request:
-            chat_id = str(self.request.get('username'))
-        else:
-            chat_id = ''
-        if 'total_results' in self.request:
-            total_results = str(self.request.get('total_results'))
-        else:
-            total_results = ''
+        #chat_id = str(self.request.get('username'))
         #loginPin = str(self.request.get('password'))
+        #total_results = self.request.get('total_results')
         #if chat_id != '':
         #    count = login.getCount(chat_id)
         #    if count > 3:
         #        self.response.write('You have been locked out due to too many incorrect login attempts.')
         #    else:
         #        if loginPin != '' and loginPin == login.getPin(chat_id):
-        self.run_web_command(chat_id, requestText, total_results)
+        self.run_web_command(keyConfig, requestText, 1)
         #        else:
         #            self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
         #                                keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
@@ -190,8 +184,11 @@ class WebhookHandler(webapp2.RequestHandler):
         #return self.response
 
     def run_web_command(self, chat_id, message, total_results):
-        response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' + (
-            total_results if total_results is not None else '') + ' ' + message, 'private')
+        response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id,
+                                                                           'Admins, Scenic Oxygen ' +
+                                                                           'has received a web request', '/' +
+                                                                           #(total_results if total_results is not None else '') + ' ' +
+                                                                           message, 'private')
         self.response.write(response_text)
         if message[:3] == 'say':
             self.response.headers['Content-Type'] = 'audio/ogg'
