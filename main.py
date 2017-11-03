@@ -304,21 +304,31 @@ def load_code_as_module(module_name):
                     return None
                 return module
     return None
-es = add.CommandsValue.query()
-if es.app:
+es = add.CommandsValue.query().fetch()
+command_names = []
+if len(es) > 0:
     for mod in es:
-        mod_key = mod.key
-        mod_key_pairs = mod_key._Key__pairs
-        if len(mod_key_pairs) > 0:
-            mod_key_pair = mod_key_pairs[0]
-            if len(mod_key_pair) > 1:
-                command_name = str(mod_key_pair[1])
-                load_code_as_module(command_name)
+        command_name = str(mod.key._Key__pairs[0][1])
+        load_code_as_module(command_name)
+
+
+class GetCommandsHandler(webapp2.RequestHandler):
+    def get(self):
+        urlfetch.set_default_fetch_deadline(10)
+        es = add.CommandsValue.query().fetch()
+        command_names = []
+        if len(es) > 0:
+            for mod in es:
+                command_names.append(str(mod.key._Key__pairs[0][1]))
+        self.response.write(command_names)
+        return self.response
+
 
 app = webapp2.WSGIApplication([
     ('/telegram_webhook', TelegramWebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
+    ('/list_commands', GetCommandsHandler),
     ('/github_webhook', GithubWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
     ('/webhook', WebhookHandler)
