@@ -23,7 +23,7 @@ function checkforhelp(){
         commandList = this.responseText;
       }
     };
-    xhttp.open("GET", "list_commands", true);
+    xhttp.open("GET", "/list_commands", true);
     xhttp.send();
     for (counter = 0; counter < commandList.length; counter++) {
 	    showText("#msg" + counter+3, '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
