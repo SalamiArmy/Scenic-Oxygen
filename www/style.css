@@ -3,7 +3,7 @@
 body{
   background:url("http://www.deleteagency.com/assets/img/pattern.png"); 
   background-color : black;
-  cursor: url("https://i.imgur.com/zkZbB5k.png"), auto;
+  cursor: url("zkZbB5k.png"), auto;
 }
 ::-webkit-scrollbar {
     width: 6px;
@@ -174,7 +174,7 @@ textarea:focus, input:focus{
   text-decoration: none;
   -webkit-filter: blur(.9px);
   font-size: 2em;
-  cursor: url("https://i.imgur.com/q21BHh4.png"), auto;
+  cursor: url("q21BHh4.png"), auto;
  -webkit-animation: blur 30ms infinite, jerk 50ms infinite;
    -webkit-animation: jerkwhole 10s infinite;
 }
