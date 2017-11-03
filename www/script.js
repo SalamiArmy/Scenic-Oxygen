@@ -16,7 +16,6 @@ $(function () {
 });
 function checkforblank(){
   if (document.getElementById('fname').value == "help") {
-    
     showText("#msg2", 'commands:', 0, 100);
 	showText("#msg3", '#1 getxxlarge, get an extra extra large image', 0, 100);
 	showText("#msg4", '#2 getxxlargegif, get an extra extra large gif', 0, 100);
@@ -37,14 +36,12 @@ function checkforblank(){
 	showText("#msg19", '#18 getpic, get images of various sizes', 0, 100);
 	showText("#msg20", '#19 getxlarge, get an extra large image', 0, 100);
 	showText("#msg21", '#20 getxlargegif, get an extra large gif', 0, 100);
-    
-    //(document.getElementById('textarea').document.write('jajajajajjaja'());
-
+    (document.getElementById('textarea').document.write(''());
     return false; 
   }
   else{
-    alert('error: "help", dont have space at the end');
-    return false;
+    alert('redirecting...');
+    return true;
   }
 
 }
