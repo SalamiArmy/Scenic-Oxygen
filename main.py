@@ -310,12 +310,12 @@ def load_code_as_module(module_name):
                     return None
                 return module
     return None
-es = add.CommandsValue.query().fetch()
-command_names = []
-if len(es) > 0:
-    for mod in es:
-        command_name = str(mod.key._Key__pairs[0][1])
-        load_code_as_module(command_name)
+#es = add.CommandsValue.query().fetch()
+#command_names = []
+#if len(es) > 0:
+#    for mod in es:
+#        command_name = str(mod.key._Key__pairs[0][1])
+#        load_code_as_module(command_name)
 
 
 class GetCommandsHandler(webapp2.RequestHandler):
