@@ -162,33 +162,36 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-        command = self.request.get('command')
+        #command = self.request.get('command')
         requestText = self.request.get('message')
+        #
         chat_id = str(self.request.get('username'))
-        loginPin = str(self.request.get('password'))
+        #loginPin = str(self.request.get('password'))
         total_results = self.request.get('total_results')
-        if chat_id != '':
-            count = login.getCount(chat_id)
-            if count > 3:
-                self.response.write('You have been locked out due to too many incorrect login attempts.')
-            else:
-                if loginPin != '' and loginPin == login.getPin(chat_id):
-                    response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' +
-                                                                                       command + (
-                        total_results if total_results is not None else '') + ' ' + requestText,
-                                                                                       'private')
-                    self.response.write(response_text)
-                    if command == 'say':
-                        self.response.headers['Content-Type'] = 'audio/ogg'
-                    login.setPin(chat_id, '')
-                    login.setCount(chat_id, 0)
-                else:
-                    self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
-                                        keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
-                                        'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
-        else:
-            self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
-        return self.response
+        #if chat_id != '':
+        #    count = login.getCount(chat_id)
+        #    if count > 3:
+        #        self.response.write('You have been locked out due to too many incorrect login attempts.')
+        #    else:
+        #        if loginPin != '' and loginPin == login.getPin(chat_id):
+        self.run_web_command(chat_id, requestText, total_results)
+        #        else:
+        #            self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
+        #                                keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
+        #                                'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
+        #else:
+        #    self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
+        #return self.response
+
+    def run_web_command(self, chat_id, message, total_results):
+        response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id, 'Web', '/' + (
+            total_results if total_results is not None else '') + ' ' + message, 'private')
+        self.response.write(response_text)
+        if message[:3] == 'say':
+            self.response.headers['Content-Type'] = 'audio/ogg'
+        login.setPin(chat_id, '')
+        login.setCount(chat_id, 0)
+
 
 class Login(webapp2.RequestHandler):
     def get(self):
