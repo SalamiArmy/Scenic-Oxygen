@@ -16,8 +16,19 @@ $(function () {
 function checkforhelp(){
   if (document.getElementById('messagetextarea').value == "help") {
     showText("#msg2", 'commands:', 0, 100);
+    var xhttp = new XMLHttpRequest();
+    var commandList = [];
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        commandList = this.responseText;
+      }
+    };
+    xhttp.open("GET", "list_commands", true);
+    xhttp.send();
+    for (counter = 0; counter < commandList.length; counter++) {
+	    showText("#msg" + counter+3, '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
+    }
     var counter = 3;
-	showText("#msg" + counter++, '#1 getxxlarge, get an extra extra large image', 0, 100);
 	showText("#msg" + counter++, '#2 getxxlargegif, get an extra extra large gif', 0, 100);
 	showText("#msg" + counter++, '#3 getxxx, get smut', 0, 100);
 	showText("#msg" + counter++, '#4 bekommen, alias for get', 0, 100);
@@ -40,23 +51,24 @@ function checkforhelp(){
     return false; 
   }
   else{
-    alert('redirecting...');
     return true;
   }
 
 }
 
-var textarea = document.querySelector('textarea');
+$("messagetextarea").keypress(function(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      $("executecommandform").submit();
+    } else {
+      var el = this;
+      setTimeout(function(){
+        el.style.cssText = 'height:0; padding:0';
+        el.style.cssText = 'height:' + el.scrollHeight + 'px';
+      },0);
+    }
+});
 
-textarea.addEventListener('keydown', autosize);
-             
-function autosize(){
-  var el = this;
-  setTimeout(function(){
-    el.style.cssText = 'height:0; padding:0';
-    el.style.cssText = 'height:' + el.scrollHeight + 'px';
-  },0);
-}
 $(function() {
     $('textarea').on('keypress', function(e) {
         if (e.which == 32)
@@ -84,9 +96,3 @@ setTimeout(function(){
 
 
 
-$("input").keypress(function(event) {
-    if (event.which == 13) {
-        event.preventDefault();
-        $("executecommandform").submit();
-    }
-});
