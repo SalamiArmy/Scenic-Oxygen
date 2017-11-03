@@ -165,9 +165,15 @@ class WebhookHandler(webapp2.RequestHandler):
         #command = self.request.get('command')
         requestText = self.request.get('message')
         #
-        chat_id = str(self.request.get('username'))
+        if 'username' in self.request:
+            chat_id = str(self.request.get('username'))
+        else:
+            chat_id = ''
+        if 'total_results' in self.request:
+            total_results = str(self.request.get('total_results'))
+        else:
+            total_results = ''
         #loginPin = str(self.request.get('password'))
-        total_results = self.request.get('total_results')
         #if chat_id != '':
         #    count = login.getCount(chat_id)
         #    if count > 3:
