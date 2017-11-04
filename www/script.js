@@ -59,7 +59,7 @@ function checkforhelp(){
     //}
     return false;
   } else {
-    return true;
+    return (document.getElementById('messagetextarea').value != "");
   }
 }
 
