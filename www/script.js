@@ -16,28 +16,32 @@ $(function () {
 function checkforhelp(){
   $('#messagetextarea').focus();
   if (document.getElementById('messagetextarea').value.toLowerCase() == "help") {
-    showText("#msg2", 'commands:', 0, 100);
-    var counter = 3;
-	showText("#msg" + counter++, '#2 getxxlargegif, get an extra extra large gif', 0, 100);
-	showText("#msg" + counter++, '#3 getxxx, get smut', 0, 100);
-	showText("#msg" + counter++, '#4 bekommen, alias for get', 0, 100);
-	showText("#msg" + counter++, '#5 gifbekommen, alias for getgif', 0, 100);
-	showText("#msg" + counter++, '#6 giphy, get gif from giphy', 0, 100);
-	showText("#msg" + counter++, '#7 imgur, get image from imgur', 0, 100);
-	showText("#msg" + counter++, '#8 say, say something', 0, 100);
-	showText("#msg" + counter++, '#9 add, add new commands', 0, 100);
-	showText("#msg" + counter++, '#10 get, get an image', 0, 100);
-	showText("#msg" + counter++, '#12 getfig, get an image of a fig', 0, 100);
-	showText("#msg" + counter++, '#13 getgif, get a gif', 0, 100);
-	showText("#msg" + counter++, '#14 gethuge, get a huge image', 0, 100);
-	showText("#msg" + counter++, '#15 gethugegif, get a huge gif', 0, 100);
-	showText("#msg" + counter++, '#16 getlarge, get a large image', 0, 100);
-	showText("#msg" + counter++, '#17 getlargegif, get a large gif', 0, 100);
-	showText("#msg" + counter++, '#18 getpic, get images of various sizes', 0, 100);
-	showText("#msg" + counter++, '#19 getxlarge, get an extra large image', 0, 100);
-	showText("#msg" + counter++, '#20 getxlargegif, get an extra large gif', 0, 100);
+    if ($("#msg2").text().trim() == ""){
+      showText("#msg2", 'commands:', 0, 100);
+
+      var counter = 3;
+	  showText("#msg" + counter++, '#2 getxxlargegif, get an extra extra large gif', 0, 100);
+	  showText("#msg" + counter++, '#3 getxxx, get smut', 0, 100);
+	  showText("#msg" + counter++, '#4 bekommen, alias for get', 0, 100);
+	  showText("#msg" + counter++, '#5 gifbekommen, alias for getgif', 0, 100);
+	  showText("#msg" + counter++, '#6 giphy, get gif from giphy', 0, 100);
+	  showText("#msg" + counter++, '#7 imgur, get image from imgur', 0, 100);
+	  showText("#msg" + counter++, '#8 say, say something', 0, 100);
+	  showText("#msg" + counter++, '#9 add, add new commands', 0, 100);
+	  showText("#msg" + counter++, '#10 get, get an image', 0, 100);
+	  showText("#msg" + counter++, '#12 getfig, get an image of a fig', 0, 100);
+	  showText("#msg" + counter++, '#13 getgif, get a gif', 0, 100);
+	  showText("#msg" + counter++, '#14 gethuge, get a huge image', 0, 100);
+	  showText("#msg" + counter++, '#15 gethugegif, get a huge gif', 0, 100);
+	  showText("#msg" + counter++, '#16 getlarge, get a large image', 0, 100);
+	  showText("#msg" + counter++, '#17 getlargegif, get a large gif', 0, 100);
+	  showText("#msg" + counter++, '#18 getpic, get images of various sizes', 0, 100);
+	  showText("#msg" + counter++, '#19 getxlarge, get an extra large image', 0, 100);
+	  showText("#msg" + counter++, '#20 getxlargegif, get an extra large gif', 0, 100);
+	}
     document.getElementById('messagetextarea').value = '';
 
+    return false;
     var xhttp = new XMLHttpRequest();
     var commandList = [];
     xhttp.onreadystatechange = function() {
@@ -56,7 +60,6 @@ function checkforhelp(){
     };
     xhttp.open("GET", "/list_commands", true);
     xhttp.send();
-    return false;
   } else {
     return (document.getElementById('messagetextarea').value != "");
   }
