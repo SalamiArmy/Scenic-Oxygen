@@ -14,6 +14,7 @@ $(function () {
   setTimeout("$('#messagetextarea').focus();", 500);
 });
 function checkforhelp(){
+  $('#messagetextarea').focus();
   if (document.getElementById('messagetextarea').value.toLowerCase() == "help") {
     showText("#msg2", 'commands:', 0, 100);
     var counter = 3;
@@ -37,7 +38,6 @@ function checkforhelp(){
 	showText("#msg" + counter++, '#20 getxlargegif, get an extra large gif', 0, 100);
     document.getElementById('messagetextarea').value = '';
 
-    return false;
     var xhttp = new XMLHttpRequest();
     var commandList = [];
     xhttp.onreadystatechange = function() {
@@ -56,6 +56,7 @@ function checkforhelp(){
     };
     xhttp.open("GET", "/list_commands", true);
     xhttp.send();
+    return false;
   } else {
     return (document.getElementById('messagetextarea').value != "");
   }
