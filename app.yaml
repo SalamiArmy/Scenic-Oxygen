@@ -7,10 +7,6 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-- url: /set_webhook
-  login: admin
-  script: main.app
-
 - url: /login.html
   static_files: www/login.html
   upload: www/login.html

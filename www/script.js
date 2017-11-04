@@ -62,8 +62,9 @@ function checkforhelp(){
   }
 }
 function showCommandText(commandList){
-  for (counter = 0; counter < commandList.length; counter++) {
-    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
+  var commandsObject = JSON.parse(commandList)
+  for (counter = 0; counter < commandsObject.length; counter++) {
+    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandsObject[counter] + ', command_description_here', 0, 100);
   }
 }
 
