@@ -11,7 +11,7 @@ $(function () {
   showText("#msg1", "type help", 0, 100);
 });
  $(document).ready(function () {
-            setTimeout("$('#messagetextarea').focus();", 500);
+  setTimeout("$('#messagetextarea').focus();", 500);
 });
 function checkforhelp(){
   if (document.getElementById('messagetextarea').value.toLowerCase() == "help") {
@@ -37,29 +37,32 @@ function checkforhelp(){
 	showText("#msg" + counter++, '#20 getxlargegif, get an extra large gif', 0, 100);
     document.getElementById('messagetextarea').value = '';
 
-    //var xhttp = new XMLHttpRequest();
-    //var commandList = [];
-    //xhttp.onreadystatechange = function() {
-    //  if (this.readyState == 4 && this.status == 200) {
-    //    commandList = this.responseText;
-    //  } else {
-    //    xhttp.onreadystatechange = function() {
-    //      if (this.readyState == 4 && this.status == 200) {
-    //        commandList = this.responseText;
-    //      }
-    //    };
-    //    xhttp.open("GET", "https://hey-boet.com/list_commands", true);
-    //    xhttp.send();
-    //  }
-    //};
-    //xhttp.open("GET", "/list_commands", true);
-    //xhttp.send();
-    //for (counter = 0; counter < commandList.length; counter++) {
-	//    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
-    //}
     return false;
+    var xhttp = new XMLHttpRequest();
+    var commandList = [];
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        showCommandText(this.responseText);
+      } else {
+        var fallbackXhttp = new XMLHttpRequest();
+        fallbackXhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            showCommandText(this.responseText);
+          }
+        };
+        fallbackXhttp.open("GET", "https://hey-boet.com/list_commands", true);
+        fallbackXhttp.send();
+      }
+    };
+    xhttp.open("GET", "/list_commands", true);
+    xhttp.send();
   } else {
     return (document.getElementById('messagetextarea').value != "");
+  }
+}
+function showCommandText(commandList){
+  for (counter = 0; counter < commandList.length; counter++) {
+    showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandList[counter] + ', command_description_here', 0, 100);
   }
 }
 
