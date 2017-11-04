@@ -7,7 +7,7 @@ var showText = function (target, message, index, interval) {
   }
 }
 $(function () {
-  showText("#msg", "Scenic Terminal", 0, 100);
+  showText("#msg", "Terminal", 0, 100);
   showText("#msg1", "type help", 0, 100);
 });
  $(document).ready(function () {
