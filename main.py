@@ -128,7 +128,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 return
 
             if text.startswith('/'):
-                self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+                result = self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+                error_starts_with = 'I\'m sorry '
+                if result[:len(error_starts_with)] != error_starts_with:
+                    urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') +
+                                  '/deleteMessage?chat_id=' + str(chat_id) + '&message_id=' + str(message['message_id']))
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
