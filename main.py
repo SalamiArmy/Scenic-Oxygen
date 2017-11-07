@@ -131,8 +131,12 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
                 #error_starts_with = 'I\'m sorry '
                 #if result == '' or result[:len(error_starts_with)] != error_starts_with:
-                logging.error(urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') +
-                              '/deleteMessage?chat_id=' + str(chat_id) + '&message_id=' + str(message['message_id'])).content)
+                delete_result = urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs',
+                                                                                      'TELEGRAM_BOT_ID') + '/deleteMessage?chat_id=' + str(
+                    chat_id) + '&message_id=' + str(message['message_id']))
+                data = json.loads(delete_result.content)
+                if 'ok' in data and not data['ok']:
+                    logging.error(data['description'])
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -316,10 +320,10 @@ class GetCommandsHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    ('/telegram_webhook', TelegramWebhookHandler),
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
     ('/list_commands', GetCommandsHandler),
+    ('/telegram_webhook', TelegramWebhookHandler),
     ('/github_webhook', GithubWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
     ('/webhook', WebhookHandler)
