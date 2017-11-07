@@ -128,11 +128,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 return
 
             if text.startswith('/'):
-                print self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+                logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
                 #error_starts_with = 'I\'m sorry '
                 #if result == '' or result[:len(error_starts_with)] != error_starts_with:
-                print urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') +
-                              '/deleteMessage?chat_id=' + str(chat_id) + '&message_id=' + str(message['message_id']))
+                logging.error(urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') +
+                              '/deleteMessage?chat_id=' + str(chat_id) + '&message_id=' + str(message['message_id'])).content)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -166,32 +166,13 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-        #command = self.request.get('command')
         requestText = self.request.get('message')
-        #
-        #chat_id = str(self.request.get('username'))
-        #loginPin = str(self.request.get('password'))
-        #total_results = self.request.get('total_results')
-        #if chat_id != '':
-        #    count = login.getCount(chat_id)
-        #    if count > 3:
-        #        self.response.write('You have been locked out due to too many incorrect login attempts.')
-        #    else:
-        #        if loginPin != '' and loginPin == login.getPin(chat_id):
         self.run_web_command(keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'), requestText, 1)
-        #        else:
-        #            self.response.write('Web requests require the use of a One Time Pin which you can get by visiting:\n ' +\
-        #                                keyConfig.get('InternetShortcut', 'URL') + '/login?username=' + chat_id + '\n' +\
-        #                                'You have ' + str(3-login.incrementCount(chat_id, count)) + ' remaining attempts to log in.')
-        #else:
-        #    self.response.write('Web requests require the use of a username which you can get using the /login command when chatting to the bot.')
-        #return self.response
 
     def run_web_command(self, chat_id, message, total_results):
         response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id,
                                                                            'Admins, Scenic Oxygen ' +
                                                                            'has received a web request from ' + keyConfig.get('InternetShortcut', 'URL'), '/' +
-                                                                           #(total_results if total_results is not None else '') + ' ' +
                                                                            message, 'private')
         self.response.write(response_text)
         if message[:3] == 'say':
