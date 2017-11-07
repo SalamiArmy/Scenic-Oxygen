@@ -128,7 +128,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 return
 
             if text.startswith('/'):
-                result = self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+                print self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
                 #error_starts_with = 'I\'m sorry '
                 #if result == '' or result[:len(error_starts_with)] != error_starts_with:
                 print urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') +
