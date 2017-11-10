@@ -54,5 +54,5 @@ libraries:
   version: latest
 - name: endpoints
   version: latest
-- name: logging
+- name: google.logging
   version: latest
