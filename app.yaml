@@ -54,3 +54,5 @@ libraries:
   version: latest
 - name: endpoints
   version: latest
+- name: logging
+  version: latest
