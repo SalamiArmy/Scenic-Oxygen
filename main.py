@@ -150,7 +150,6 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
-        logging.info('checking ' + commandName)
         if commandName == 'add':
             return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'remove':
@@ -160,7 +159,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         elif commandName == 'start':
             return start.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'classicget':
-            return classicget.run(telegramBot, chat_id, fr_username, keyConfig)
+            return classicget.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         else:
             mod = load_code_as_module(commandName)
             if mod:
