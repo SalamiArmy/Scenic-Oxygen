@@ -5,6 +5,9 @@ import json
 import logging
 import urllib
 import sys
+
+from commands import classicget
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 import urllib2
@@ -155,6 +158,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             return login.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'start':
             return start.run(telegramBot, chat_id, fr_username, keyConfig)
+        elif commandName == 'classicget':
+            return classicget.run(telegramBot, chat_id, fr_username, keyConfig)
         else:
             mod = load_code_as_module(commandName)
             if mod:
