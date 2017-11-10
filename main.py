@@ -5,6 +5,7 @@ import json
 import logging
 import urllib
 import sys
+import re
 
 from commands import classicget
 
@@ -146,10 +147,10 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         commandName = split[0].lower().replace(telegramBot.name.lower(), '')
         request_text = split[1] if len(split) > 1 else ''
         totalResults = 1
-        import re
         if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
+        logging.info('checking ' + commandName)
         if commandName == 'add':
             return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'remove':
