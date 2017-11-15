@@ -32,7 +32,7 @@ from commands import remove
 # Read keys.ini file at program start (don't forget to put your bot keys in there!)
 keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
-keyConfig.read(["keys.ini", "..\\keys.ini"])
+keyConfig.read(["keys.ini", "..\keys.ini"])
 
 #Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
@@ -175,8 +175,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
+        chat_id = self.request.get('chat_id')
+        if 'chat_id' == '':
+            chat_id = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID')
         requestText = self.request.get('message')
-        self.run_web_command(keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'), requestText, 1)
+        self.run_web_command(chat_id, requestText, 1)
 
     def run_web_command(self, chat_id, message, total_results):
         response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id,

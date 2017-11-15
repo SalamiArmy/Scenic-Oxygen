@@ -22,11 +22,11 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def integration_test_get(self):
-        newRequestObject = main.Login()
+        newRequestObject = main.WebhookHandler()
         class Object(object):
             pass
         newRequestObject.request = Object()
-        newRequestObject.request.get = lambda x: '33166369' if (x == 'username') else 'gosh'
+        newRequestObject.request.get = lambda x: '33166369' if (x == 'message') else 'gosh'
         newRequestObject.response = Object()
         newRequestObject.response.write = lambda x: self.mockResponseWriter(x)
         self.responseString = ''
