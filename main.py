@@ -141,16 +141,23 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + user + ', I don\'t know.')
 
     def TryAnswerAQuestion(self, chat_id, fr_username, text):
-        mod = load_code_as_module('getanswer')
-        if mod:
-            getanswerResult = mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
-        if result_is_not_error(getanswerResult):
-            return getanswerResult
-        mod = load_code_as_module('getbook')
-        if mod:
-            getanswerResult = mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
-        if result_is_not_error(getanswerResult):
-            return getanswerResult
+        commandCascade = ['getanswer',
+                          'getbook',
+                          'getshow',
+                          'getmovie',
+                          'wiki',
+                          'define',
+                          'urban',
+                          'getlyrics',
+                          'getquote',
+                          'translate'
+                          'getlink']
+        for eachCommand in commandCascade:
+            mod = load_code_as_module(eachCommand)
+            if mod:
+                getanswerResult = mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
+            if result_is_not_error(getanswerResult):
+                return getanswerResult
         return None
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
