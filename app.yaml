@@ -54,3 +54,6 @@ libraries:
   version: latest
 - name: endpoints
   version: latest
+
+env_variables:
+  PYTHONHTTPSVERIFY: 1
