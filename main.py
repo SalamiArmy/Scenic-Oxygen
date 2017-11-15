@@ -133,14 +133,32 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
             if text.startswith('/'):
                 logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
-                #error_starts_with = 'I\'m sorry '
-                #if result == '' or result[:len(error_starts_with)] != error_starts_with:
-                delete_result = urlfetch.fetch('https://api.telegram.org/bot' + keyConfig.get('BotIDs',
-                                                                                      'TELEGRAM_BOT_ID') + '/deleteMessage?chat_id=' + str(
-                    chat_id) + '&message_id=' + str(message['message_id']))
-                data = json.loads(delete_result.content)
-                if 'ok' in data and not data['ok']:
-                    logging.error(data['description'])
+            elif text.endswith('?'):
+                result = self.TryAnswerAQuestion(chat_id, user, text)
+                if result_is_not_error(result):
+                    telegramBot.sendMessage(chat_id=chat_id, text=result)
+                elif chat_type == 'private':
+                    telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + user + ', I don\'t know.')
+
+    def TryAnswerAQuestion(self, chat_id, fr_username, text):
+        commandCascade = ['getanswer',
+                          'getbook',
+                          'getshow',
+                          'getmovie',
+                          'wiki',
+                          'define',
+                          'urban',
+                          'getlyrics',
+                          'getquote',
+                          'translate'
+                          'getlink']
+        for eachCommand in commandCascade:
+            mod = load_code_as_module(eachCommand)
+            if mod:
+                getanswerResult = mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
+            if result_is_not_error(getanswerResult):
+                return getanswerResult
+        return None
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -171,6 +189,10 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
 
+
+def result_is_not_error(self, result):
+    error_starts_with = 'I\'m sorry '
+    return result != None and result != '' and result[:len(error_starts_with)] != error_starts_with
 
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
@@ -302,6 +324,11 @@ def load_code_as_module(module_name):
                           'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
                           'for Scenic Oxygen to be able to resolve them' + \
                           str(sys.exc_info()[0]) + '\n' + \
+                          str(sys.exc_info()[1]) + '\n' + \
+                          command_code
+                    return None
+                except:
+                    print str(sys.exc_info()[0]) + '\n' + \
                           str(sys.exc_info()[1]) + '\n' + \
                           command_code
                     return None
