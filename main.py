@@ -159,7 +159,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 getanswerResult = mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
             if result_is_not_error(getanswerResult):
                 return getanswerResult
-            logging.info('error results returned from:\n' + eachCommand + ' ' + text + '\n' + getanswerResult)
+            else:
+                logging.info('error result returned from:\n' + eachCommand + ' ' + text + '\n' + getanswerResult)
         return None
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
