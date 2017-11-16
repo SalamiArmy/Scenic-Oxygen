@@ -193,7 +193,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     return errorMsg
 
 
-def result_is_not_error(self, result):
+def result_is_not_error(result):
     error_starts_with = 'I\'m sorry '
     return result != None and result != '' and result[:len(error_starts_with)] != error_starts_with
 
