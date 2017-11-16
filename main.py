@@ -153,11 +153,13 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                           'translate'
                           'getlink']
         for eachCommand in commandCascade:
+            getanswerResult = None
             mod = load_code_as_module(eachCommand)
             if mod:
                 getanswerResult = mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
             if result_is_not_error(getanswerResult):
                 return getanswerResult
+            logging.info('error results returned from:\n' + eachCommand + ' ' + text + '\n' + getanswerResult)
         return None
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
