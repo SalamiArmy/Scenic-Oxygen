@@ -1,12 +1,12 @@
 cron:
 - description: all watches job
   url: /allwatches
-  schedule: every day 14:00
+  schedule: every day 15:00
 
 - description: backup all watches job
   url: /allwatches
-  schedule: every day 14:02
+  schedule: every day 15:02
 
 - description: second backup all watches job
   url: /allwatches
-  schedule: every day 14:04
+  schedule: every day 15:04
