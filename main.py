@@ -302,6 +302,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                     if 'name' in command_data and \
                                     command_data['name'] != '__init__.py' and \
                                     command_data['name'] != 'add.py' and \
+                                    command_data['name'] != 'classicget.py' and \
                                     command_data['name'] != 'remove.py' and \
                                     command_data['name'] != 'login.py' and \
                                     command_data['name'] != 'start.py':
@@ -309,6 +310,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                                                       '/master/commands/' + command_data['name'],
                                                   headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
                         add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
+                
                 return ''
             else:
                 return json_data['message']
@@ -320,31 +322,17 @@ def load_code_as_module(module_name):
             command_code = str(get_value_from_data_store.codeValue)
             if command_code != '':
                 module = sys.modules.setdefault(module_name, imp.new_module(module_name))
-                try:
-                    logging.info('begin loading module ' + module_name)
-                    exec command_code in module.__dict__
-                    logging.info('end loading module ' + module_name)
-                except ImportError:
-                    print module_name + '\n' + \
-                          'imports between commands must be replaced with command = main.load_code_as_module(command) ' + \
-                          'for Scenic Oxygen to be able to resolve them' + \
-                          str(sys.exc_info()[0]) + '\n' + \
-                          str(sys.exc_info()[1]) + '\n' + \
-                          command_code
-                    return None
-                except:
-                    print str(sys.exc_info()[0]) + '\n' + \
-                          str(sys.exc_info()[1]) + '\n' + \
-                          command_code
-                    return None
+                logging.info('begin loading module ' + module_name)
+                exec command_code in module.__dict__
                 return module
     return None
-#es = add.CommandsValue.query().fetch()
-#command_names = []
-#if len(es) > 0:
-#    for mod in es:
-#        command_name = str(mod.key._Key__pairs[0][1])
-#        load_code_as_module(command_name)
+
+def ReloadAllCommands():
+    es = add.CommandsValue.query().fetch()
+    if len(es) > 0:
+        for mod in es:
+            command_name = str(mod.key._Key__pairs[0][1])
+            load_code_as_module(command_name)
 
 
 class GetCommandsHandler(webapp2.RequestHandler):
