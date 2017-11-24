@@ -186,8 +186,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                           'translate'
                           'getlink']
         if commandName in commandCascade:
-            getanswer = load_code_as_module(commandName)
-            result = getanswer.run(fr_username, request_text)
+            mod = load_code_as_module(commandName)
+            result = mod.run(fr_username, request_text)
             telegramBot.sendMessage(chat_id=chat_id, text=result)
             return result
 
