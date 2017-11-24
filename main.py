@@ -147,9 +147,9 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                       'wiki',
                       'define',
                       'urban',
+                      'translate',
                       'getlyrics',
                       'getquote',
-                      'translate'
                       'getlink']
 
     def TryAnswerAQuestion(self, chat_id, fr_username, text):
@@ -177,7 +177,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
         if any(commandName in cascade_commands for cascade_commands in self.commandCascade):
             mod = load_code_as_module(commandName)
-            result = mod.run(fr_username, request_text)
+            result = mod.run(fr_username, request_text, chat_id)
             telegramBot.sendMessage(chat_id=chat_id, text=result)
             return result
 
