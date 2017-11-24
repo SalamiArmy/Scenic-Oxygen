@@ -137,6 +137,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 logging.info(self.TryAnswerAQuestion(chat_id, user, text, chat_type))
 
     commandCascade = ['getanswer',
+                      'how',
                       'getbook',
                       'getshow',
                       'getmovie',
