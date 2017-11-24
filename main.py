@@ -175,7 +175,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
 
-        print commandName
+        logging.info(commandName)
         if commandName in self.commandCascade:
             mod = load_code_as_module(commandName)
             result = mod.run(fr_username, request_text)
