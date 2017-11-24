@@ -132,7 +132,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 return
 
             if text.startswith('/'):
-                if text.lower.startswith('/getanswer'):
+                if text.lower().startswith('/getanswer'):
                     getanswer = load_code_as_module('getanswer')
                     telegramBot.sendMessage(chat_id=chat_id, text=getanswer.run(user, text))
                 else:
