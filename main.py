@@ -140,19 +140,20 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 elif chat_type == 'private':
                     telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + user + ', I don\'t know.')
 
+    commandCascade = ['getanswer',
+                      'getbook',
+                      'getshow',
+                      'getmovie',
+                      'wiki',
+                      'define',
+                      'urban',
+                      'getlyrics',
+                      'getquote',
+                      'translate'
+                      'getlink']
+
     def TryAnswerAQuestion(self, chat_id, fr_username, text):
-        commandCascade = ['getanswer',
-                          'getbook',
-                          'getshow',
-                          'getmovie',
-                          'wiki',
-                          'define',
-                          'urban',
-                          'getlyrics',
-                          'getquote',
-                          'translate'
-                          'getlink']
-        for eachCommand in commandCascade:
+        for eachCommand in self.commandCascade:
             getanswerResult = None
             mod = load_code_as_module(eachCommand)
             if mod:
@@ -173,19 +174,9 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
-            
-        commandCascade = ['getanswer',
-                          'getbook',
-                          'getshow',
-                          'getmovie',
-                          'wiki',
-                          'define',
-                          'urban',
-                          'getlyrics',
-                          'getquote',
-                          'translate'
-                          'getlink']
-        if commandName in commandCascade:
+
+        print commandName
+        if commandName in self.commandCascade:
             mod = load_code_as_module(commandName)
             result = mod.run(fr_username, request_text)
             telegramBot.sendMessage(chat_id=chat_id, text=result)
