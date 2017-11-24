@@ -134,11 +134,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             if text.startswith('/'):
                 logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
             elif text.endswith('?'):
-                result = self.TryAnswerAQuestion(chat_id, user, text)
-                if result_is_not_error(result):
-                    telegramBot.sendMessage(chat_id=chat_id, text=result)
-                elif chat_type == 'private':
-                    telegramBot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + user + ', I don\'t know.')
+                logging.info(self.TryAnswerAQuestion(chat_id, user, text, chat_type))
 
     commandCascade = ['getanswer',
                       'getbook',
@@ -152,13 +148,18 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                       'getquote',
                       'getlink']
 
-    def TryAnswerAQuestion(self, chat_id, fr_username, text):
+    def TryAnswerAQuestion(self, chat_id, fr_username, text, chat_type):
         for eachCommand in self.commandCascade:
             getanswerResult = None
             mod = load_code_as_module(eachCommand)
             if mod:
                 getanswerResult = mod.run(fr_username, text, chat_id)
             if result_is_not_error(getanswerResult):
+                if result_is_not_error(getanswerResult):
+                    telegramBot.sendMessage(chat_id=chat_id, text=getanswerResult, parse_mode='markdown')
+                elif chat_type == 'private':
+                    telegramBot.sendMessage(chat_id=chat_id,
+                                            text='I\'m sorry ' + fr_username + ', I don\'t know.')
                 return getanswerResult
             else:
                 logging.info('error result returned from:\n' + eachCommand +
@@ -178,7 +179,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         if any(commandName in cascade_commands for cascade_commands in self.commandCascade):
             mod = load_code_as_module(commandName)
             result = mod.run(fr_username, request_text, chat_id)
-            telegramBot.sendMessage(chat_id=chat_id, text=result)
+            telegramBot.sendMessage(chat_id=chat_id, text=result, parse_mode='markdown')
             return result
 
         if commandName == 'add':
