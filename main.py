@@ -132,7 +132,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 return
 
             if text.startswith('/'):
-                logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
+                if text.lower.startswith('/getanswer'):
+                    getanswer = load_code_as_module('getanswer')
+                    telegramBot.sendMessage(chat_id=chat_id, text=getanswer.run(user, text))
+                else:
+                    logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
             #elif text.endswith('?'):
             #    result = self.TryAnswerAQuestion(chat_id, user, text)
             #    if result_is_not_error(result):
@@ -310,7 +314,6 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                                                       '/master/commands/' + command_data['name'],
                                                   headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
                         add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
-                
                 return ''
             else:
                 return json_data['message']
