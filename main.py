@@ -177,11 +177,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
 
-        if any(commandName in cascade_commands for cascade_commands in self.commandCascade):
-            mod = load_code_as_module(commandName)
-            result = mod.run(fr_username, request_text, chat_id)
-            telegramBot.sendMessage(chat_id=chat_id, text=result, parse_mode='markdown')
-            return result
+        #if any(commandName in cascade_commands for cascade_commands in self.commandCascade):
+        #    mod = load_code_as_module(commandName)
+        #    result = mod.run(fr_username, request_text, chat_id)
+        #    telegramBot.sendMessage(chat_id=chat_id, text=result, parse_mode='markdown')
+        #    return result
 
         if commandName == 'add':
             return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
