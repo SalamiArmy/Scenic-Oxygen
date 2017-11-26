@@ -157,6 +157,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 getanswerResult = mod.run(fr_username, text, chat_id)
             if result_is_not_error(getanswerResult):
                 if result_is_not_error(getanswerResult):
+                    logging.info('get answer result:')
+                    logging.info(getanswerResult)
                     telegramBot.sendMessage(chat_id=chat_id, text=getanswerResult, parse_mode='markdown')
                 elif chat_type == 'private':
                     telegramBot.sendMessage(chat_id=chat_id,
