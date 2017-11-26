@@ -154,7 +154,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             getanswerResult = None
             mod = load_code_as_module(eachCommand)
             if mod:
-                getanswerResult = mod.run(fr_username, text, chat_id)
+                getanswerResult = str(mod.run(fr_username, text, chat_id))
             if result_is_not_error(getanswerResult):
                 if result_is_not_error(getanswerResult):
                     logging.info('get answer result:')
