@@ -219,9 +219,9 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
     def clean_result_markdown(self, result):
         valid_markdown = result
-        if result.count('*') % 2 == 0:
+        if result.count('*') % 2 != 0:
             valid_markdown += '*'
-        if result.count('_') % 2 == 0:
+        if result.count('_') % 2 != 0:
             valid_markdown += '_'
         return valid_markdown
 
