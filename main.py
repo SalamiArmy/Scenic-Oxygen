@@ -156,8 +156,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             if mod:
                 getanswerResult = str(mod.run(fr_username, text, chat_id))
             if result_is_not_error(getanswerResult):
-                if result_is_not_error(getanswerResult):
-                    logging.info('get answer result:')
+                if result_is_not_error(getanswerResult) and self.result_is_valid_markdown(getanswerResult):
+                    logging.info('got answer:')
                     logging.info(getanswerResult)
                     telegramBot.sendMessage(chat_id=chat_id, text=getanswerResult, parse_mode='markdown')
                 elif chat_type == 'private':
@@ -215,6 +215,9 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                                ', I\'m afraid I do not recognize the ' + commandName + ' command.'
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
+
+    def result_is_valid_markdown(self, result):
+        return result.count('*') % 2 == 0 and result.count('_') % 2 == 0
 
 
 def result_is_not_error(result):
