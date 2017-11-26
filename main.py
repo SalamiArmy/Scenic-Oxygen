@@ -156,10 +156,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             if mod:
                 getanswerResult = str(mod.run(fr_username, text, chat_id))
             if result_is_not_error(getanswerResult):
-                if result_is_not_error(getanswerResult) and self.result_is_valid_markdown(getanswerResult):
+                if result_is_not_error(getanswerResult):
+                    valid_markdown = self.clean_result_markdown(getanswerResult)
                     logging.info('got answer:')
-                    logging.info(getanswerResult)
-                    telegramBot.sendMessage(chat_id=chat_id, text=getanswerResult, parse_mode='markdown')
+                    logging.info(valid_markdown)
+                    telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
                 elif chat_type == 'private':
                     telegramBot.sendMessage(chat_id=chat_id,
                                             text='I\'m sorry ' + fr_username + ', I don\'t know.')
@@ -216,8 +217,13 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
 
-    def result_is_valid_markdown(self, result):
-        return result.count('*') % 2 == 0 and result.count('_') % 2 == 0
+    def clean_result_markdown(self, result):
+        valid_markdown = result
+        if result.count('*') % 2 == 0:
+            valid_markdown += '*'
+        if result.count('_') % 2 == 0:
+            valid_markdown += '_'
+        return valid_markdown
 
 
 def result_is_not_error(result):
