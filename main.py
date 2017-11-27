@@ -149,7 +149,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                       'getlink']
 
     def TryAnswerAQuestion(self, chat_id, fr_username, text, chat_type):
-        if text.strip()[:3].lower() != 'how':
+        if text.strip()[:3].lower() != 'how' or text.strip()[:8].lower() == 'how much':
             for eachCommand in self.commandCascade:
                 mod = load_code_as_module(eachCommand)
                 if mod:
