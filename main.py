@@ -183,7 +183,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
             mod = load_code_as_module(commandName)
             result = mod.run(fr_username, request_text, chat_id)
-            telegramBot.sendMessage(chat_id=chat_id, text=result, parse_mode='markdown')
+            valid_markdown = self.clean_result_markdown(result)
+            telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
             return result
 
         if commandName == 'add':
