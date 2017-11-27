@@ -218,10 +218,16 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     return errorMsg
 
     def clean_result_markdown(self, result):
-        valid_markdown = result
-        if result.count('*') % 2 != 0:
+        valid_markdown = str(re.sub(r'<[^>]*?>', '',
+                                    result
+                                    .replace('<span class="searchmatch">', '*')
+                                    .replace('</span>', '*')
+                                    .replace('&quot;', '\"')
+                                    .replace('[', '')
+                                    .replace(']', '')))
+        if valid_markdown.count('*') % 2 != 0:
             valid_markdown += '*'
-        if result.count('_') % 2 != 0:
+        if valid_markdown.count('_') % 2 != 0:
             valid_markdown += '_'
         return valid_markdown
 
