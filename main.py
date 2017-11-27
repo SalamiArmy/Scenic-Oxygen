@@ -133,7 +133,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
             if text.startswith('/'):
                 logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
-            elif text.endswith('?'):
+            elif text.endswith('?') and not text.contains('.'):
                 logging.info(self.TryAnswerAQuestion(chat_id, user, text, chat_type))
 
     commandCascade = ['getanswer',
