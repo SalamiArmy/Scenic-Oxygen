@@ -137,7 +137,6 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 logging.info(self.TryAnswerAQuestion(chat_id, user, text, chat_type))
 
     commandCascade = ['getanswer',
-                      'how',
                       'getbook',
                       'getshow',
                       'getmovie',
@@ -150,25 +149,23 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                       'getlink']
 
     def TryAnswerAQuestion(self, chat_id, fr_username, text, chat_type):
-        for eachCommand in self.commandCascade:
-            getanswerResult = None
-            mod = load_code_as_module(eachCommand)
+        if text.strip()[:3].lower() != 'how':
+            for eachCommand in self.commandCascade:
+                mod = load_code_as_module(eachCommand)
+                if mod:
+                    getanswerResult = str(mod.run(fr_username, text, chat_id))
+                    if result_is_not_error(getanswerResult):
+                        valid_markdown = self.clean_result_markdown(getanswerResult)
+                        logging.info('got answer:')
+                        logging.info(valid_markdown)
+                        telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
+                        return valid_markdown
+        else:
+            mod = load_code_as_module('how')
             if mod:
-                getanswerResult = str(mod.run(fr_username, text, chat_id))
-            if result_is_not_error(getanswerResult):
-                if result_is_not_error(getanswerResult):
-                    valid_markdown = self.clean_result_markdown(getanswerResult)
-                    logging.info('got answer:')
-                    logging.info(valid_markdown)
-                    telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
-                elif chat_type == 'private':
-                    telegramBot.sendMessage(chat_id=chat_id,
-                                            text='I\'m sorry ' + fr_username + ', I don\'t know.')
-                return getanswerResult
-            else:
-                logging.info('error result returned from:\n' + eachCommand +
-                             (' ' + text if text != None else '') + '\n' +
-                             (' ' + getanswerResult if getanswerResult != None else ''))
+                getHowResult = str(mod.run(fr_username, text, chat_id))
+                telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
+                return getHowResult
         return None
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
@@ -180,12 +177,19 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
 
-        if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
-            mod = load_code_as_module(commandName)
-            result = mod.run(fr_username, request_text, chat_id)
-            valid_markdown = self.clean_result_markdown(result)
-            telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
-            return result
+        if commandName != 'how':
+            if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
+                mod = load_code_as_module(commandName)
+                result = mod.run(fr_username, request_text, chat_id)
+                valid_markdown = self.clean_result_markdown(result)
+                telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
+                return result
+        else:
+            mod = load_code_as_module('how')
+            if mod:
+                getHowResult = str(mod.run(fr_username, text, chat_id))
+                telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
+                return getHowResult
 
         if commandName == 'add':
             return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
