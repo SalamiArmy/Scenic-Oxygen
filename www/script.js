@@ -21,15 +21,6 @@ function checkforhelp(){
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         showCommandText(this.responseText);
-      } else {
-        var fallbackXhttp = new XMLHttpRequest();
-        fallbackXhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            showCommandText(this.responseText);
-          }
-        };
-        fallbackXhttp.open("GET", "/list_commands", true);
-        fallbackXhttp.send();
       }
     };
     xhttp.open("GET", "/list_commands", true);
