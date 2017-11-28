@@ -127,14 +127,17 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             chat_id = chat['id']
             chat_type = chat['type']
 
-            if not text:
+            if text:
+                logging.info(self.respond(chat_id, chat_type, text, user))
+            else:
                 logging.info('no text')
                 return
 
-            if text.startswith('/'):
-                logging.info(self.TryExecuteExplicitCommand(chat_id, user, text, chat_type))
-            elif text.endswith('?'):
-                logging.info(self.TryAnswerAQuestion(chat_id, user, text, chat_type))
+    def respond(self, chat_id, chat_type, text, user='Dave'):
+        if text.startswith('/') or any(text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
+            return self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+        elif text.endswith('?'):
+            return self.TryAnswerAQuestion(chat_id, user, text, chat_type)
 
     commandCascade = ['getanswer',
                       'getbook',
@@ -251,11 +254,7 @@ class WebhookHandler(webapp2.RequestHandler):
         self.run_web_command(chat_id, requestText, 1)
 
     def run_web_command(self, chat_id, message, total_results):
-        response_text = TelegramWebhookHandler().TryExecuteExplicitCommand(chat_id,
-                                                                           'Admins, Scenic Oxygen ' +
-                                                                           'has received a web request from ' + keyConfig.get('InternetShortcut', 'URL'), '/' +
-                                                                           message, 'private')
-        self.response.write(response_text)
+        self.response.write(TelegramWebhookHandler().respond(chat_id, 'private', message))
         if message[:3] == 'say':
             self.response.headers['Content-Type'] = 'audio/ogg'
         login.setPin(chat_id, '')
@@ -379,12 +378,7 @@ def ReloadAllCommands():
 class GetCommandsHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        es = add.CommandsValue.query().fetch()
-        command_names = []
-        if len(es) > 0:
-            for mod in es:
-                command_names.append(str(mod.key._Key__pairs[0][1]))
-        self.response.write(command_names)
+        self.response.write(TelegramWebhookHandler().commandCascade)
         return self.response
 
 
