@@ -80,12 +80,6 @@ $(document).keypress(function(e) {
     }
 });
 
-$(function() {
-    $('textarea').on('keypress', function(e) {
-        if (e.which == 32)
-            return false;
-    });
-});
 setTimeout(function(){
    $("textarea").text("LOADING TERMINAL");
 },500); // 3 second delay
