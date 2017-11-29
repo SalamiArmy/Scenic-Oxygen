@@ -153,7 +153,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 if result_is_not_error(getHowResult):
                     telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
                     return getHowResult
-        return self.respond(chat_id, fr_username, text)
+        return self.respond(chat_id, text, fr_username)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -166,7 +166,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
         if commandName != 'how':
             if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
-                return self.respond(chat_id, fr_username, request_text, commandName)
+                return self.respond(chat_id, request_text, commandName, fr_username)
         else:
             mod = load_code_as_module('how')
             if mod:
@@ -204,19 +204,19 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
 
-    def respond(self, chat_id, fr_username, request_text):
+    def respond(self, chat_id, request_text, user='Dave'):
         for eachCommand in self.commandCascade:
             mod = load_code_as_module(eachCommand)
             if mod:
-                getanswerResult = str(mod.run(fr_username, request_text, chat_id))
+                getanswerResult = str(mod.run(user, request_text, chat_id))
                 if result_is_not_error(getanswerResult):
                     valid_markdown = self.clean_result_markdown(getanswerResult)
                     telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
                     return valid_markdown
 
-    def respond(self, chat_id, fr_username, request_text, command_name):
+    def respond(self, chat_id, request_text, command_name, user='Dave'):
         mod = load_code_as_module(command_name)
-        result = mod.run(fr_username, request_text, chat_id)
+        result = mod.run(user, request_text, chat_id)
         valid_markdown = self.clean_result_markdown(result)
         telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
         return result
