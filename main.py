@@ -204,7 +204,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
 
-    def respond(self, chat_id, request_text, user='Dave'):
+    def respond(self, chat_id, request_text, user):
         for eachCommand in self.commandCascade:
             mod = load_code_as_module(eachCommand)
             if mod:
@@ -216,10 +216,13 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
     def respond(self, chat_id, request_text, command_name, user='Dave'):
         mod = load_code_as_module(command_name)
-        result = mod.run(user, request_text, chat_id)
-        valid_markdown = self.clean_result_markdown(result)
-        telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
-        return result
+        if mod:
+            result = mod.run(user, request_text, chat_id)
+            valid_markdown = self.clean_result_markdown(result)
+            telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
+            return result
+        else:
+            return None
 
     def get_response(self, chat_id, chat_type, text, user='Dave'):
         if text.startswith('/') or any(text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
