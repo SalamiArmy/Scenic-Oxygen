@@ -170,7 +170,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         else:
             mod = load_code_as_module('how')
             if mod:
-                getHowResult = str(mod.run(fr_username, text, chat_id))
+                getHowResult = str(mod.run(fr_username, text, chat_id, totalResults))
                 telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
                 return getHowResult
         if commandName == 'add':
