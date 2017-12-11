@@ -243,7 +243,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             valid_markdown += '*'
         if valid_markdown.count('_') % 2 != 0:
             valid_markdown += '_'
-        if len(split_line_break):
+        if len(split_line_break) > 1:
             post_line_break_escape_markdown = split_line_break[1]\
                 .replace('_', '\_')\
                 .replace('*', '\*')
