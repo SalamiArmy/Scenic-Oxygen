@@ -231,7 +231,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             return self.TryAnswerAQuestion(chat_id, user, text, chat_type)
 
     def clean_result_markdown(self, result):
-        split_line_break = result.split('\n', 2)
+        split_line_break = result.rsplit('\n', 1)
         valid_markdown = str(re.sub(r'<[^>]*?>', '',
                                     split_line_break[0]
                                     .replace('<span class="searchmatch">', '*')
