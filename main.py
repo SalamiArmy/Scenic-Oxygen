@@ -213,9 +213,14 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         mod = load_code_as_module(command_name)
         if mod:
             result = mod.run(user, request_text, chat_id, total_results)
-            valid_markdown = self.clean_result_markdown(result)
-            telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
-            return result
+            if result:
+                valid_markdown = self.clean_result_markdown(result)
+                telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
+                return result
+            else:
+                error_message = 'I\'m sorry, ' + user + ' I got nothing.'
+                telegramBot.sendMessage(chat_id=chat_id, text=error_message)
+                return error_message
         else:
             return None
 
