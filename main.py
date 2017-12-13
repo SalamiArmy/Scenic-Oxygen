@@ -145,7 +145,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                       'getquote',
                       'getlink']
 
-    def TryAnswerAQuestion(self, chat_id, fr_username, text, chat_type):
+    def TryAnswerAQuestion(self, chat_id, fr_username, text):
         if text.strip()[:3].lower() == 'how' and text.strip()[:8].lower() != 'how much':
             mod = load_code_as_module('how')
             if mod:
@@ -153,7 +153,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 if result_is_not_error(getHowResult):
                     telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
                     return getHowResult
-        return self.respond(chat_id, text, fr_username, 1)
+        return self.respond_to_implicit_request(chat_id, text, fr_username, 1)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -166,7 +166,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
         if commandName != 'how':
             if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
-                return self.respond(chat_id, request_text, commandName, fr_username, totalResults)
+                return self.respond_to_explicit_command(commandName, chat_id, request_text, fr_username, totalResults)
         else:
             mod = load_code_as_module('how')
             if mod:
@@ -199,7 +199,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
 
-    def respond(self, chat_id, request_text, user, total_results):
+    def respond_to_implicit_request(self, chat_id, request_text, user, total_results):
         for eachCommand in self.commandCascade:
             mod = load_code_as_module(eachCommand)
             if mod:
@@ -209,7 +209,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
                     return valid_markdown
 
-    def respond(self, chat_id, request_text, command_name, user, total_results):
+    def respond_to_specific_command(self, command_name, chat_id, request_text, user, total_results):
         mod = load_code_as_module(command_name)
         if mod:
             result = mod.run(user, request_text, chat_id, total_results)
@@ -223,7 +223,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         if text.startswith('/') or any(text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
             return self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
         elif text.endswith('?'):
-            return self.TryAnswerAQuestion(chat_id, user, text, chat_type)
+            return self.TryAnswerAQuestion(chat_id, user, text)
 
     def clean_result_markdown(self, result):
         split_line_break = result.rsplit('\n', 1)
