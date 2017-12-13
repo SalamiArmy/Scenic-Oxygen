@@ -153,7 +153,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 if result_is_not_error(getHowResult):
                     telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
                     return getHowResult
-        return self.respond_to_implicit_request(chat_id, text, fr_username, 1)
+        return self.respond_to_a_question(chat_id, text, fr_username, 1)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -166,7 +166,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 
         if commandName != 'how':
             if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
-                return self.respond_to_explicit_command(commandName, chat_id, request_text, fr_username, totalResults)
+                return self.respond_to_specific_command(commandName, chat_id, request_text, fr_username, totalResults)
         else:
             mod = load_code_as_module('how')
             if mod:
@@ -199,7 +199,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
 
-    def respond_to_implicit_request(self, chat_id, request_text, user, total_results):
+    def respond_to_a_question(self, chat_id, request_text, user, total_results):
         for eachCommand in self.commandCascade:
             mod = load_code_as_module(eachCommand)
             if mod:
