@@ -153,7 +153,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 if result_is_not_error(getHowResult):
                     telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
                     return getHowResult
-        return self.respond(chat_id, text, fr_username)
+        return self.respond(chat_id, text, fr_username, 1)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
