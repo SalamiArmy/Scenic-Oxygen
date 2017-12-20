@@ -183,8 +183,6 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             return start.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'classicget':
             return classicget.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
-        elif commandName == 'imgur':
-            return None
         else:
             mod = load_code_as_module(commandName)
             if mod:
