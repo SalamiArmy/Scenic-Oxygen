@@ -146,14 +146,22 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                       'getlink']
 
     def TryAnswerAQuestion(self, chat_id, fr_username, text):
-        if text.strip()[:3].lower() == 'how' and text.strip()[:8].lower() != 'how much':
-            mod = load_code_as_module('how')
-            if mod:
-                getHowResult = str(mod.run(fr_username, text, chat_id))
-                if result_is_not_error(getHowResult):
-                    telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
-                    return getHowResult
         return self.respond_to_a_question(chat_id, text, fr_username, 1)
+
+    def TryAnswerAHowQuestion(self, chat_id, fr_username, text):
+        if text.strip()[:8].lower() == 'how much' or text.strip()[:8].lower() == 'how many':
+            mod = load_code_as_module('getanswer')
+            if mod:
+                getManyMuchResult = str(mod.run(fr_username, text, chat_id))
+                if result_is_not_error(getManyMuchResult):
+                    telegramBot.sendMessage(chat_id=chat_id, text=getManyMuchResult)
+                    return getManyMuchResult
+        mod = load_code_as_module('how')
+        if mod:
+            getHowResult = str(mod.run(fr_username, text, chat_id))
+            if result_is_not_error(getHowResult):
+                telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
+                return getHowResult
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -222,8 +230,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
     def get_response(self, chat_id, chat_type, text, user='Dave'):
         if text.startswith('/') or any(text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
             return self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
-        elif text.endswith('?'):
-            return self.TryAnswerAQuestion(chat_id, user, text)
+        elif text.strip()[:len('how')].lower() == 'how' and text.endswith('?'):
+            return self.TryAnswerAHowQuestion(chat_id, user, text)
 
     def clean_result_markdown(self, result):
         split_line_break = result.rsplit('\n', 1)
