@@ -31,7 +31,7 @@ class TestPost(unittest.TestCase):
         class Object(object):
             pass
         newRequestObject.request = Object()
-        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "/getgif grade A 👌👌 100% 👌👌 good shit", "chat": {"id": -55348600, "type": "group"}}}'
+        newRequestObject.request.body = '{"message": {"from": {"username": "SalamiArmy", "first_name": "Ashley", "last_name": "Lewis"}, "text": "this is a quesiton?", "chat": {"id": -55348600, "type": "group"}}}'
         newRequestObject.response = Object()
         newRequestObject.response.write = lambda x: None
         newRequestObject.post()
