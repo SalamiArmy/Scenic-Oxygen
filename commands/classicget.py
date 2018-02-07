@@ -2,9 +2,9 @@ from google.cloud import logging
 from google.auth import app_engine
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
-    PROJECT_IDS = [keyConfig.get('Logging', 'APP_ENGINE_PROJECT_KEY1'),
-                   keyConfig.get('Logging', 'APP_ENGINE_PROJECT_KEY2'),
-                   keyConfig.get('Logging', 'APP_ENGINE_PROJECT_KEY3')]
+    PROJECT_IDS = [keyConfig.get('Logging', 'HEY-BOET'),
+                   keyConfig.get('Logging', 'SCENIC-OXYGEN-113812'),
+                   keyConfig.get('Logging', 'IMAGEBOET')]
     client = logging.Client(
         credentials=app_engine.Credentials(service_account_id=keyConfig.get('Google', 'GCSE_APP_ID'))
     )
