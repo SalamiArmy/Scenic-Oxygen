@@ -226,7 +226,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
     def get_response(self, chat_id, chat_type, text, user='Dave'):
         if text.startswith('/') or any(text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
             return self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
-        elif text.strip()[:len('how')].lower() == 'how' and text.endswith('?'):
+        elif text.strip()[:len('how')].lower() == 'how' and not text.strip()[:len('how is')].lower() == 'how is' and text.endswith('?'):
             return self.TryAnswerAHowQuestion(chat_id, user, text)
 
     def clean_result_markdown(self, result):
