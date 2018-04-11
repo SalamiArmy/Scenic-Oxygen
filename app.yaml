@@ -49,7 +49,7 @@ libraries:
 - name: webapp2
   version: "2.5.2"
 - name: ssl
-  version: latest
+  version: "2.7.11"
 - name: PIL
   version: latest
 - name: endpoints
