@@ -14,7 +14,6 @@ import imp
 import endpoints
 
 import telegram
-from pymessager.message import Messager
 
 # standard app engine imports
 from google.appengine.ext import ndb
@@ -35,8 +34,6 @@ keyConfig.read(["keys.ini", "..\keys.ini"])
 #Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
 telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
-
-facebookBot = Messager(keyConfig.get('BotIDs', 'FACEBOOK_BOT_ID'))
 
 # ================================
 
