@@ -31,15 +31,17 @@ keyConfig = ConfigParser.ConfigParser()
 keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
 keyConfig.read(["keys.ini", "..\keys.ini"])
 
-#Telegram Bot Info
+# Telegram Bot Info
 BASE_TELEGRAM_URL = 'https://api.telegram.org/bot'
 telegramBot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+
 
 # ================================
 
 class AllWatchesValue(ndb.Model):
     # key name: AllWatches
     currentValue = ndb.StringProperty(indexed=False, default='')
+
 
 # ================================
 
@@ -48,17 +50,22 @@ def addToAllWatches(command, chat_id, request=''):
     es.currentValue += ',' + str(chat_id) + ':' + command + (':' + request.replace(',', '%2C') if request != '' else '')
     es.put()
 
+
 def AllWatchesContains(command, chat_id, request=''):
     es = AllWatchesValue.get_by_id('AllWatches')
     if es:
-        return (',' + str(chat_id) + ':' + command + (':' + request.replace(',', '%2C') if request != '' else '')) in str(es.currentValue) or \
-               (str(chat_id) + ':' + command + (':' + request.replace(',', '%2C') if request != '' else '') + ',') in str(es.currentValue)
+        return (',' + str(chat_id) + ':' + command + (
+        ':' + request.replace(',', '%2C') if request != '' else '')) in str(es.currentValue) or \
+               (str(chat_id) + ':' + command + (
+               ':' + request.replace(',', '%2C') if request != '' else '') + ',') in str(es.currentValue)
     return False
+
 
 def setAllWatchesValue(NewValue):
     es = AllWatchesValue.get_or_insert('AllWatches')
     es.currentValue = NewValue
     es.put()
+
 
 def getAllWatches():
     es = AllWatchesValue.get_by_id('AllWatches')
@@ -66,8 +73,11 @@ def getAllWatches():
         return es.currentValue
     return ''
 
+
 def removeFromAllWatches(watch):
-    setAllWatchesValue(getAllWatches().replace(',' + watch.replace(',', '%2C'), '').replace(watch.replace(',', '%2C'), ''))
+    setAllWatchesValue(
+        getAllWatches().replace(',' + watch.replace(',', '%2C'), '').replace(watch.replace(',', '%2C'), ''))
+
 
 # ================================
 
@@ -97,7 +107,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         url = self.request.get('url')
         if url:
             self.response.write(json.dumps(json.load(urllib2.urlopen(
-                BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook', urllib.urlencode({'url': url})))))
+                BASE_TELEGRAM_URL + keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID') + '/setWebhook',
+                urllib.urlencode({'url': url})))))
 
     def post(self):
         urlfetch.set_default_fetch_deadline(120)
@@ -187,10 +198,11 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         else:
             mod = load_code_as_module(commandName)
             if mod:
-                return mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '', totalResults)
+                return mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '',
+                               totalResults)
             else:
                 if chat_type == 'private':
-                    errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') +\
+                    errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') + \
                                ', I\'m afraid I do not recognize the ' + commandName + ' command.'
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
@@ -221,7 +233,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             return None
 
     def get_response(self, chat_id, chat_type, text, user='Dave'):
-        if text.startswith('/') or any(text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
+        if text.startswith('/') or any(
+                text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
             return self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
         elif text.strip()[:len('how')].lower() == 'how' \
                 and not text.strip()[:len('how is')].lower() == 'how is' \
@@ -243,8 +256,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         if valid_markdown.count('_') % 2 != 0:
             valid_markdown += '_'
         if len(split_line_break) > 1:
-            post_line_break_escape_markdown = split_line_break[1]\
-                .replace('_', '\_')\
+            post_line_break_escape_markdown = split_line_break[1] \
+                .replace('_', '\_') \
                 .replace('*', '\*')
             valid_markdown += '\n' + post_line_break_escape_markdown
         return valid_markdown
@@ -253,6 +266,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
 def result_is_not_error(result):
     error_starts_with = 'I\'m sorry '
     return result != None and result != '' and result[:len(error_starts_with)] != error_starts_with
+
 
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
@@ -281,6 +295,7 @@ class Login(webapp2.RequestHandler):
             self.response.write(keyConfig.get('InternetShortcut', 'URL') + '/login?username=')
         return self.response
 
+
 class TriggerAllWatches(webapp2.RequestHandler):
     def get(self):
         AllWatches = getAllWatches()
@@ -300,13 +315,15 @@ class TriggerAllWatches(webapp2.RequestHandler):
                     print('removing from all watches: ' + watch)
                     removeFromAllWatches(watch)
 
+
 class GithubWebhookHandler(webapp2.RequestHandler):
     def post(self):
         urlfetch.set_default_fetch_deadline(120)
         logging.info('request body:')
         logging.info(self.request.body)
         body = json.loads(self.request.body)
-        if 'repository' in body and 'owner' in body['repository'] and 'login' in body['repository']['owner'] and 'name' in body['repository']:
+        if 'repository' in body and 'owner' in body['repository'] and 'login' in body['repository'][
+            'owner'] and 'name' in body['repository']:
             repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
             logging.info('Got repo_url as ' + repo_url)
             token = add.getTokenValue(repo_url)
@@ -314,25 +331,28 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                 response = self.update_commands(repo_url, token)
                 if response == '':
                     commitMsg = ''
-					if 'commits' in body:
-						for commit in body['commits']:
-							commitMsg += '\n' + commit['message']
-						telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-												text='Admins, The Scenic-Oxygen Github Webhook ' +
-													 'has performed update for:\n' + commitMsg + '\nSee ' + body['compare'],
-												disable_web_page_preview=True)
-					else:
-						telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-												text='Admins, The Scenic-Oxygen Github Webhook ' +
-													 'has performed update for: ' + repo_url,
-												disable_web_page_preview=True)
-					self.response.write('Commands imported from ' + repo_url)
+                    if 'commits' in body:
+                        for commit in body['commits']:
+                            commitMsg += '\n' + commit['message']
+                        telegramBot.sendMessage(
+                            chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                            text='Admins, The Scenic-Oxygen Github Webhook ' +
+                                 'has performed update for:\n' + commitMsg + '\nSee ' + body['compare'],
+                            disable_web_page_preview=True)
+                    else:
+                        telegramBot.sendMessage(
+                            chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                            text='Admins, The Scenic-Oxygen Github Webhook ' +
+                                 'has performed update for: ' + repo_url,
+                            disable_web_page_preview=True)
+                    self.response.write('Commands imported from ' + repo_url)
                 else:
-                    telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                                            text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                                 'has failed to perform automatic update for ' + body['compare'] +
-                                                 '\n' + response,
-                                            disable_web_page_preview=True)
+                    telegramBot.sendMessage(
+                        chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                        text='Admins, The Scenic-Oxygen Github Webhook ' +
+                             'has failed to perform automatic update for ' + body['compare'] +
+                             '\n' + response,
+                        disable_web_page_preview=True)
                     self.response.write(response)
                     if response == 'Bad credentials':
                         raise endpoints.UnauthorizedException()
@@ -348,7 +368,8 @@ class GithubWebhookHandler(webapp2.RequestHandler):
     def update_commands(self, repo_url, token):
         github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/commands'
         raw_data = urlfetch.fetch(url=github_contents_url,
-                                  headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
+                                  headers={'Authorization': 'Basic %s' % base64.b64encode(
+                                      repo_url.split('/')[0] + ':' + token)})
         logging.info('Got raw_data as ' + raw_data.content)
         json_data = json.loads(raw_data.content)
         if json_data and len(json_data) > 0:
@@ -365,11 +386,13 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                                     command_data['name'] != 'start.py':
                         raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
                                                       '/master/commands/' + command_data['name'],
-                                                  headers={'Authorization': 'Basic %s' % base64.b64encode(repo_url.split('/')[0] + ':' + token)})
+                                                  headers={'Authorization': 'Basic %s' % base64.b64encode(
+                                                      repo_url.split('/')[0] + ':' + token)})
                         add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
                 return ''
             else:
                 return json_data['message']
+
 
 def load_code_as_module(module_name):
     if module_name != '':
@@ -382,6 +405,7 @@ def load_code_as_module(module_name):
                 exec command_code in module.__dict__
                 return module
     return None
+
 
 def ReloadAllCommands():
     es = add.CommandsValue.query().fetch()
