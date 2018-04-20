@@ -314,13 +314,19 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                 response = self.update_commands(repo_url, token)
                 if response == '':
                     commitMsg = ''
-                    for commit in body['commits']:
-                        commitMsg += '\n' + commit['message']
-                    telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                                            text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                                 'has performed update for:\n' + commitMsg + '\nSee ' + body['compare'],
-                                            disable_web_page_preview=True)
-                    self.response.write('Commands imported from ' + repo_url)
+					if 'commits' in body:
+						for commit in body['commits']:
+							commitMsg += '\n' + commit['message']
+						telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+												text='Admins, The Scenic-Oxygen Github Webhook ' +
+													 'has performed update for:\n' + commitMsg + '\nSee ' + body['compare'],
+												disable_web_page_preview=True)
+					else:
+						telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+												text='Admins, The Scenic-Oxygen Github Webhook ' +
+													 'has performed update for: ' + repo_url,
+												disable_web_page_preview=True)
+					self.response.write('Commands imported from ' + repo_url)
                 else:
                     telegramBot.sendMessage(chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
                                             text='Admins, The Scenic-Oxygen Github Webhook ' +
