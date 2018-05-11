@@ -134,40 +134,10 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             chat_type = chat['type']
 
             if text:
-                logging.info(self.get_response(chat_id, chat_type, text, user))
+                self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
             else:
                 logging.info('no text')
                 return
-
-    commandCascade = ['getanswer',
-                      'getbook',
-                      'getshow',
-                      'getmovie',
-                      'wiki',
-                      'define',
-                      'urban',
-                      'translate',
-                      'getlyrics',
-                      'getquote',
-                      'getlink']
-
-    def TryAnswerAQuestion(self, chat_id, fr_username, text):
-        return self.respond_to_a_question(chat_id, text, fr_username, 1)
-
-    def TryAnswerAHowQuestion(self, chat_id, fr_username, text):
-        if text.strip()[:8].lower() == 'how much' or text.strip()[:8].lower() == 'how many':
-            mod = load_code_as_module('getanswer')
-            if mod:
-                getManyMuchResult = str(mod.run(fr_username, text, chat_id))
-                if result_is_not_error(getManyMuchResult):
-                    telegramBot.sendMessage(chat_id=chat_id, text=getManyMuchResult)
-                    return getManyMuchResult
-        mod = load_code_as_module('how')
-        if mod:
-            getHowResult = str(mod.run(fr_username, text, chat_id))
-            if result_is_not_error(getHowResult):
-                telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
-                return getHowResult
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
@@ -178,15 +148,6 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
 
-        if commandName != 'how':
-            if any(commandName == cascade_commands for cascade_commands in self.commandCascade):
-                return self.respond_to_specific_command(commandName, chat_id, request_text, fr_username, totalResults)
-        else:
-            mod = load_code_as_module('how')
-            if mod:
-                getHowResult = str(mod.run(fr_username, text, chat_id, totalResults))
-                telegramBot.sendMessage(chat_id=chat_id, text=getHowResult)
-                return getHowResult
         if commandName == 'add':
             return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'remove':
@@ -206,61 +167,6 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                                ', I\'m afraid I do not recognize the ' + commandName + ' command.'
                     telegramBot.sendMessage(chat_id=chat_id, text=errorMsg)
                     return errorMsg
-
-    def respond_to_a_question(self, chat_id, request_text, user, total_results):
-        for eachCommand in self.commandCascade:
-            mod = load_code_as_module(eachCommand)
-            if mod:
-                getanswerResult = str(mod.run(user, request_text, chat_id, total_results))
-                if result_is_not_error(getanswerResult):
-                    valid_markdown = self.clean_result_markdown(getanswerResult)
-                    telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
-                    return valid_markdown
-
-    def respond_to_specific_command(self, command_name, chat_id, request_text, user, total_results):
-        mod = load_code_as_module(command_name)
-        if mod:
-            result = mod.run(user, request_text, chat_id, total_results)
-            if result:
-                valid_markdown = self.clean_result_markdown(result)
-                telegramBot.sendMessage(chat_id=chat_id, text=valid_markdown, parse_mode='markdown')
-                return result
-            else:
-                error_message = 'I\'m sorry, ' + user + ' I got nothing.'
-                telegramBot.sendMessage(chat_id=chat_id, text=error_message)
-                return error_message
-        else:
-            return None
-
-    def get_response(self, chat_id, chat_type, text, user='Dave'):
-        if text.startswith('/') or any(
-                text.strip().lower().startswith(command_name) for command_name in self.commandCascade):
-            return self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
-        elif text.strip()[:len('how')].lower() == 'how' \
-                and not text.strip()[:len('how is')].lower() == 'how is' \
-                and not text.strip()[:len('how are')].lower() == 'how are' \
-                and text.endswith('?'):
-            return self.TryAnswerAHowQuestion(chat_id, user, text)
-
-    def clean_result_markdown(self, result):
-        split_line_break = result.rsplit('\n', 1)
-        valid_markdown = str(re.sub(r'<[^>]*?>', '',
-                                    split_line_break[0]
-                                    .replace('<span class="searchmatch">', '*')
-                                    .replace('</span>', '*')
-                                    .replace('&quot;', '\"')
-                                    .replace('[', '')
-                                    .replace(']', '')))
-        if valid_markdown.count('*') % 2 != 0:
-            valid_markdown += '*'
-        if valid_markdown.count('_') % 2 != 0:
-            valid_markdown += '_'
-        if len(split_line_break) > 1:
-            post_line_break_escape_markdown = split_line_break[1] \
-                .replace('_', '\_') \
-                .replace('*', '\*')
-            valid_markdown += '\n' + post_line_break_escape_markdown
-        return valid_markdown
 
 
 def result_is_not_error(result):
