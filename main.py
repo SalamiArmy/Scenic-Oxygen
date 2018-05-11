@@ -291,7 +291,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                                     command_data['name'] != 'login.py' and \
                                     command_data['name'] != 'start.py':
                         raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
-                                                      '/master/commands/' + command_data['name'],
+                                                      '/master/telegram_commands/' + command_data['name'],
                                                   headers={'Authorization': 'Basic %s' % base64.b64encode(
                                                       repo_url.split('/')[0] + ':' + token)})
                         add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
