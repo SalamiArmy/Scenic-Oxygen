@@ -272,7 +272,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             raise endpoints.InternalServerErrorException()
 
     def update_commands(self, repo_url, token):
-        github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/commands'
+        github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/telegram_commands'
         raw_data = urlfetch.fetch(url=github_contents_url,
                                   headers={'Authorization': 'Basic %s' % base64.b64encode(
                                       repo_url.split('/')[0] + ':' + token)})
