@@ -136,6 +136,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             if text:
                 if text[:1] == '/':
                     self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+                else:
+                    print('Not an explicit enough command.')
             else:
                 logging.info('no text')
                 return
@@ -178,10 +180,9 @@ class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         requestText = self.request.get('message')
-        self.response.write(self.TryExecuteExplicitCommand(requestText))
+        self.TryExecuteExplicitCommand(requestText)
         if requestText[:3] == 'say':
             self.response.headers['Content-Type'] = 'audio/ogg'
-        return self.response
 
     def TryExecuteExplicitCommand(self, text):
         split = text.lower().split(' ', 1)
@@ -197,7 +198,6 @@ class WebhookHandler(webapp2.RequestHandler):
             self.response.write(mod.run(keyConfig, request_text, totalResults))
         else:
             self.response.write('I\'m sorry Dave, I\'m afraid I do not recognize the ' + commandName + ' command.')
-        return self.response
 
 
 class Login(webapp2.RequestHandler):
