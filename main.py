@@ -157,10 +157,12 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
         elif commandName == 'start':
             return start.run(telegramBot, chat_id, fr_username, keyConfig)
         else:
-            mod = load_code_as_module(commandName)
+            get_value_from_data_store = add.Telegram_CommandsValue.get_by_id(commandName)
+            if get_value_from_data_store:
+                command_code = str(get_value_from_data_store.codeValue)
+            mod = load_command_module(commandName, command_code)
             if mod:
-                return mod.run(telegramBot, chat_id, fr_username, keyConfig, split[1] if len(split) > 1 else '',
-                               totalResults)
+                return mod.run(telegramBot, chat_id, fr_username, keyConfig, request_text, totalResults)
             else:
                 if chat_type == 'private':
                     errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') + \
@@ -177,11 +179,8 @@ def result_is_not_error(result):
 class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
-        chat_id = self.request.get('chat_id')
-        if chat_id == '':
-            chat_id = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID')
         requestText = self.request.get('message')
-        self.run_web_command(chat_id, requestText, 1)
+        self.TryExecuteExplicitCommand(requestText)
 
     def run_web_command(self, chat_id, message, total_results):
         self.response.write(TelegramWebhookHandler().get_response(chat_id, 'private', message))
@@ -189,6 +188,25 @@ class WebhookHandler(webapp2.RequestHandler):
             self.response.headers['Content-Type'] = 'audio/ogg'
         login.setPin(chat_id, '')
         login.setCount(chat_id, 0)
+
+    def TryExecuteExplicitCommand(self, text):
+        split = text[1:].lower().split(' ', 1)
+        commandName = split[0].lower().replace(telegramBot.name.lower(), '')
+        request_text = split[1] if len(split) > 1 else ''
+        totalResults = 1
+        if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
+            totalResults = re.findall('\d+$', commandName)[0]
+            commandName = re.findall('^[a-z]+', commandName)[0]
+
+        get_value_from_data_store = add.Web_CommandsValue.get_by_id(commandName)
+        if get_value_from_data_store:
+            command_code = str(get_value_from_data_store.codeValue)
+        mod = load_command_module(commandName, command_code)
+        if mod:
+            self.response.write(mod.run(telegramBot, keyConfig, request_text, totalResults))
+        else:
+            self.response.write('I\'m sorry Dave, I\'m afraid I do not recognize the ' + commandName + ' command.')
+        return self.response
 
 
 class Login(webapp2.RequestHandler):
@@ -212,7 +230,10 @@ class TriggerAllWatches(webapp2.RequestHandler):
                 split = watch.split(':')
                 if len(split) >= 2:
                     removeGet = split[1].replace('get', 'watch')
-                    mod = load_code_as_module(removeGet)
+                    get_value_from_data_store = add.Telegram_CommandsValue.get_by_id(removeGet)
+                    if get_value_from_data_store:
+                        command_code = str(get_value_from_data_store.codeValue)
+                    mod = load_command_module(removeGet, command_code)
                     chat_id = split[0]
                     request_text = (split[2] if len(split) == 3 else '')
                     removeCommaEncoding = request_text.replace('%2C', ',')
@@ -272,44 +293,55 @@ class GithubWebhookHandler(webapp2.RequestHandler):
             raise endpoints.InternalServerErrorException()
 
     def update_commands(self, repo_url, token):
-        github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/telegram_commands'
-        raw_data = urlfetch.fetch(url=github_contents_url,
-                                  headers={'Authorization': 'Basic %s' % base64.b64encode(
-                                      repo_url.split('/')[0] + ':' + token)})
-        logging.info('Got raw_data as ' + raw_data.content)
-        json_data = json.loads(raw_data.content)
-        if json_data and len(json_data) > 0:
-            if 'message' not in json_data:
-                for command_data in json_data:
-                    logging.info('Got command meta data as ')
-                    logging.info(command_data)
-                    if 'name' in command_data and \
-                                    command_data['name'] != '__init__.py' and \
-                                    command_data['name'] != 'add.py' and \
-                                    command_data['name'] != 'classicget.py' and \
-                                    command_data['name'] != 'remove.py' and \
-                                    command_data['name'] != 'login.py' and \
-                                    command_data['name'] != 'start.py':
-                        raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
-                                                      '/master/telegram_commands/' + command_data['name'],
-                                                  headers={'Authorization': 'Basic %s' % base64.b64encode(
-                                                      repo_url.split('/')[0] + ':' + token)})
-                        add.setCommandCode(str(command_data['name']).replace('.py', ''), raw_data.content)
-                return ''
-            else:
-                return json_data['message']
+        recognized_platforms = ['web', 'telegram', 'slack', 'discord', 'facebook', 'skype']
+        for platform in recognized_platforms:
+            github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/' + platform + '_commands'
+            raw_data = urlfetch.fetch(url=github_contents_url,
+                                      headers={'Authorization': 'Basic %s' % base64.b64encode(
+                                          repo_url.split('/')[0] + ':' + token)})
+            if raw_data.status_code == 200:
+                logging.info('Got raw_data as ' + raw_data.content)
+                json_data = json.loads(raw_data.content)
+                if json_data and len(json_data) > 0:
+                    if 'message' not in json_data:
+                        for command_data in json_data:
+                            logging.info('Got command meta data as ')
+                            logging.info(command_data)
+                            if 'name' in command_data and \
+                                            command_data['name'] != '__init__.py' and \
+                                            command_data['name'] != 'add.py' and \
+                                            command_data['name'] != 'classicget.py' and \
+                                            command_data['name'] != 'remove.py' and \
+                                            command_data['name'] != 'login.py' and \
+                                            command_data['name'] != 'start.py':
+                                raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
+                                                              '/master/' + platform + '_commands/' + command_data['name'],
+                                                          headers={'Authorization': 'Basic %s' % base64.b64encode(
+                                                              repo_url.split('/')[0] + ':' + token)})
+                                module_name = str(command_data['name']).replace('.py', '')
+                                self.set_platform_command_code(platform, module_name, raw_data.content)
+
+    def set_platform_command_code(self, platform, command_name, command_code):
+        if platform == 'web':
+            add.setWeb_CommandCode(command_name, command_code)
+        elif platform == 'telegram':
+            add.setTelegram_CommandCode(command_name, command_code)
+        elif platform == 'slack':
+            add.setSlack_CommandCode(command_name, command_code)
+        elif platform == 'discord':
+            add.setDiscord_CommandCode(command_name, command_code)
+        elif platform == 'facebook':
+            add.setFacebook_CommandCode(command_name, command_code)
+        elif platform == 'skype':
+            add.setSkype_CommandCode(command_name, command_code)
 
 
-def load_code_as_module(module_name):
-    if module_name != '':
-        get_value_from_data_store = add.CommandsValue.get_by_id(module_name)
-        if get_value_from_data_store:
-            command_code = str(get_value_from_data_store.codeValue)
-            if command_code != '':
-                module = sys.modules.setdefault(module_name, imp.new_module(module_name))
-                logging.info('begin loading module ' + module_name)
-                exec command_code in module.__dict__
-                return module
+def load_command_module(module_name, command_code):
+    if module_name != '' and command_code != '':
+        module = sys.modules.setdefault(module_name, imp.new_module(module_name))
+        logging.info('begin loading module ' + module_name)
+        exec command_code in module.__dict__
+        return module
     return None
 
 
@@ -318,7 +350,10 @@ def ReloadAllCommands():
     if len(es) > 0:
         for mod in es:
             command_name = str(mod.key._Key__pairs[0][1])
-            load_code_as_module(command_name)
+            get_value_from_data_store = add.Telegram_CommandsValue.get_by_id(command_name)
+            if get_value_from_data_store:
+                command_code = str(get_value_from_data_store.codeValue)
+            load_command_module(command_name, command_code)
 
 
 class GetCommandsHandler(webapp2.RequestHandler):
