@@ -134,7 +134,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             chat_type = chat['type']
 
             if text:
-                self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
+                if text[1:] == '\\':
+                    self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
             else:
                 logging.info('no text')
                 return
