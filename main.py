@@ -178,18 +178,13 @@ class WebhookHandler(webapp2.RequestHandler):
         urlfetch.set_default_fetch_deadline(60)
         requestText = self.request.get('message')
         self.response.write(self.TryExecuteExplicitCommand(requestText))
+        if requestText[:3] == 'say':
+            self.response.headers['Content-Type'] = 'audio/ogg'
         return self.response
 
-    def run_web_command(self, chat_id, message, total_results):
-        self.response.write(TelegramWebhookHandler().get_response(chat_id, 'private', message))
-        if message[:3] == 'say':
-            self.response.headers['Content-Type'] = 'audio/ogg'
-        login.setPin(chat_id, '')
-        login.setCount(chat_id, 0)
-
     def TryExecuteExplicitCommand(self, text):
-        split = text[1:].lower().split(' ', 1)
-        commandName = split[0].lower().replace(telegramBot.name.lower(), '')
+        split = text.lower().split(' ', 1)
+        commandName = split[0]
         request_text = split[1] if len(split) > 1 else ''
         totalResults = 1
         if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
