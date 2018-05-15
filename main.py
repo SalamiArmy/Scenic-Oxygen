@@ -191,9 +191,9 @@ class WebhookHandler(webapp2.RequestHandler):
             totalResults = re.findall('\d+$', commandName)[0]
             commandName = re.findall('^[a-z]+', commandName)[0]
 
-        mod = get_platform_command_code('telegram', commandName)
+        mod = get_platform_command_code('web', commandName)
         if mod:
-            self.response.write(mod.run(telegramBot, keyConfig, request_text, totalResults))
+            self.response.write(mod.run(keyConfig, request_text, totalResults))
         else:
             self.response.write('I\'m sorry Dave, I\'m afraid I do not recognize the ' + commandName + ' command.')
         return self.response
