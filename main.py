@@ -180,7 +180,8 @@ class WebhookHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(60)
         requestText = self.request.get('message')
-        self.TryExecuteExplicitCommand(requestText)
+        self.response.write(self.TryExecuteExplicitCommand(requestText))
+        return self.response
 
     def run_web_command(self, chat_id, message, total_results):
         self.response.write(TelegramWebhookHandler().get_response(chat_id, 'private', message))
@@ -278,7 +279,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                         chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
                         text='Admins, The Scenic-Oxygen Github Webhook ' +
                              'has failed to perform automatic update for ' + body['compare'] +
-                             '\n' + response,
+                             '\n' + str(response),
                         disable_web_page_preview=True)
                     self.response.write(response)
                     if response == 'Bad credentials':
@@ -294,6 +295,7 @@ class GithubWebhookHandler(webapp2.RequestHandler):
 
     def update_commands(self, repo_url, token):
         recognized_platforms = ['web', 'telegram', 'slack', 'discord', 'facebook', 'skype']
+        error = ''
         for platform in recognized_platforms:
             github_contents_url = 'https://api.github.com/repos/' + repo_url + '/contents/' + platform + '_commands'
             raw_data = urlfetch.fetch(url=github_contents_url,
@@ -320,6 +322,9 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                                                               repo_url.split('/')[0] + ':' + token)})
                                 module_name = str(command_data['name']).replace('.py', '')
                                 self.set_platform_command_code(platform, module_name, raw_data.content)
+                    else:
+                        error = json_data['message']
+        return error
 
     def set_platform_command_code(self, platform, command_name, command_code):
         if platform == 'web':
