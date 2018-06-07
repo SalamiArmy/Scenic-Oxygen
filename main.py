@@ -137,19 +137,21 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 if text[:1] == '/':
                     self.TryExecuteExplicitCommand(chat_id, user, text, chat_type)
                 else:
-                    print('Not an explicit enough command.')
+                    logging.info('Not an explicit enough command.')
             else:
-                logging.info('no text')
-                return
+                logging.info('Not text.')
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
         split = text[1:].lower().split(' ', 1)
         commandName = split[0].lower().replace(telegramBot.name.lower(), '')
         request_text = split[1] if len(split) > 1 else ''
         totalResults = 1
-        if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
-            totalResults = re.findall('\d+$', commandName)[0]
-            commandName = re.findall('^[a-z]+', commandName)[0]
+        if commandName != 'getmp3':
+            if len(re.findall('^[a-z]+\d+$', commandName)) > 0:
+                totalResults = re.findall('\d+$', commandName)[0]
+                commandName = re.findall('^[a-z]+', commandName)[0]
+        else:
+            totalResults = 1
 
         if commandName == 'add':
             return add.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
