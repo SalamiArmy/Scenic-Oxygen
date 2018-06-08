@@ -367,7 +367,7 @@ class GetCommandsHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
         es = add.Telegram_CommandsValue.query().fetch()
-        all_commands = []
+        all_commands = ['Commands']
         if len(es) > 0:
             for mod in es:
                 all_commands += str(mod.key._Key__pairs[0][1])
