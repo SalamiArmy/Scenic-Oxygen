@@ -20,16 +20,27 @@ function checkforhelp(){
     var commandList = [];
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        showCommandText(this.responseText);
+        showAllCommandText(this.responseText);
       }
     };
     xhttp.open("GET", "/list_commands", true);
     xhttp.send();
   } else {
-    return (document.getElementById('messagetextarea').value != "");
+    var xhttp = new XMLHttpRequest();
+    var commandList = [];
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        showCommandText(this.responseText);
+      }
+    };
+    xhttp.open("GET", "/webhook", true);
+    xhttp.send();
   }
 }
 function showCommandText(commandList){
+  showText("#msg1", commandList, 0, 100);
+}
+function showAllCommandText(commandList){
   var commandsObject = JSON.parse(commandList)
   for (counter = 0; counter < commandsObject.length; counter++) {
     showText("#msg" + (counter+3), '#' + (counter+1) + ' ' + commandsObject[counter] + ', command_description_here', 0, 100);
