@@ -352,9 +352,8 @@ def load_command_module(module_name, command_code):
         return module
     return None
 
-
 def ReloadAllCommands():
-    es = add.CommandsValue.query().fetch()
+    es = add.Telegram_CommandsValue.query().fetch()
     if len(es) > 0:
         for mod in es:
             command_name = str(mod.key._Key__pairs[0][1])
@@ -367,7 +366,12 @@ def ReloadAllCommands():
 class GetCommandsHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        self.response.write(TelegramWebhookHandler().commandCascade)
+        es = add.Telegram_CommandsValue.query().fetch()
+        all_commands = []
+        if len(es) > 0:
+            for mod in es:
+                all_commands += str(mod.key._Key__pairs[0][1])
+        self.response.write(all_commands)
         return self.response
 
 
