@@ -253,22 +253,19 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                             commitMsg += '\n' + commit['message']
                         telegramBot.sendMessage(
                             chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                            text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                 'has performed update for:\n' + commitMsg + '\nSee ' + body['compare'],
+                            text='Admins, Scenic-Oxygen has performed an update for:\n' + commitMsg + '\nSee ' + body['compare'],
                             disable_web_page_preview=True)
                     else:
                         telegramBot.sendMessage(
                             chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                            text='Admins, The Scenic-Oxygen Github Webhook ' +
-                                 'has performed update for: ' + repo_url,
+                            text='Admins, Scenic-Oxygen has performed an update for: ' + repo_url,
                             disable_web_page_preview=True)
                     self.response.write('Commands imported from ' + repo_url)
                 else:
                     telegramBot.sendMessage(
                         chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
-                        text='Admins, The Scenic-Oxygen Github Webhook ' +
-                             'has failed to perform automatic update for ' + body['compare'] +
-                             '\n' + str(response),
+                        text='Admins, Scenic-Oxygen has failed to perform automatic update for ' + body['compare'] +
+                             '. You must either fix the following error or push manually using gcloud.\n' + str(response),
                         disable_web_page_preview=True)
                     self.response.write(response)
                     if response == 'Bad credentials':
