@@ -363,10 +363,10 @@ def ReloadAllCommands():
             load_command_module(command_name, command_code)
 
 
-class GetCommandsHandler(webapp2.RequestHandler):
+class GetWebCommandsHandler(webapp2.RequestHandler):
     def get(self):
         urlfetch.set_default_fetch_deadline(10)
-        es = add.Telegram_CommandsValue.query().fetch()
+        es = add.Web_CommandsValue.query().fetch()
         all_commands = []
         if len(es) > 0:
             for mod in es:
@@ -378,7 +378,7 @@ class GetCommandsHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/allwatches', TriggerAllWatches),
     ('/login', Login),
-    ('/list_commands', GetCommandsHandler),
+    ('/list_commands', GetWebCommandsHandler),
     ('/telegram_webhook', TelegramWebhookHandler),
     ('/github_webhook', GithubWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
