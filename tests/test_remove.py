@@ -45,9 +45,9 @@ class TestRemove(unittest.TestCase):
         remove.run(bot, chatId, 'Admin', keyConfig, request_text)
 
         self.assertEquals(add.getTokenValue(repo_url), '')
-        self.assertEquals(main.load_code_as_module('retry_on_telegram_error'), None)
-        self.assertEquals(main.load_code_as_module('get'), None)
-        self.assertEquals(main.load_code_as_module('getgif'), None)
+        self.assertEquals(main.get_platform_command_code('telegram', 'retry_on_telegram_error'), None)
+        self.assertEquals(main.get_platform_command_code('telegram', 'get'), None)
+        self.assertEquals(main.get_platform_command_code('telegram', 'getgif'), None)
 
     def test_RemoveHook(self):
         keyConfig = ConfigParser.ConfigParser()
@@ -68,6 +68,6 @@ class TestRemove(unittest.TestCase):
         add.setCommandCode('getgif', command_codes.getgif_command_code())
 
         remove.remove_commands(repo_url, token_value)
-        self.assertEquals(main.load_code_as_module('retry_on_telegram_error'), None)
-        self.assertEquals(main.load_code_as_module('get'), None)
-        self.assertEquals(main.load_code_as_module('getgif'), None)
+        self.assertEquals(main.get_platform_command_code('telegram', 'retry_on_telegram_error'), None)
+        self.assertEquals(main.get_platform_command_code('telegram', 'get'), None)
+        self.assertEquals(main.get_platform_command_code('telegram', 'getgif'), None)

@@ -1,4 +1,3 @@
-import base64
 import json
 import logging
 
@@ -36,12 +35,57 @@ def setHookIDValue(repo_url, NewValue):
     es.currentValue = str(NewValue)
     es.put()
 
-class CommandsValue(ndb.Model):
+class Web_CommandsValue(ndb.Model):
     # key name: command_name
     codeValue = ndb.TextProperty(indexed=False, default='')
 
-def setCommandCode(command_name, NewValue):
-    es = CommandsValue.get_or_insert(command_name)
+def setWeb_CommandCode(command_name, NewValue):
+    es = Web_CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
+
+class Telegram_CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def setTelegram_CommandCode(command_name, NewValue):
+    es = Telegram_CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
+
+class Discord_CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def setDiscord_CommandCode(command_name, NewValue):
+    es = Discord_CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
+
+class Slack_CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def setSlack_CommandCode(command_name, NewValue):
+    es = Slack_CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
+
+class Facebook_CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def setFacebook_CommandCode(command_name, NewValue):
+    es = Facebook_CommandsValue.get_or_insert(command_name)
+    es.codeValue = str(NewValue)
+    es.put()
+
+class Skype_CommandsValue(ndb.Model):
+    # key name: command_name
+    codeValue = ndb.TextProperty(indexed=False, default='')
+
+def setSkype_CommandCode(command_name, NewValue):
+    es = Skype_CommandsValue.get_or_insert(command_name)
     es.codeValue = str(NewValue)
     es.put()
 
