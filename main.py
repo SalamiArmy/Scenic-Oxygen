@@ -312,6 +312,84 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                         error = json_data['message']
         return error
 
+
+class GitlabWebhookHandler(webapp2.RequestHandler):
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        logging.info('request body:')
+        logging.info(self.request.body)
+        body = json.loads(self.request.body)
+        if 'repository' in body and 'owner' in body['repository'] and 'login' in body['repository'][
+            'owner'] and 'name' in body['repository']:
+            repo_url = body['repository']['owner']['login'] + '/' + body['repository']['name']
+            logging.info('Got repo_url as ' + repo_url)
+            token = add.getTokenValue(repo_url)
+            if token != '':
+                response = self.update_commands(repo_url, token)
+                if response == '':
+                    commitMsg = ''
+                    if 'commits' in body:
+                        for commit in body['commits']:
+                            commitMsg += '\n' + commit['message']
+                        telegramBot.sendMessage(
+                            chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                            text='Admins, Scenic-Oxygen has updated itself with:\n' + commitMsg + '\nSee ' + body['compare'],
+                            disable_web_page_preview=True)
+                    else:
+                        telegramBot.sendMessage(
+                            chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                            text='Admins, Scenic-Oxygen has updated itself with: ' + repo_url,
+                            disable_web_page_preview=True)
+                    self.response.write('Commands imported from ' + repo_url)
+                else:
+                    telegramBot.sendMessage(
+                        chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                        text='Admins, Scenic-Oxygen has failed to updated itself with ' + body['compare'] +
+                             '. You must either fix the following error or push manually using gcloud.\n' + str(response),
+                        disable_web_page_preview=True)
+                    self.response.write(response)
+                    if response == 'Bad credentials':
+                        raise endpoints.UnauthorizedException()
+                    else:
+                        raise endpoints.InternalServerErrorException()
+            else:
+                raise endpoints.InternalServerErrorException('Internal data store error: no token found ' +
+                                                             'in the data store for ' + repo_url)
+        else:
+            self.response.write('unrecognized ' + json.dumps(body))
+            raise endpoints.InternalServerErrorException()
+
+    def update_commands(self, repo_url, token):
+        recognized_platforms = ['web', 'telegram', 'slack', 'discord', 'facebook', 'skype']
+        error = ''
+        for platform in recognized_platforms:
+            github_contents_url = 'https://gitlab.com/' + repo_url + '/raw/master/' + platform + '_commands'
+            raw_data = urlfetch.fetch(url=github_contents_url)
+            if raw_data.status_code == 200:
+                logging.info('Got raw_data as ' + raw_data.content)
+                json_data = json.loads(raw_data.content)
+                if json_data and len(json_data) > 0:
+                    if 'message' not in json_data:
+                        for command_data in json_data:
+                            logging.info('Got command meta data as ')
+                            logging.info(command_data)
+                            if 'name' in command_data and \
+                                            command_data['name'] != '__init__.py' and \
+                                            command_data['name'] != 'add.py' and \
+                                            command_data['name'] != 'classicget.py' and \
+                                            command_data['name'] != 'remove.py' and \
+                                            command_data['name'] != 'login.py' and \
+                                            command_data['name'] != 'start.py':
+                                raw_data = urlfetch.fetch(url='https://raw.githubusercontent.com/' + repo_url +
+                                                              '/master/' + platform + '_commands/' + command_data['name'],
+                                                          headers={'Authorization': 'Basic %s' % base64.b64encode(
+                                                              repo_url.split('/')[0] + ':' + token)})
+                                module_name = str(command_data['name']).replace('.py', '')
+                                set_platform_command_code(platform, module_name, raw_data.content)
+                    else:
+                        error = json_data['message']
+        return error
+
 def set_platform_command_code(platform, command_name, command_code):
     if platform == 'web':
         add.setWeb_CommandCode(command_name, command_code)
@@ -381,6 +459,7 @@ app = webapp2.WSGIApplication([
     ('/list_commands', GetWebCommandsHandler),
     ('/telegram_webhook', TelegramWebhookHandler),
     ('/github_webhook', GithubWebhookHandler),
+    ('/gitlab_webhook', GitlabWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
     ('/webhook', WebhookHandler)
 ], debug=True)
