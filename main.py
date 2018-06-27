@@ -108,11 +108,9 @@ class SlackWebhookHandler(webapp2.RequestHandler):
         self.response.write(str(self.request.body))
 
     def post(self):
-        urlfetch.set_default_fetch_deadline(120)
-        body = json.loads(self.request.body)
         logging.info('request body:')
-        logging.info(body)
-        self.response.write(json.dumps(body))
+        logging.info(str(self.request.body))
+        self.response.write(str(self.request.body))
 
 
 class TelegramWebhookHandler(webapp2.RequestHandler):
