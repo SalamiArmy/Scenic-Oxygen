@@ -102,15 +102,35 @@ class FacebookWebhookHandler(webapp2.RequestHandler):
                         facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
 
 class SlackWebhookHandler(webapp2.RequestHandler):
-    def get(self):
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
         logging.info('request body:')
         logging.info(str(self.request.body))
         self.response.write(str(self.request.body))
 
-    def post(self):
-        logging.info('request body:')
-        logging.info(str(self.request.body))
-        self.response.write(str(self.request.body))
+        if '&' in str(self.request.body) and 'text' in str(self.request.body) and 'user_name' in str(self.request.body):
+            for requestParameter in str(self.request.body).split('&'):
+                if len(requestParameter.split('=')) == 2:
+                    if requestParameter.split('=')[0] == 'user_name':
+                        user = requestParameter.split('=')[1]
+                    elif requestParameter.split('=')[0] == 'text':
+                        text = requestParameter.split('=')[1]
+                    elif requestParameter.split('=')[0] == 'channel_id':
+                        chat_id = requestParameter.split('=')[1]
+
+            if text[:1] == '/':
+                self.TryExecuteExplicitCommand(chat_id, user, text)
+            else:
+                logging.info('Not an explicit enough command.')
+
+    def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
+        mod = get_platform_command_code('slack', 'get')
+        if mod:
+            return mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
+        else:
+            errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') + \
+                       ', I\'m afraid I do not recognize the /get command.'
+            return errorMsg
 
 
 class TelegramWebhookHandler(webapp2.RequestHandler):
