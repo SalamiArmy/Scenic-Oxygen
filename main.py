@@ -100,6 +100,19 @@ class FacebookWebhookHandler(webapp2.RequestHandler):
                     if 'message' in message and 'sender' in message:
                         facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
 
+class SlackWebhookHandler(webapp2.RequestHandler):
+    def get(self):
+        logging.info('request body:')
+        logging.info(str(self.request.body))
+        self.response.write(str(self.request.body))
+
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        body = json.loads(self.request.body)
+        logging.info('request body:')
+        logging.info(body)
+        self.response.write(json.dumps(body))
+
 
 class TelegramWebhookHandler(webapp2.RequestHandler):
     def get(self):
@@ -458,5 +471,6 @@ app = webapp2.WSGIApplication([
     ('/github_webhook', GithubWebhookHandler),
     ('/gitlab_webhook', GitlabWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
+    ('/slack_webhook', SlackWebhookHandler),
     ('/webhook', WebhookHandler)
 ], debug=True)
