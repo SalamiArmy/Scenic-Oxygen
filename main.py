@@ -14,6 +14,7 @@ import imp
 import endpoints
 
 import telegram
+import slackclient
 
 # standard app engine imports
 from google.appengine.ext import ndb
