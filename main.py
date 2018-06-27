@@ -118,10 +118,7 @@ class SlackWebhookHandler(webapp2.RequestHandler):
                     elif requestParameter.split('=')[0] == 'channel_id':
                         chat_id = requestParameter.split('=')[1]
 
-            if text[:1] == '/':
-                self.TryExecuteExplicitCommand(chat_id, user, text)
-            else:
-                logging.info('Not an explicit enough command.')
+            self.TryExecuteExplicitCommand(chat_id, user, text)
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
         mod = get_platform_command_code('slack', 'get')
