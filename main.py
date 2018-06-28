@@ -171,7 +171,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 logging.info('Not text.')
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
-        split = text[1:].lower().split(' ', 1)
+        split = text[1:].split(' ', 1)
         commandName = split[0].lower().replace(telegramBot.name.lower(), '')
         request_text = split[1] if len(split) > 1 else ''
         totalResults = 1
