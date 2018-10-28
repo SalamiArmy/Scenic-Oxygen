@@ -14,6 +14,7 @@ import imp
 import endpoints
 
 import telegram
+import slackclient
 
 # standard app engine imports
 from google.appengine.ext import ndb
@@ -100,6 +101,34 @@ class FacebookWebhookHandler(webapp2.RequestHandler):
                     if 'message' in message and 'sender' in message:
                         facebookBot.send_text(message['sender']['id'], 'Hey Boet! I got ' + message['message']['text'])
 
+class SlackWebhookHandler(webapp2.RequestHandler):
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        logging.info('request body:')
+        logging.info(str(self.request.body))
+        self.response.write(str(self.request.body))
+
+        if '&' in str(self.request.body) and 'text' in str(self.request.body) and 'user_name' in str(self.request.body):
+            for requestParameter in str(self.request.body).split('&'):
+                if len(requestParameter.split('=')) == 2:
+                    if requestParameter.split('=')[0] == 'user_name':
+                        user = requestParameter.split('=')[1]
+                    elif requestParameter.split('=')[0] == 'text':
+                        text = requestParameter.split('=')[1]
+                    elif requestParameter.split('=')[0] == 'channel_id':
+                        chat_id = requestParameter.split('=')[1]
+
+            self.TryExecuteExplicitCommand(chat_id, user, text)
+
+    def TryExecuteExplicitCommand(self, chat_id, fr_username, text):
+        mod = get_platform_command_code('slack', 'get')
+        if mod:
+            return mod.run(telegramBot, chat_id, fr_username, keyConfig, text)
+        else:
+            errorMsg = 'I\'m sorry ' + (fr_username if not fr_username == '' else 'Dave') + \
+                       ', I\'m afraid I do not recognize the /get command.'
+            return errorMsg
+
 
 class TelegramWebhookHandler(webapp2.RequestHandler):
     def get(self):
@@ -142,7 +171,7 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
                 logging.info('Not text.')
 
     def TryExecuteExplicitCommand(self, chat_id, fr_username, text, chat_type):
-        split = text[1:].lower().split(' ', 1)
+        split = text[1:].split(' ', 1)
         commandName = split[0].lower().replace(telegramBot.name.lower(), '')
         request_text = split[1] if len(split) > 1 else ''
         totalResults = 1
@@ -312,36 +341,114 @@ class GithubWebhookHandler(webapp2.RequestHandler):
                         error = json_data['message']
         return error
 
+
+class GitlabWebhookHandler(webapp2.RequestHandler):
+    def post(self):
+        urlfetch.set_default_fetch_deadline(120)
+        logging.info('request body:')
+        logging.info(self.request.body)
+        body = json.loads(self.request.body)
+        if 'user_username' in body and 'name' in body['project']:
+            repo_url = body['user_username'] + '/' + body['project']['name']
+            logging.info('Got repo_url as ' + repo_url)
+            token = add.getTokenValue(repo_url)
+            if token != '':
+                response = self.update_commands(repo_url, token)
+                if response == '':
+                    commitMsg = ''
+                    if 'commits' in body:
+                        for commit in body['commits']:
+                            commitMsg += '\n' + commit['message']
+                        telegramBot.sendMessage(
+                            chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                            text='Admins, Scenic-Oxygen has updated itself (from gitlab!) with:\n' + commitMsg + '\nSee ' + body['compare'],
+                            disable_web_page_preview=True)
+                    else:
+                        telegramBot.sendMessage(
+                            chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                            text='Admins, Scenic-Oxygen has updated itself (from gitlab!) with: ' + repo_url,
+                            disable_web_page_preview=True)
+                    self.response.write('Commands imported (from gitlab!) ' + repo_url)
+                else:
+                    telegramBot.sendMessage(
+                        chat_id=keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID'),
+                        text='Admins, Scenic-Oxygen has failed to updated itself (from gitlab!) with ' + body['compare'] +
+                             '. You must either fix the following error or push manually using gcloud.\n' + str(response),
+                        disable_web_page_preview=True)
+                    self.response.write(response)
+                    if response == 'Bad credentials':
+                        raise endpoints.UnauthorizedException()
+                    else:
+                        raise endpoints.InternalServerErrorException()
+            else:
+                raise endpoints.InternalServerErrorException('Internal data store error: no token found ' +
+                                                             'in the data store for ' + repo_url)
+        else:
+            self.response.write('unrecognized ' + json.dumps(body))
+            raise endpoints.InternalServerErrorException()
+
+    def update_commands(self, repo_url, token):
+        recognized_platforms = ['web', 'telegram', 'slack', 'discord', 'facebook', 'skype']
+        error = ''
+        for platform in recognized_platforms:
+            github_contents_url = 'https://gitlab.com/' + repo_url + '/raw/master/' + platform + '_commands'
+            raw_data = urlfetch.fetch(url=github_contents_url)
+            if raw_data.status_code == 200:
+                logging.info('Got raw_data as ' + raw_data.content)
+                json_data = json.loads(raw_data.content)
+                if json_data and len(json_data) > 0:
+                    if 'message' not in json_data:
+                        for command_data in json_data:
+                            logging.info('Got command meta data as ')
+                            logging.info(command_data)
+                            if 'name' in command_data and \
+                                            command_data['name'] != '__init__.py' and \
+                                            command_data['name'] != 'add.py' and \
+                                            command_data['name'] != 'classicget.py' and \
+                                            command_data['name'] != 'remove.py' and \
+                                            command_data['name'] != 'login.py' and \
+                                            command_data['name'] != 'start.py':
+                                raw_data = urlfetch.fetch(url='https://gitlab.com/' + repo_url +
+                                                              '/raw/master/' + platform + '_commands/' + command_data['name'])
+                                module_name = str(command_data['name']).replace('.py', '')
+                                set_platform_command_code(platform, module_name, raw_data.content)
+                    else:
+                        error = json_data['message']
+        return error
+
 def set_platform_command_code(platform, command_name, command_code):
-    if platform == 'web':
-        add.setWeb_CommandCode(command_name, command_code)
-    elif platform == 'telegram':
-        add.setTelegram_CommandCode(command_name, command_code)
-    elif platform == 'slack':
-        add.setSlack_CommandCode(command_name, command_code)
-    elif platform == 'discord':
-        add.setDiscord_CommandCode(command_name, command_code)
-    elif platform == 'facebook':
-        add.setFacebook_CommandCode(command_name, command_code)
-    elif platform == 'skype':
-        add.setSkype_CommandCode(command_name, command_code)
+    if command_name != '':
+		if platform == 'web':
+			add.setWeb_CommandCode(command_name, command_code)
+		elif platform == 'telegram':
+			add.setTelegram_CommandCode(command_name, command_code)
+		elif platform == 'slack':
+			add.setSlack_CommandCode(command_name, command_code)
+		elif platform == 'discord':
+			add.setDiscord_CommandCode(command_name, command_code)
+		elif platform == 'facebook':
+			add.setFacebook_CommandCode(command_name, command_code)
+		elif platform == 'skype':
+			add.setSkype_CommandCode(command_name, command_code)
+    return ''
 
 def get_platform_command_code(platform, command_name):
-    if platform == 'web':
-        get_value_from_data_store = add.Web_CommandsValue.get_by_id(command_name)
-    elif platform == 'telegram':
-        get_value_from_data_store = add.Telegram_CommandsValue.get_by_id(command_name)
-    elif platform == 'slack':
-        get_value_from_data_store = add.Slack_CommandsValue.get_by_id(command_name)
-    elif platform == 'discord':
-        get_value_from_data_store = add.Discord_CommandsValue.get_by_id(command_name)
-    elif platform == 'facebook':
-        get_value_from_data_store = add.Facebook_CommandsValue.get_by_id(command_name)
-    elif platform == 'skype':
-        get_value_from_data_store = add.Skype_CommandsValue.get_by_id(command_name)
-    if get_value_from_data_store:
-        command_code = str(get_value_from_data_store.codeValue)
-        return load_command_module(command_name, command_code)
+    if command_name != '':
+        if platform == 'web':
+            get_value_from_data_store = add.Web_CommandsValue.get_by_id(command_name)
+        elif platform == 'telegram':
+            get_value_from_data_store = add.Telegram_CommandsValue.get_by_id(command_name)
+        elif platform == 'slack':
+            get_value_from_data_store = add.Slack_CommandsValue.get_by_id(command_name)
+        elif platform == 'discord':
+            get_value_from_data_store = add.Discord_CommandsValue.get_by_id(command_name)
+        elif platform == 'facebook':
+            get_value_from_data_store = add.Facebook_CommandsValue.get_by_id(command_name)
+        elif platform == 'skype':
+            get_value_from_data_store = add.Skype_CommandsValue.get_by_id(command_name)
+        if get_value_from_data_store:
+            command_code = str(get_value_from_data_store.codeValue)
+            return load_command_module(command_name, command_code)
     return ''
 
 def load_command_module(module_name, command_code):
@@ -381,6 +488,8 @@ app = webapp2.WSGIApplication([
     ('/list_commands', GetWebCommandsHandler),
     ('/telegram_webhook', TelegramWebhookHandler),
     ('/github_webhook', GithubWebhookHandler),
+    ('/gitlab_webhook', GitlabWebhookHandler),
     ('/facebook_webhook', FacebookWebhookHandler),
+    ('/slack_webhook', SlackWebhookHandler),
     ('/webhook', WebhookHandler)
 ], debug=True)
