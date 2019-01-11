@@ -190,6 +190,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             return login.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'start':
             return start.run(telegramBot, chat_id, fr_username, keyConfig)
+        elif commandName == 'getweather':
+            telegramBot.sendMessage(chat_id=chat_id, text="This command has been deprecated because Yahoo retired its weather api.")
         else:
             mod = get_platform_command_code('telegram', commandName)
             if mod:
