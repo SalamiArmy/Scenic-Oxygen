@@ -22,6 +22,7 @@ from google.appengine.api import urlfetch
 
 import webapp2
 
+from commands import start
 from commands import login
 from commands import add
 from commands import remove
@@ -187,6 +188,8 @@ class TelegramWebhookHandler(webapp2.RequestHandler):
             return remove.run(telegramBot, chat_id, fr_username, keyConfig, request_text)
         elif commandName == 'login':
             return login.run(telegramBot, chat_id, fr_username, keyConfig)
+        elif commandName == 'start':
+            return start.run(telegramBot, chat_id, fr_username, keyConfig)
         elif commandName == 'getweather':
             telegramBot.sendMessage(chat_id=chat_id, text="This command has been deprecated because Yahoo retired its weather api.")
         else:
