@@ -17,8 +17,8 @@ class TestPost(unittest.TestCase):
         self.testbed.init_datastore_v3_stub()
         self.testbed.init_memcache_stub()
         self.testbed.init_user_stub()
-        # Clear ndb's in-context cache between tests.
-        # This prevents data from leaking between tests.
+        # Clear ndb's in-context cache between telegram_tests.
+        # This prevents data from leaking between telegram_tests.
         # Alternatively, you could disable caching by
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
